@@ -1,6 +1,3 @@
-[submodule "PressurePulse_Brain-PCB"]
-	path =
-	url =
 [submodule "electrical/PressurePulse_Brain-PCB"]
 	path = electrical/PressurePulse_Brain-PCB
 	url = git@github.com:Markahofmeister/PressurePulse_Brain-PCB.git
