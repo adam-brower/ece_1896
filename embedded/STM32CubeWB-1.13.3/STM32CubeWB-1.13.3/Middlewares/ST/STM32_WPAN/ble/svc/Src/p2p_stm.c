@@ -60,6 +60,23 @@ static const uint8_t BM_REQ_CHAR_UUID[2] = {0x11, 0xFE};
 #endif
 #endif
 
+// JJ Defined Stuff
+uint32_t const dummyDataArr[10]={
+		0xa0,
+		0x2c,
+		0x4c,
+		0xe8,
+		0x26,
+		0xea,
+		0x92,
+		0x9e,
+		0xbc,
+		0xc7
+};
+
+uint32_t g_index = 0;
+
+
 /**
  * START of Section BLE_DRIVER_CONTEXT
  */
@@ -270,6 +287,16 @@ void P2PS_STM_Init(void)
 tBleStatus P2PS_STM_App_Update_Char(uint16_t UUID, uint8_t *pPayload) 
 {
   tBleStatus result = BLE_STATUS_INVALID_PARAMS;
+
+  *pPayload = dummyDataArr[g_index];
+
+  if (g_index == 9) {
+	  g_index = 0;
+  }
+  else {
+  	  g_index++;
+  }
+
   switch(UUID)
   {
     case P2P_NOTIFY_CHAR_UUID:

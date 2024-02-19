@@ -42,7 +42,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "dbg_trace.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,7 +135,7 @@ int main(void)
   MX_RTC_Init();
   MX_RNG_Init();
   /* USER CODE BEGIN 2 */
-
+  PRINT_MESG_DBG("Hi this is JJ \n");
   /* USER CODE END 2 */
 
   /* Init code for STM32_WPAN */
