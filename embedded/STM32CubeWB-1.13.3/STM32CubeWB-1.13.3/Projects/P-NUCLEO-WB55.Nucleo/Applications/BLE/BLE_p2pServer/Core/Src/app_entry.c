@@ -365,9 +365,9 @@ static void APPE_SysUserEvtRx( void * pPayload )
 
   /* Read the firmware version of both the wireless firmware and the FUS */
   SHCI_GetWirelessFwInfo( &WirelessInfo );
-  APP_DBG_MSG("Wireless Firmware version %d.%d.%d\n", WirelessInfo.VersionMajor, WirelessInfo.VersionMinor, WirelessInfo.VersionSub);
-  APP_DBG_MSG("Wireless Firmware build %d\n", WirelessInfo.VersionReleaseType);
-  APP_DBG_MSG("FUS version %d.%d.%d\n\n", WirelessInfo.FusVersionMajor, WirelessInfo.FusVersionMinor, WirelessInfo.FusVersionSub);
+  APP_DBG_MSG("Wireless Firmware version %d.%d.%d\r\n", WirelessInfo.VersionMajor, WirelessInfo.VersionMinor, WirelessInfo.VersionSub);
+  APP_DBG_MSG("Wireless Firmware build %d \r\n", WirelessInfo.VersionReleaseType);
+  APP_DBG_MSG("FUS version %d.%d.%d \r\n\n", WirelessInfo.FusVersionMajor, WirelessInfo.FusVersionMinor, WirelessInfo.FusVersionSub);
 
   switch(p_sys_event->subevtcode)
   {
@@ -455,7 +455,7 @@ static void APPE_SysEvtReadyProcessing( void * pPayload )
     /**
     * The wireless firmware is running on the CPU2
     */
-    APP_DBG_MSG("SHCI_SUB_EVT_CODE_READY - WIRELESS_FW_RUNNING \n");
+    APP_DBG_MSG("SHCI_SUB_EVT_CODE_READY - WIRELESS_FW_RUNNING \r\n");
 
     /* Traces channel initialization */
     APPD_EnableCPU2( );
@@ -479,7 +479,7 @@ static void APPE_SysEvtReadyProcessing( void * pPayload )
     */
     RevisionID = LL_DBGMCU_GetRevisionID();
 
-    APP_DBG_MSG("DBGMCU_GetRevisionID= %lx \n\n", RevisionID);
+    APP_DBG_MSG("DBGMCU_GetRevisionID= %lx \r\n\n", RevisionID);
 
     config_param.RevisionID = RevisionID;
     (void)SHCI_C2_Config(&config_param);
