@@ -331,6 +331,7 @@ tBleStatus aci_gatt_del_char( uint16_t Serv_Handle,
   rq.clen = index_input;
   rq.rparam = &status;
   rq.rlen = 1;
+
   if ( hci_send_req(&rq, FALSE) < 0 )
     return BLE_STATUS_TIMEOUT;
   return status;

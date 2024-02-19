@@ -152,11 +152,14 @@ int main(void)
     Error_Handler();
   }
 
-  PRINT_MESG_DBG("Hi this is JJ \n");
 
-  PRINT_MESG_DBG("\r\n~ SD card demo by kiwih ~\r\n\r\n");
 
-    HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+  HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+  PRINT_MESG_DBG("\r\n\r\n################ Serial Terminal for STM32WB55RG MCU ################");
+
+  PRINT_MESG_DBG("\r\n\r\n################ Read/Write SD Card Demo ################\r\n\r\n");
 
     //some variables for FatFs
     FATFS FatFs; 	//Fatfs handle
@@ -193,21 +196,20 @@ int main(void)
   	PRINT_MESG_DBG("f_open error (%i)\r\n");
   	while(1);
     }
-    PRINT_MESG_DBG("I was able to open 'test.txt' for reading!\r\n");
+    PRINT_MESG_DBG("I was able to open 'TEST.txt' for reading!\r\n");
 
-    //Read 30 bytes from "test.txt" on the SD card
-    BYTE readBuf[30];
+    //Read 100 bytes from "test.txt" on the SD card
+    BYTE readBuf[100];
 
     //We can either use f_read OR f_gets to get data out of files
     //f_gets is a wrapper on f_read that does some string formatting for us
-    TCHAR* rres = f_gets((TCHAR*)readBuf, 30, &fil);
+    TCHAR* rres = f_gets((TCHAR*)readBuf, 72, &fil);
     if(rres != 0) {
   	PRINT_MESG_DBG("Read string from 'test.txt' contents: %s\r\n", readBuf);
     } else {
   	PRINT_MESG_DBG("f_gets error (%i)\r\n", fres);
     }
 
-    //Be a tidy kiwi - don't forget to close your file!
     f_close(&fil);
 
     //Now let's try and write a file "write.txt"
@@ -219,20 +221,23 @@ int main(void)
     }
 
     //Copy in a string
-    strncpy((char*)readBuf, "a new file is made!", 19);
+    strncpy((char*)readBuf, "I can write to the SD Card from the embedded code!", 50);
     UINT bytesWrote;
-    fres = f_write(&fil, readBuf, 19, &bytesWrote);
+    fres = f_write(&fil, readBuf, 50, &bytesWrote);
     if(fres == FR_OK) {
   	PRINT_MESG_DBG("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
     } else {
   	PRINT_MESG_DBG("f_write error (%i)\r\n");
     }
 
-    //Be a tidy kiwi - don't forget to close your file!
     f_close(&fil);
 
     //We're done, so de-mount the drive
-    f_mount(NULL, "", 0);
+	f_mount(NULL, "", 0);
+
+    PRINT_MESG_DBG("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
+
+
 
   /* USER CODE END 2 */
 
