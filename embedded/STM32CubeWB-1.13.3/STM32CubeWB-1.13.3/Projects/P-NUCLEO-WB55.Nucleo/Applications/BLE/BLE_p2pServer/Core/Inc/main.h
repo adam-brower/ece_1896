@@ -63,7 +63,8 @@ void Error_Handler(void);
 void   MX_LPUART1_UART_Init(void);
 void   MX_USART1_UART_Init(void);
 /* USER CODE BEGIN Private defines */
-
+#define SD_CS_Pin GPIO_PIN_3
+#define SD_CS_GPIO_Port GPIOC
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
