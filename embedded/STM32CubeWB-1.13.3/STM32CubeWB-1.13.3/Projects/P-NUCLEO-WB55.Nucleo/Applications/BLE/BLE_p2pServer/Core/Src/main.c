@@ -44,6 +44,7 @@
 /* USER CODE BEGIN Includes */
 #include "app_fatfs.h"
 #include "dbg_trace.h"
+#include "Adafruit_RA8875.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -153,6 +154,9 @@ int main(void)
   MX_APPE_Init();
 
 /* USER CODE BEGIN 2 */
+
+
+
   if (MX_FATFS_Init() != APP_OK) {
     Error_Handler();
   }

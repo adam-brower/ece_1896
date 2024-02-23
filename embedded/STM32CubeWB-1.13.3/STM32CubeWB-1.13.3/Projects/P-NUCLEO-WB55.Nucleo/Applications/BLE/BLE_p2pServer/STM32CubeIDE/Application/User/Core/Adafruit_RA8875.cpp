@@ -35,6 +35,7 @@
 #include "Adafruit_RA8875.h"
 #include "main.h"
 #include "stm32wbxx_hal_gpio.h"
+#include "dbg_trace.h"
 
 
 /// @cond DISABLE
@@ -82,7 +83,8 @@ static inline void spi_end(void) { SPI.endTransaction(); }
             @param RST Location of the reset pin
 */
 /**************************************************************************/
-Adafruit_RA8875::Adafruit_RA8875(uint8_t CS, uint8_t RST) {
+Adafruit_RA8875::Adafruit_RA8875(uint8_t CS, uint8_t RST, SPI_HandleTypeDef DIS_HSPI) {
+	_DIS_HSPI = DIS_HSPI;
     _cs = CS;
     _rst = RST;
 }
@@ -107,60 +109,26 @@ bool Adafruit_RA8875::begin() {
     _rotation = 0;
 
     // TODO: init pins manually
-//    pinMode(_cs, OUTPUT);
-//    digitalWrite(_cs, HIGH);
+      HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
+
 //    pinMode(_rst, OUTPUT);
-//
 //    digitalWrite(_rst, LOW);
 //    delay(100);
 //    digitalWrite(_rst, HIGH);
 //    delay(100);
+
 //
 //    SPI.begin();
 
-#ifdef SPI_HAS_TRANSACTION
-/// @cond DISABLE
-#if defined(ARDUINO_ARCH_ARC32)
-    /// @endcond
-    spi_speed = 2000000;
-/// @cond DISABLE
-#else
-    /// @endcond
-    spi_speed = 125000;
-/// @cond DISABLE
-#endif
-/// @endcond
-#else
-#ifdef __AVR__
-    SPI.setClockDivider(SPI_CLOCK_DIV128);
-    SPI.setDataMode(SPI_MODE0);
-#endif
-#endif
 
     uint8_t x = readReg(0);
-    //        Serial.print("x = 0x"); Serial.println(x,HEX);
+    PRINT_MESG_DBG("x = %d\r\n", x);
     if (x != 0x75) {
-	// TODO: add my own debug:
-        //        Serial.println(x);
+		PRINT_MESG_DBG("DISPLAY READ REGISTER FAILED!!!! \r\n");
         return false;
     }
 
     initialize();
-
-#ifdef SPI_HAS_TRANSACTION
-/// @cond DISABLE
-#if defined(ARDUINO_ARCH_ARC32)
-    /// @endcond
-    spi_speed = 12000000L;
-#else
-    spi_speed = 4000000L;
-#endif
-#else
-#ifdef __AVR__
-    SPI.setClockDivider(SPI_CLOCK_DIV4);
-#endif
-#endif
-
     return true;
 }
 
@@ -1587,12 +1555,19 @@ void Adafruit_RA8875::writeData(uint8_t d) {
 
 	// TODO: implement SPI and write functions for this
 //    digitalWrite(_cs, LOW);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    spi_begin();
 //    SPI.transfer(RA8875_DATAWRITE);
+	uint8_t data2 = 0x00;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
 //    SPI.transfer(d);
+	HAL_SPI_Transmit(&_DIS_HSPI, &d, 1, HAL_MAX_DELAY);
 //    spi_end();
 //    digitalWrite(_cs, HIGH);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
+
+
 
 /**************************************************************************/
 /*!
@@ -1605,15 +1580,21 @@ uint8_t Adafruit_RA8875::readData(void) {
 
 	// TODO: implement SPI and write functions for this
 //    digitalWrite(_cs, LOW);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    spi_begin();
 //
 //    SPI.transfer(RA8875_DATAREAD);
+	 uint8_t data3 = 0x40;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data3, 1, HAL_MAX_DELAY);
 //    uint8_t x = SPI.transfer(0x0);
+	uint8_t data4 = 0x00;
+	uint8_t x;
+	HAL_SPI_TransmitReceive(&_DIS_HSPI, &data4, &x, 2, HAL_MAX_DELAY);
 //    spi_end();
 //
 //    digitalWrite(_cs, HIGH);
-//    return x;
-	return 1;
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
+    return x;
 }
 
 /**************************************************************************/
@@ -1627,13 +1608,20 @@ void Adafruit_RA8875::writeCommand(uint8_t d) {
 
 	// TODO: implement SPI and write functions for this
 //    digitalWrite(_cs, LOW);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    spi_begin();
 //
 //    SPI.transfer(RA8875_CMDWRITE);
+    // TODO: clean this up
+    uint8_t data1 = 0x80;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data1, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(&_DIS_HSPI, &d, 1, HAL_MAX_DELAY);
 //    SPI.transfer(d);
 //    spi_end();
+
 //
 //    digitalWrite(_cs, HIGH);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
 
 /**************************************************************************/
