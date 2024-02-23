@@ -205,6 +205,8 @@ int main(void)
   tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
   tft.PWM1out(255);
 
+  tft.drawLine(10, 10, 200, 100, RA8875_RED);
+
   // With hardware accelleration this is instant
 
 
