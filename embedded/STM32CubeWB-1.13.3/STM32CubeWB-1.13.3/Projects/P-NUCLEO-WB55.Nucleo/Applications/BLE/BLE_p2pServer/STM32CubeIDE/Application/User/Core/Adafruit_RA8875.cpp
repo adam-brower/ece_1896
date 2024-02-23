@@ -83,9 +83,8 @@ static inline void spi_end(void) { SPI.endTransaction(); }
             @param RST Location of the reset pin
 */
 /**************************************************************************/
-Adafruit_RA8875::Adafruit_RA8875(uint8_t CS, uint8_t RST, SPI_HandleTypeDef DIS_HSPI) {
+Adafruit_RA8875::Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI) {
 	_DIS_HSPI = DIS_HSPI;
-    _cs = CS;
     _rst = RST;
 }
 
