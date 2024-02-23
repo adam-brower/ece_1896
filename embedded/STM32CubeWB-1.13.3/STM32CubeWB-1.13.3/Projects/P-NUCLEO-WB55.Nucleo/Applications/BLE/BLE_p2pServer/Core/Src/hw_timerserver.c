@@ -590,7 +590,7 @@ void HW_TS_Init(HW_TS_InitMode_t TimerInitMode, RTC_HandleTypeDef *hrtc)
   uint8_t loop;
   uint32_t localmaxwakeuptimersetup;
 
-  /**
+/**
    * Get RTC handler
    */
   phrtc = hrtc;

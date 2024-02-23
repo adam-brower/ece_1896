@@ -37,49 +37,49 @@
 /**
  * Macro definition
  */
-#if ( BLE_DBG_APP_EN != 0 )
+#if (BLE_DBG_APP_EN != 0)
 #define BLE_DBG_APP_MSG             PRINT_MESG_DBG
 #else
 #define BLE_DBG_APP_MSG             PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_DIS_EN != 0 )
+#if (BLE_DBG_DIS_EN != 0)
 #define BLE_DBG_DIS_MSG             PRINT_MESG_DBG
 #else
 #define BLE_DBG_DIS_MSG             PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_HRS_EN != 0 )
+#if (BLE_DBG_HRS_EN != 0)
 #define BLE_DBG_HRS_MSG             PRINT_MESG_DBG
 #else
 #define BLE_DBG_HRS_MSG             PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_P2P_STM_EN != 0 )
+#if (BLE_DBG_P2P_STM_EN != 0)
 #define BLE_DBG_P2P_STM_MSG         PRINT_MESG_DBG
 #else
 #define BLE_DBG_P2P_STM_MSG         PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_TEMPLATE_STM_EN != 0 )
+#if (BLE_DBG_TEMPLATE_STM_EN != 0)
 #define BLE_DBG_TEMPLATE_STM_MSG         PRINT_MESG_DBG
 #else
 #define BLE_DBG_TEMPLATE_STM_MSG         PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_EDS_STM_EN != 0 )
+#if (BLE_DBG_EDS_STM_EN != 0)
 #define BLE_DBG_EDS_STM_MSG         PRINT_MESG_DBG
 #else
 #define BLE_DBG_EDS_STM_MSG         PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_LBS_STM_EN != 0 )
+#if (BLE_DBG_LBS_STM_EN != 0)
 #define BLE_DBG_LBS_STM_MSG         PRINT_MESG_DBG
 #else
 #define BLE_DBG_LBS_STM_MSG         PRINT_NO_MESG
 #endif
 
-#if ( BLE_DBG_SVCCTL_EN != 0 )
+#if (BLE_DBG_SVCCTL_EN != 0)
 #define BLE_DBG_SVCCTL_MSG          PRINT_MESG_DBG
 #else
 #define BLE_DBG_SVCCTL_MSG          PRINT_NO_MESG

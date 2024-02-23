@@ -54,14 +54,19 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void MX_LPUART1_UART_Init(void);
+void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-void   MX_LPUART1_UART_Init(void);
-void   MX_USART1_UART_Init(void);
+#define SD_CS_Pin GPIO_PIN_3
+#define SD_CS_GPIO_Port GPIOC
+#define DIS_CS_Pin GPIO_PIN_8
+#define DIS_CS_GPIO_Port GPIOA
+
 /* USER CODE BEGIN Private defines */
 #define SD_CS_Pin GPIO_PIN_3
 #define SD_CS_GPIO_Port GPIOC
