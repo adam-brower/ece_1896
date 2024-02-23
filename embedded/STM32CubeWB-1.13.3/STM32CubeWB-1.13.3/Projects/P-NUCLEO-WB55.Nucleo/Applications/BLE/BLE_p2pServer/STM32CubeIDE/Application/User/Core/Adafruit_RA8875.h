@@ -120,7 +120,7 @@ class Adafruit_RA8875 {
 public:
   Adafruit_RA8875(uint8_t cs, uint8_t rst);
 
-  bool begin(enum RA8875sizes s);
+  bool begin();
   void softReset(void);
   void displayOn(bool on);
   void sleep(bool sleep);
