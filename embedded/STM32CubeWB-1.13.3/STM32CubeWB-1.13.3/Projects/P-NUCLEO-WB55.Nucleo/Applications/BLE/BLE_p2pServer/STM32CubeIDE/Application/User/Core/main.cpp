@@ -196,6 +196,39 @@ int main(void)
 
   PRINT_MESG_DBG("\r\n\r\n################ Serial Terminal for STM32WB55RG MCU ################");
 
+  uint8_t dummy_rst = 0xFF;
+  Adafruit_RA8875 tft = Adafruit_RA8875(dummy_rst, hspi1);
+  bool a = tft.begin();
+
+  tft.displayOn(true);
+  tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+  tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+  tft.PWM1out(255);
+
+  // With hardware accelleration this is instant
+
+
+  while (1) {
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_WHITE);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_BLUE);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_GREEN);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_CYAN);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_MAGENTA);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_WHITE);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_YELLOW);
+	  HAL_Delay(1000);
+	  tft.fillScreen(RA8875_BLACK);
+  }
+
+
+  tft.fillScreen(RA8875_WHITE);
 
 
 
