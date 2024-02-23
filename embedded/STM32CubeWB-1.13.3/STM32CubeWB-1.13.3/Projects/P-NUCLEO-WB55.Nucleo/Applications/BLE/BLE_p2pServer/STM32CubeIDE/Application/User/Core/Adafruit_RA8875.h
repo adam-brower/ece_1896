@@ -21,6 +21,9 @@
 
 #include <stdint.h>
 #include <cstddef>
+#include "main.h"
+#include "stm32wbxx_hal_spi.h"
+
 
 using std::size_t;
 
@@ -118,7 +121,7 @@ typedef struct // Matrix
 /**************************************************************************/
 class Adafruit_RA8875 {
 public:
-  Adafruit_RA8875(uint8_t cs, uint8_t rst);
+  Adafruit_RA8875(uint8_t cs, uint8_t rst, SPI_HandleTypeDef DIS_HSPI);
 
   bool begin();
   void softReset(void);
@@ -274,6 +277,9 @@ private:
   }
 
   uint8_t _cs, _rst;
+  SPI_HandleTypeDef _DIS_HSPI;
+
+
   uint16_t _width, _height;
   uint8_t _textScale;
   uint8_t _rotation;
