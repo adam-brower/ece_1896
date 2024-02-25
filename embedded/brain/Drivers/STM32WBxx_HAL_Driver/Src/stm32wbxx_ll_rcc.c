@@ -19,12 +19,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wbxx_ll_rcc.h"
-#ifdef USE_FULL_ASSERT
+#ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif /* USE_FULL_ASSERT */
-
+#endif
 /** @addtogroup STM32WBxx_LL_Driver
   * @{
   */
@@ -46,21 +45,21 @@
 
 #if defined(LPUART1)
 #define IS_LL_RCC_LPUART_CLKSOURCE(__VALUE__) ((__VALUE__) == LL_RCC_LPUART1_CLKSOURCE)
-#endif /* LPUART1 */
+#endif
 
 #if defined(I2C3)
 #define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_I2C1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE))
+                                            || ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE))
 #else
 #define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_I2C1_CLKSOURCE)
-#endif /* I2C3 */
+#endif
 
 #define IS_LL_RCC_LPTIM_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_LPTIM1_CLKSOURCE) \
-                                               || ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE))
+                                            || ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE))
 
 #if defined(SAI1)
 #define IS_LL_RCC_SAI_CLKSOURCE(__VALUE__)    ((__VALUE__) == LL_RCC_SAI1_CLKSOURCE)
-#endif /* SAI1 */
+#endif
 
 #define IS_LL_RCC_RNG_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_RNG_CLKSOURCE))
 
@@ -68,7 +67,7 @@
 
 #if defined(USB)
 #define IS_LL_RCC_USB_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_USB_CLKSOURCE))
-#endif /* USB */
+#endif
 
 #define IS_LL_RCC_ADC_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_ADC_CLKSOURCE))
 
@@ -83,7 +82,7 @@
 static uint32_t RCC_PLL_GetFreqDomain_SYS(void);
 #if defined(SAI1)
 static uint32_t RCC_PLL_GetFreqDomain_SAI(void);
-#endif /* SAI1 */
+#endif
 static uint32_t RCC_PLL_GetFreqDomain_ADC(void);
 static uint32_t RCC_PLL_GetFreqDomain_48M(void);
 
@@ -91,7 +90,7 @@ static uint32_t RCC_PLL_GetFreqDomain_48M(void);
 static uint32_t RCC_PLLSAI1_GetFreqDomain_SAI(void);
 static uint32_t RCC_PLLSAI1_GetFreqDomain_48M(void);
 static uint32_t RCC_PLLSAI1_GetFreqDomain_ADC(void);
-#endif /* SAI1 */
+#endif
 
 
 static uint32_t RCC_GetSystemClockFreq(void);
@@ -178,23 +177,23 @@ ErrorStatus LL_RCC_DeInit(void)
 
   /* Reset PLLSAI1CFGR register */
   LL_RCC_WriteReg(PLLSAI1CFGR, 0x22041000U);
-#endif /* SAI1 */
+#endif
 
   /* Disable all interrupts */
   LL_RCC_WriteReg(CIER, 0x00000000U);
 
   /* Clear all interrupt flags */
-  vl_mask = RCC_CICR_LSI1RDYC | RCC_CICR_LSERDYC | RCC_CICR_MSIRDYC | RCC_CICR_HSIRDYC | RCC_CICR_HSERDYC |
-            RCC_CICR_PLLRDYC | RCC_CICR_CSSC | RCC_CICR_LSECSSC | RCC_CICR_LSI2RDYC;
+  vl_mask = RCC_CICR_LSI1RDYC | RCC_CICR_LSERDYC | RCC_CICR_MSIRDYC | RCC_CICR_HSIRDYC | RCC_CICR_HSERDYC | RCC_CICR_PLLRDYC | \
+            RCC_CICR_CSSC | RCC_CICR_LSECSSC | RCC_CICR_LSI2RDYC;
 
 #if defined(SAI1)
   vl_mask |= RCC_CICR_PLLSAI1RDYC;
-#endif /* SAI1 */
-
+#endif
+  
 #if defined(RCC_HSI48_SUPPORT)
   vl_mask |= RCC_CICR_HSI48RDYC;
-#endif /* RCC_HSI48_SUPPORT */
-
+#endif
+  
   LL_RCC_WriteReg(CICR, vl_mask);
 
   /* Clear reset flags */
@@ -203,7 +202,7 @@ ErrorStatus LL_RCC_DeInit(void)
 #if defined(RCC_SMPS_SUPPORT)
   /* SMPS reset */
   LL_RCC_WriteReg(SMPSCR, 0x00000301U); /* MSI default clock source */
-#endif /* RCC_SMPS_SUPPORT */
+#endif
 
   /* RF Wakeup Clock Source selection */
   LL_RCC_SetRFWKPClockSource(LL_RCC_RFWKP_CLKSOURCE_NONE);
@@ -211,7 +210,7 @@ ErrorStatus LL_RCC_DeInit(void)
 #if defined(RCC_HSI48_SUPPORT)
   /* HSI48 reset */
   LL_RCC_HSI48_Disable();
-#endif /* RCC_HSI48_SUPPORT */
+#endif
 
   /* HSECR register write unlock & then reset*/
   LL_RCC_WriteReg(HSECR, HSE_CONTROL_UNLOCK_KEY);
@@ -358,7 +357,7 @@ uint32_t LL_RCC_GetSMPSClockFreq(void)
 
   return smps_frequency;
 }
-#endif /* RCC_SMPS_SUPPORT */
+#endif
 
 /**
   * @brief  Return USARTx clock frequency
@@ -464,7 +463,7 @@ uint32_t LL_RCC_GetI2CClockFreq(uint32_t I2CxSource)
         break;
     }
   }
-#endif /* I2C3 */
+#endif
 
   return i2c_frequency;
 }
@@ -513,7 +512,7 @@ uint32_t LL_RCC_GetLPUARTClockFreq(uint32_t LPUARTxSource)
 
   return lpuart_frequency;
 }
-#endif /* LPUART1 */
+#endif
 
 /**
   * @brief  Return LPTIMx clock frequency
@@ -625,6 +624,7 @@ uint32_t LL_RCC_GetSAIClockFreq(uint32_t SAIxSource)
       }
       break;
 
+#if defined(SAI1)
     case LL_RCC_SAI1_CLKSOURCE_PLLSAI1:    /* PLLSAI1 clock used as SAI1 clock source */
       if (LL_RCC_PLLSAI1_IsReady() == 1U)
       {
@@ -634,6 +634,7 @@ uint32_t LL_RCC_GetSAIClockFreq(uint32_t SAIxSource)
         }
       }
       break;
+#endif
 
     case LL_RCC_SAI1_CLKSOURCE_PLL:        /* PLL clock used as SAI1 clock source */
       if (LL_RCC_PLL_IsReady() == 1U)
@@ -652,15 +653,14 @@ uint32_t LL_RCC_GetSAIClockFreq(uint32_t SAIxSource)
   }
   return sai_frequency;
 }
-#endif /* SAI1 */
+#endif
 
 /**
   * @brief  Return CLK48x clock frequency
   * @param  CLK48xSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_CLK48_CLKSOURCE
   * @retval USB clock frequency (in Hz)
-  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1)
-  *                 is not ready
+  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1) is not ready
   */
 uint32_t LL_RCC_GetCLK48ClockFreq(uint32_t CLK48xSource)
 {
@@ -682,7 +682,7 @@ uint32_t LL_RCC_GetCLK48ClockFreq(uint32_t CLK48xSource)
         }
       }
       break;
-#endif /* SAI1 */
+#endif
 
     case LL_RCC_CLK48_CLKSOURCE_PLL:           /* PLL clock used as CLK48 clock source */
       if (LL_RCC_PLL_IsReady() == 1U)
@@ -713,7 +713,7 @@ uint32_t LL_RCC_GetCLK48ClockFreq(uint32_t CLK48xSource)
     default:
       /* Nothing to do */
       break;
-#endif /* RCC_HSI48_SUPPORT */
+#endif
   }
 
   return clk48_frequency;
@@ -725,22 +725,20 @@ uint32_t LL_RCC_GetCLK48ClockFreq(uint32_t CLK48xSource)
   * @param  USBxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_CLK48_CLKSOURCE
   * @retval USB clock frequency (in Hz)
-  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1)
-  *                 is not ready
+  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1) is not ready
   */
 uint32_t LL_RCC_GetUSBClockFreq(uint32_t USBxSource)
 {
   return LL_RCC_GetCLK48ClockFreq(USBxSource);
 }
-#endif /* USB */
+#endif
 
 /**
   * @brief  Return RNGx clock frequency
   * @param  RNGxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_RNG_CLKSOURCE
   * @retval RNG clock frequency (in Hz)
-  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1)
-  *                 is not ready
+  *         - @ref  LL_RCC_PERIPH_FREQUENCY_NO indicates that oscillator (MSI or HSI48) or PLLs (PLL or PLLSAI1) is not ready
   */
 uint32_t LL_RCC_GetRNGClockFreq(uint32_t RNGxSource)
 {
@@ -803,7 +801,7 @@ uint32_t LL_RCC_GetADCClockFreq(uint32_t ADCxSource)
         }
       }
       break;
-#endif /* SAI1 */
+#endif
 
     case LL_RCC_ADC_CLKSOURCE_SYSCLK:        /* SYSCLK clock used as ADC clock source */
       adc_frequency = RCC_GetSystemClockFreq();
@@ -857,11 +855,11 @@ uint32_t LL_RCC_GetRTCClockFreq(void)
       }
       break;
 
-    case LL_RCC_RTC_CLKSOURCE_HSE_DIV32: /* HSE clock used as ADC clock source */
+    case LL_RCC_RTC_CLKSOURCE_HSE_DIV32:        /* HSE clock used as ADC clock source */
       rtc_frequency = HSE_VALUE / 32U;
       break;
 
-    case LL_RCC_RTC_CLKSOURCE_NONE:      /* No clock used as RTC clock source */
+    case LL_RCC_RTC_CLKSOURCE_NONE:          /* No clock used as RTC clock source */
     default:
       rtc_frequency = LL_RCC_PERIPH_FREQUENCY_NA;
       break;
@@ -902,6 +900,7 @@ uint32_t LL_RCC_GetRFWKPClockFreq(void)
 
   return rfwkp_frequency;
 }
+
 
 /**
   * @}
@@ -1015,7 +1014,9 @@ static uint32_t RCC_GetHCLK5ClockFreq(void)
   }
 
   return frequency;
+
 }
+
 
 /**
   * @brief  Return PCLK1 clock frequency
@@ -1045,8 +1046,7 @@ static uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency)
   */
 static uint32_t RCC_PLL_GetFreqDomain_SYS(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI Value/ PLLM) * PLLN
      SYSCLK = PLL_VCO / PLLR
@@ -1089,8 +1089,7 @@ static uint32_t RCC_PLL_GetFreqDomain_SYS(void)
   */
 static uint32_t RCC_PLL_GetFreqDomain_SAI(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI Value / PLLM) * PLLN
      SAI Domain clock = PLL_VCO / PLLP
@@ -1125,7 +1124,7 @@ static uint32_t RCC_PLL_GetFreqDomain_SAI(void)
   return __LL_RCC_CALC_PLLCLK_SAI_FREQ(pllinputfreq, LL_RCC_PLL_GetDivider(),
                                        LL_RCC_PLL_GetN(), LL_RCC_PLL_GetP());
 }
-#endif /* SAI1 */
+#endif
 
 /**
   * @brief  Return PLL clock (PLLPCLK) frequency used for ADC domain
@@ -1133,8 +1132,7 @@ static uint32_t RCC_PLL_GetFreqDomain_SAI(void)
   */
 static uint32_t RCC_PLL_GetFreqDomain_ADC(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI Value / PLLM) * PLLN
      SAI Domain clock = PLL_VCO / PLLP
@@ -1171,14 +1169,14 @@ static uint32_t RCC_PLL_GetFreqDomain_ADC(void)
                                        LL_RCC_PLL_GetN(), LL_RCC_PLL_GetP());
 }
 
+
 /**
   * @brief  Return PLL clock (PLLQCLK) frequency used for 48 MHz domain
   * @retval PLLQCLK clock frequency (in Hz)
   */
 static uint32_t RCC_PLL_GetFreqDomain_48M(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI Value/ PLLM) * PLLN
      48M Domain clock = PLL_VCO / PLLQ
@@ -1222,8 +1220,7 @@ static uint32_t RCC_PLL_GetFreqDomain_48M(void)
   */
 static uint32_t RCC_PLLSAI1_GetFreqDomain_SAI(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLLSAI1_VCO = (HSE_VALUE or HSI_VALUE or MSI Value/ PLLM) * PLLSAI1N */
   /* SAI Domain clock  = PLLSAI1_VCO / PLLSAI1P */
@@ -1265,8 +1262,7 @@ static uint32_t RCC_PLLSAI1_GetFreqDomain_SAI(void)
   */
 static uint32_t RCC_PLLSAI1_GetFreqDomain_48M(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLLSAI1_VCO = (HSE_VALUE or HSI_VALUE or MSI Value/ PLLM) * PLLSAI1N */
   /* 48M Domain clock  = PLLSAI1_VCO / PLLSAI1Q */
@@ -1307,8 +1303,7 @@ static uint32_t RCC_PLLSAI1_GetFreqDomain_48M(void)
   */
 static uint32_t RCC_PLLSAI1_GetFreqDomain_ADC(void)
 {
-  uint32_t pllinputfreq;
-  uint32_t pllsource;
+  uint32_t pllinputfreq, pllsource;
 
   /* PLLSAI1_VCO = (HSE_VALUE or HSI_VALUE or MSI Value/ PLLM) * PLLSAI1N */
   /* 48M Domain clock  = PLLSAI1_VCO / PLLSAI1R */
@@ -1342,7 +1337,8 @@ static uint32_t RCC_PLLSAI1_GetFreqDomain_ADC(void)
   return __LL_RCC_CALC_PLLSAI1_ADC_FREQ(pllinputfreq, LL_RCC_PLL_GetDivider(),
                                         LL_RCC_PLLSAI1_GetN(), LL_RCC_PLLSAI1_GetR());
 }
-#endif /* SAI1 */
+#endif
+
 
 /**
   * @}
@@ -1352,7 +1348,7 @@ static uint32_t RCC_PLLSAI1_GetFreqDomain_ADC(void)
   * @}
   */
 
-#endif /* RCC */
+#endif /* defined(RCC) */
 
 /**
   * @}

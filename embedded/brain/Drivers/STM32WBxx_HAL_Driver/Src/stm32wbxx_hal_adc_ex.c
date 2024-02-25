@@ -7,14 +7,14 @@
   *          peripheral:
   *           + Operation functions
   *             ++ Start, stop, get result of conversions of ADC group injected,
-  *                using 2 possible modes: polling, interruption (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
+  *                using 2 possible modes: polling, interruption (not available on devices: STM32WB10xx, STM32WB15xx).
   *             ++ Calibration
   *               +++ ADC automatic self-calibration
   *               +++ Calibration factors get or set
   *           + Control functions
-  *             ++ Channels configuration on ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx )
+  *             ++ Channels configuration on ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx)
   *           + State functions
-  *             ++ ADC group injected contexts queue management (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx )
+  *             ++ ADC group injected contexts queue management (not available on devices: STM32WB10xx, STM32WB15xx)
   *          Other functions (generic functions) are available in file
   *          "stm32wbxx_hal_adc.c".
   ******************************************************************************
@@ -71,7 +71,6 @@
 /* Calibration time max = 116 / fADC (refer to datasheet)                     */
 /*                      = 158 379 CPU cycles                                  */
 #define ADC_CALIBRATION_TIMEOUT         (158379UL)   /*!< ADC calibration time-out value (unit: CPU cycles) */
-#define ADC_DISABLE_TIMEOUT             (2UL)
 
 /**
   * @}
@@ -99,12 +98,12 @@
       (+) Get calibration factors for single or differential ending.
       (+) Set calibration factors for single or differential ending.
 
-      (+) Start conversion of ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
-      (+) Stop conversion of ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
-      (+) Poll for conversion complete on ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
-      (+) Get result of ADC group injected channel conversion (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
-      (+) Start conversion of ADC group injected and enable interruptions (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
-      (+) Stop conversion of ADC group injected and disable interruptions (not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx ).
+      (+) Start conversion of ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx).
+      (+) Stop conversion of ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx).
+      (+) Poll for conversion complete on ADC group injected (not available on devices: STM32WB10xx, STM32WB15xx).
+      (+) Get result of ADC group injected channel conversion (not available on devices: STM32WB10xx, STM32WB15xx).
+      (+) Start conversion of ADC group injected and enable interruptions (not available on devices: STM32WB10xx, STM32WB15xx).
+      (+) Stop conversion of ADC group injected and disable interruptions (not available on devices: STM32WB10xx, STM32WB15xx).
 
 @endverbatim
   * @{
@@ -120,20 +119,16 @@
   *           @arg @ref ADC_SINGLE_ENDED       Channel in mode input single ended
   *           @arg @ref ADC_DIFFERENTIAL_ENDED Channel in mode input differential ended (1)
   *
-  *         (1) On STM32WB series, parameter not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx.
+  *         (1) On STM32WB serie, parameter not available on devices: STM32WB10xx, STM32WB15xx.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_ADCEx_Calibration_Start(ADC_HandleTypeDef *hadc, uint32_t SingleDiff)
 {
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
   UNUSED(SingleDiff);
 
   uint32_t calibration_index;
   uint32_t calibration_factor_accumulated = 0;
-  uint32_t backup_setting_cfgr1;
-  uint32_t tickstart;
-  uint32_t adc_clk_async_presc;
-  __IO uint32_t delay_cpu_cycles;
 #endif /* ADC_SUPPORT_2_5_MSPS */
 
   HAL_StatusTypeDef tmp_hal_status;
@@ -155,7 +150,7 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_Start(ADC_HandleTypeDef *hadc, uint32_t 
   if (tmp_hal_status == HAL_OK)
   {
     /* Set ADC state */
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
     ADC_STATE_CLR_SET(hadc->State,
                       HAL_ADC_STATE_REG_BUSY,
                       HAL_ADC_STATE_BUSY_INTERNAL);
@@ -166,18 +161,7 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_Start(ADC_HandleTypeDef *hadc, uint32_t 
 #endif /* ADC_SUPPORT_2_5_MSPS */
 
     /* Start ADC calibration in mode single-ended or differential */
-#if defined(ADC_SUPPORT_2_5_MSPS)
-    /* Manage settings impacting calibration */
-    /* - Disable ADC mode auto power-off */
-    /* - Disable ADC DMA transfer request during calibration */
-    /* Note: Specificity of this STM32 series: Calibration factor is          */
-    /*       available in data register and also transferred by DMA.          */
-    /*       To not insert ADC calibration factor among ADC conversion data   */
-    /*       in array variable, DMA transfer must be disabled during          */
-    /*       calibration.                                                     */
-    backup_setting_cfgr1 = READ_BIT(hadc->Instance->CFGR1, ADC_CFGR1_DMAEN | ADC_CFGR1_DMACFG | ADC_CFGR1_AUTOFF);
-    CLEAR_BIT(hadc->Instance->CFGR1, ADC_CFGR1_DMAEN | ADC_CFGR1_DMACFG | ADC_CFGR1_AUTOFF);
-
+#if defined (ADC_SUPPORT_2_5_MSPS)
     /* ADC calibration procedure */
     /* Note: Perform an averaging of 8 calibrations for optimized accuracy */
     for (calibration_index = 0UL; calibration_index < 8UL; calibration_index++)
@@ -206,61 +190,15 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_Start(ADC_HandleTypeDef *hadc, uint32_t 
         return HAL_ERROR;
       }
     }
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
       calibration_factor_accumulated += LL_ADC_GetCalibrationFactor(hadc->Instance);
     }
     /* Compute average */
     calibration_factor_accumulated /= calibration_index;
-    /* Apply calibration factor (requires ADC enable and disable process) */
+    /* Apply calibration factor */
     LL_ADC_Enable(hadc->Instance);
-
-    /* Case of ADC clocked at low frequency: Delay required between ADC enable and disable actions */
-    if(LL_ADC_GetClock(hadc->Instance) == LL_ADC_CLOCK_ASYNC)
-    {
-      adc_clk_async_presc = LL_ADC_GetCommonClock(__LL_ADC_COMMON_INSTANCE(hadc->Instance));
-
-      if(adc_clk_async_presc >= LL_ADC_CLOCK_ASYNC_DIV16)
-      {
-        /* Delay loop initialization and execution */
-        /* Delay depends on ADC clock prescaler: Compute ADC clock asynchronous prescaler to decimal format */
-        delay_cpu_cycles = (1U << ((adc_clk_async_presc >> ADC_CCR_PRESC_Pos) - 3U));
-        /* Divide variable by 2 to compensate partially CPU processing cycles */
-        delay_cpu_cycles >>= 1U;
-
-        while(delay_cpu_cycles != 0)
-        {
-          delay_cpu_cycles--;
-        }
-      }
-    }
-
     LL_ADC_SetCalibrationFactor(hadc->Instance, calibration_factor_accumulated);
     LL_ADC_Disable(hadc->Instance);
-
-    /* Wait for ADC effectively disabled before changing configuration */
-    /* Get tick count */
-    tickstart = HAL_GetTick();
-
-    while (LL_ADC_IsEnabled(hadc->Instance) != 0UL)
-    {
-      if ((HAL_GetTick() - tickstart) > ADC_DISABLE_TIMEOUT)
-      {
-        /* New check to avoid false timeout detection in case of preemption */
-        if (LL_ADC_IsEnabled(hadc->Instance) != 0UL)
-        {
-          /* Update ADC state machine to error */
-          SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
-
-          /* Set ADC error code to ADC peripheral internal error */
-          SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
-
-          return HAL_ERROR;
-        }
-      }
-    }
-
-    /* Restore configuration after calibration */
-    SET_BIT(hadc->Instance->CFGR1, backup_setting_cfgr1);
 #endif /* ADC_SUPPORT_2_5_MSPS */
 
     /* Set ADC state */
@@ -290,25 +228,25 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_Start(ADC_HandleTypeDef *hadc, uint32_t 
   *           @arg @ref ADC_SINGLE_ENDED       Channel in mode input single ended
   *           @arg @ref ADC_DIFFERENTIAL_ENDED Channel in mode input differential ended (1)
   *
-  *         (1) On STM32WB series, parameter not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx.
+  *         (1) On STM32WB serie, parameter not available on devices: STM32WB10xx, STM32WB15xx.
   * @retval Calibration value.
   */
-uint32_t HAL_ADCEx_Calibration_GetValue(const ADC_HandleTypeDef *hadc, uint32_t SingleDiff)
+uint32_t HAL_ADCEx_Calibration_GetValue(ADC_HandleTypeDef *hadc, uint32_t SingleDiff)
 {
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
   UNUSED(SingleDiff);
-#endif /* ADC_SUPPORT_2_5_MSPS */
+#endif
   
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
   assert_param(IS_ADC_SINGLE_DIFFERENTIAL(SingleDiff));
 
   /* Return the selected ADC calibration value */
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
   return LL_ADC_GetCalibrationFactor(hadc->Instance);
 #else
   return LL_ADC_GetCalibrationFactor(hadc->Instance, SingleDiff);
-#endif /* ADC_SUPPORT_2_5_MSPS */
+#endif
 }
 
 /**
@@ -319,19 +257,19 @@ uint32_t HAL_ADCEx_Calibration_GetValue(const ADC_HandleTypeDef *hadc, uint32_t 
   *           @arg @ref ADC_SINGLE_ENDED       Channel in mode input single ended
   *           @arg @ref ADC_DIFFERENTIAL_ENDED Channel in mode input differential ended (1)
   *
-  *         (1) On STM32WB series, parameter not available on devices: STM32WB10xx, STM32WB15xx, STM32WB1Mxx.
+  *         (1) On STM32WB serie, parameter not available on devices: STM32WB10xx, STM32WB15xx.
   * @param CalibrationFactor Calibration factor (coded on 7 bits maximum)
   * @retval HAL state
   */
 HAL_StatusTypeDef HAL_ADCEx_Calibration_SetValue(ADC_HandleTypeDef *hadc, uint32_t SingleDiff, uint32_t CalibrationFactor)
 {
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
   UNUSED(SingleDiff);
-#endif /* ADC_SUPPORT_2_5_MSPS */
-
+#endif
+  
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
   uint32_t tmp_adc_is_conversion_on_going_regular;
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
   uint32_t tmp_adc_is_conversion_on_going_injected;
@@ -348,7 +286,7 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_SetValue(ADC_HandleTypeDef *hadc, uint32
   /* Verification of hardware constraints before modifying the calibration    */
   /* factors register: ADC must be enabled, no conversion on going.           */
   tmp_adc_is_conversion_on_going_regular = LL_ADC_REG_IsConversionOngoing(hadc->Instance);
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
   tmp_adc_is_conversion_on_going_injected = LL_ADC_INJ_IsConversionOngoing(hadc->Instance);
@@ -356,7 +294,7 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_SetValue(ADC_HandleTypeDef *hadc, uint32
 
   if ((LL_ADC_IsEnabled(hadc->Instance) != 0UL)
       && (tmp_adc_is_conversion_on_going_regular == 0UL)
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
       && (tmp_adc_is_conversion_on_going_injected == 0UL)
@@ -364,11 +302,11 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_SetValue(ADC_HandleTypeDef *hadc, uint32
      )
   {
     /* Set the selected ADC calibration value */
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
     LL_ADC_SetCalibrationFactor(hadc->Instance, CalibrationFactor);
 #else
     LL_ADC_SetCalibrationFactor(hadc->Instance, SingleDiff, CalibrationFactor);
-#endif /* ADC_SUPPORT_2_5_MSPS */
+#endif
   }
   else
   {
@@ -388,7 +326,7 @@ HAL_StatusTypeDef HAL_ADCEx_Calibration_SetValue(ADC_HandleTypeDef *hadc, uint32
   return tmp_hal_status;
 }
 
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
 /**
@@ -842,7 +780,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef *hadc)
 }
 #endif /* ADC_SUPPORT_2_5_MSPS */
 
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
 /**
@@ -873,7 +811,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedStop_IT(ADC_HandleTypeDef *hadc)
   *            @arg @ref ADC_INJECTED_RANK_4 ADC group injected rank 4
   * @retval ADC group injected conversion data
   */
-uint32_t HAL_ADCEx_InjectedGetValue(const ADC_HandleTypeDef *hadc, uint32_t InjectedRank)
+uint32_t HAL_ADCEx_InjectedGetValue(ADC_HandleTypeDef *hadc, uint32_t InjectedRank)
 {
   uint32_t tmp_jdr;
 
@@ -984,7 +922,7 @@ __weak void HAL_ADCEx_EndOfSamplingCallback(ADC_HandleTypeDef *hadc)
   */
 }
 
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
 /**
@@ -1187,7 +1125,7 @@ HAL_StatusTypeDef HAL_ADCEx_RegularStop_DMA(ADC_HandleTypeDef *hadc)
   * @}
   */
 
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
 /** @defgroup ADCEx_Exported_Functions_Group2 ADC Extended Peripheral Control functions
@@ -1241,7 +1179,7 @@ HAL_StatusTypeDef HAL_ADCEx_RegularStop_DMA(ADC_HandleTypeDef *hadc)
   *         injected group.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc, const ADC_InjectionConfTypeDef *sConfigInjected)
+HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc, ADC_InjectionConfTypeDef *sConfigInjected)
 {
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
   uint32_t tmpOffsetShifted;
@@ -1655,7 +1593,7 @@ HAL_StatusTypeDef HAL_ADCEx_InjectedConfigChannel(ADC_HandleTypeDef *hadc, const
 }
 #endif /* ADC_SUPPORT_2_5_MSPS */
 
-#if  defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature "ADC group injected" not available on ADC peripheral of this STM32WB device */
 #else
 /**
@@ -1767,7 +1705,7 @@ HAL_StatusTypeDef HAL_ADCEx_DisableVoltageRegulator(ADC_HandleTypeDef *hadc)
   return tmp_hal_status;
 }
 
-#if defined(ADC_SUPPORT_2_5_MSPS)
+#if defined (ADC_SUPPORT_2_5_MSPS)
 /* Feature " ADC deep power-down" not available on ADC peripheral of this STM32WB device */
 #else
 /**
@@ -1806,7 +1744,7 @@ HAL_StatusTypeDef HAL_ADCEx_EnterADCDeepPowerDownMode(ADC_HandleTypeDef *hadc)
 
   return tmp_hal_status;
 }
-#endif /* ADC_SUPPORT_2_5_MSPS */
+#endif
 
 /**
   * @}

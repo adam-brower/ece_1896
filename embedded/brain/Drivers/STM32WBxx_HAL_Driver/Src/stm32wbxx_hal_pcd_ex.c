@@ -161,8 +161,23 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   USB_TypeDef *USBx = hpcd->Instance;
   uint32_t tickstart = HAL_GetTick();
 
-  /* Wait for Min DCD Timeout */
-  HAL_Delay(300U);
+  /* Wait Detect flag or a timeout is happen */
+  while ((USBx->BCDR & USB_BCDR_DCDET) == 0U)
+  {
+    /* Check for the Timeout */
+    if ((HAL_GetTick() - tickstart) > 1000U)
+    {
+#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+      hpcd->BCDCallback(hpcd, PCD_BCD_ERROR);
+#else
+      HAL_PCDEx_BCD_Callback(hpcd, PCD_BCD_ERROR);
+#endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+
+      return;
+    }
+  }
+
+  HAL_Delay(200U);
 
   /* Data Pin Contact ? Check Detect flag */
   if ((USBx->BCDR & USB_BCDR_DCDET) == USB_BCDR_DCDET)
@@ -222,24 +237,11 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
 
   /* Battery Charging capability discovery finished Start Enumeration */
   (void)HAL_PCDEx_DeActivateBCD(hpcd);
-
-  /* Check for the Timeout, else start USB Device */
-  if ((HAL_GetTick() - tickstart) > 1000U)
-  {
 #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
-    hpcd->BCDCallback(hpcd, PCD_BCD_ERROR);
+  hpcd->BCDCallback(hpcd, PCD_BCD_DISCOVERY_COMPLETED);
 #else
-    HAL_PCDEx_BCD_Callback(hpcd, PCD_BCD_ERROR);
+  HAL_PCDEx_BCD_Callback(hpcd, PCD_BCD_DISCOVERY_COMPLETED);
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
-  }
-  else
-  {
-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
-    hpcd->BCDCallback(hpcd, PCD_BCD_DISCOVERY_COMPLETED);
-#else
-    HAL_PCDEx_BCD_Callback(hpcd, PCD_BCD_DISCOVERY_COMPLETED);
-#endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
-  }
 }
 
 
