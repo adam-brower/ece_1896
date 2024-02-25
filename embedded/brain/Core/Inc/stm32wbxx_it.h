@@ -2,18 +2,19 @@
 /**
   ******************************************************************************
   * @file    stm32wbxx_it.h
+  * @author  MCD Application Team
   * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2019-2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
- ******************************************************************************
+  ******************************************************************************
   */
 /* USER CODE END Header */
 
@@ -27,7 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app_common.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -55,8 +56,19 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+void RTC_WKUP_IRQHandler(void);
+void DMA1_Channel4_IRQHandler(void);
+void USART1_IRQHandler(void);
+void LPUART1_IRQHandler(void);
+void IPCC_C1_RX_IRQHandler(void);
+void IPCC_C1_TX_IRQHandler(void);
+void HSEM_IRQHandler(void);
+void DMA2_Channel4_IRQHandler(void);
 /* USER CODE BEGIN EFP */
-
+void RTC_WKUP_IRQHandler(void);
+void PUSH_BUTTON_SW1_EXTI_IRQHandler(void);
+void PUSH_BUTTON_SW2_EXTI_IRQHandler(void);
+void PUSH_BUTTON_SW3_EXTI_IRQHandler(void);
 /* USER CODE END EFP */
 
 #ifdef __cplusplus
