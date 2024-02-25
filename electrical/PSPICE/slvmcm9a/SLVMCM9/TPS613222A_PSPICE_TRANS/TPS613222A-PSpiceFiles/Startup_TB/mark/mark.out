@@ -1,0 +1,396 @@
+
+**** 02/17/24 12:39:25 **** PSpice 23.1.0 (24 January 2024) *** ID# 0 ********
+
+ ** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSP
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "mark.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../tps613222a_trans.lib" 
+* From [PSPICE NETLIST] section of C:\SPB_DATA\cdssetup\OrCAD_PSpice\23.1.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 5m 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\Startup_TB.net" 
+
+
+
+**** INCLUDING Startup_TB.net ****
+* source TPS613222A
+V_VIN         VIN 0  
++PULSE 0 2 0.1m 10u 1000u 1.5m 2
+C_C1         VIN 0  4.7u  TC=0,0 
+X_L1         VIN SW LDCR PARAMS:  L=2.2u  DCR=120m IC=0
+X_U1         SW VOUT 0 TPS613222A_TRANS
+C_C2         VOUT 0  44u IC={VOUT*SS} TC=0,0 
+R_RLOAD         0 VOUT  10 TC=0,0 
+.PARAM  ss=0 vout=5
+
+**** RESUMING mark.cir ****
+.END
+
+**** 02/17/24 12:39:25 **** PSpice 23.1.0 (24 January 2024) *** ID# 0 ********
+
+ ** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSP
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U1.X_UTOFF_U18.D_D1 
+          IS    1.000000E-15 
+           N     .1          
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_UTOFF_U22.D_D1 
+          IS    1.000000E-15 
+           N     .1          
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_UTOFF_U23.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_UTOFF_U16.dd1            X_U1.X_U668.dd1 
+          IS  100.000000E-21                  100.000000E-21 
+           N    1.000000E-03                    1.000000E-03 
+          RS     .05                             .05         
+          TT   10.000000E-12                   10.000000E-12 
+
+
+               X_U1.X_U657.D_D1                X_U1.X_U79.D_D1 
+          IS    1.000000E-15                    1.000000E-15 
+           N     .1                              .1          
+          RS     .05                             .05         
+          TT   10.000000E-12                   10.000000E-12 
+
+
+               X_U1.X_U5_U28.dd 
+          IS    1.000000E-15 
+           N     .01         
+          TT   10.000000E-12 
+
+
+               X_U1.X_U5_U26.dd 
+          IS    1.000000E-15 
+           N     .01         
+          TT   10.000000E-12 
+
+
+               X_U1.X_U5_U66.D_D1 
+          IS    1.000000E-15 
+           N     .1          
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_U5_U32.dd 
+          IS    1.000000E-15 
+           N     .01         
+          TT   10.000000E-12 
+
+
+               X_U1.X_U5_U12.dd 
+          IS    1.000000E-15 
+           N     .01         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U114.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U15.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U18.D_D1 
+          IS    1.000000E-15 
+           N     .1          
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U13.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U117.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U16.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u3_U14.dd1 
+          IS  100.000000E-21 
+           N     .1          
+          RS    1.4          
+          TT   10.000000E-12 
+
+
+               X_U1.X_u2_U79.dd 
+          IS    1.000000E-15 
+           N     .01         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u2_U73.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u2_U37.D_D1 
+          IS    1.000000E-15 
+           N     .1          
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u2_U72.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+               X_U1.X_u2_U71.dd1 
+          IS  100.000000E-21 
+           N    1.000000E-03 
+          RS     .05         
+          TT   10.000000E-12 
+
+
+**** 02/17/24 12:39:25 **** PSpice 23.1.0 (24 January 2024) *** ID# 0 ********
+
+ ** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSP
+
+
+ ****     MOSFET MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               PMOS_SIMPLE     
+               PMOS            
+       LEVEL    1            
+           L  100.000000E-06 
+           W  100.000000E-06 
+         VTO    0            
+          KP   20.000000E-06 
+       GAMMA    0            
+         PHI     .6          
+      LAMBDA    0            
+          IS   10.000000E-15 
+          JS    0            
+          PB     .8          
+        PBSW     .8          
+          CJ    0            
+        CJSW    0            
+        CGSO    0            
+        CGDO    0            
+        CGBO    0            
+         TOX    0            
+          XJ    0            
+       UCRIT   10.000000E+03 
+      DIOMOD    1            
+         VFB    0            
+        LETA    0            
+        WETA    0            
+          U0    0            
+        TEMP    0            
+         VDD    5            
+       XPART    0            
+
+
+**** 02/17/24 12:39:25 **** PSpice 23.1.0 (24 January 2024) *** ID# 0 ********
+
+ ** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSP
+
+
+ ****     Voltage Controlled Switch MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U1.X_UTOFF_S1._UTOFF_S1 
+         RON    1            
+        ROFF    1.000000E+06 
+         VON     .75         
+        VOFF     .25         
+
+
+               X_U1.X_UTOFF_S2._UTOFF_S2 
+         RON    1            
+        ROFF    1.000000E+06 
+         VON     .75         
+        VOFF     .25         
+
+
+               X_U1.X_U5_S18._U5_S18           X_U1.X_S1._S1   
+         RON     .45                            1.000000E-03 
+        ROFF    1.000000E+09                    1.000000E+09 
+         VON     .2                             1            
+        VOFF     .8                             0            
+
+
+               X_U1.X_u3_S6._u3_S6 
+         RON    4.5          
+        ROFF   10.000000E+09 
+         VON     .8          
+        VOFF     .2          
+
+
+               X_U1.X_u3_S3._u3_S3 
+         RON     .15         
+        ROFF   10.000000E+09 
+         VON     .8          
+        VOFF     .2          
+
+
+               X_U1.X_u3_S4._u3_S4 
+         RON     .75         
+        ROFF    1.000000E+12 
+         VON     .6          
+        VOFF     .4          
+
+
+               X_U1.X_u3_S7._u3_S7 
+         RON    1.000000E-03 
+        ROFF    1.000000E+09 
+         VON     .6          
+        VOFF     .4          
+
+
+               X_U1.X_u2_S3._u2_S3 
+         RON    1            
+        ROFF    1.000000E+09 
+         VON    1            
+        VOFF    0            
+
+
+               X_U1.X_u2_S4._u2_S4 
+         RON    1.000000E-03 
+        ROFF    1.000000E+09 
+         VON     .25         
+        VOFF     .75         
+
+
+ERROR(ORPSIM-16587): Cannot simulate circuit because there are more than 250 devices, which exceeds the limit for PSpice A/D Basics. To simulate this circuit, upgrade to a higher license.
+
+
+ABORTING SIMULATION
+**** 02/17/24 12:39:25 **** PSpice 23.1.0 (24 January 2024) *** ID# 0 ********
+
+ ** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSP
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+Node counts:
+  Top level (NUNODS)                =           3
+  External (NCNODS)                 =         296
+  Total (NUMNOD)                    =         322
+
+Total device count (NUMEL)          =         483
+  Capacitors (C)                    =         121
+  Diodes (D)                        =          31
+  VCVS (E)                          =         111
+  CCCS (F)                          =           1
+  VCCS (G)                          =          20
+  CCVS (H)                          =           4
+  Inductors (L)                     =           1
+  MosFETs (M)                       =           1
+  Resistors (R)                     =         136
+  VSwitches (S)                     =          10
+  Voltage Sources (V)               =          46
+
+Number of subcircuits (X)           =         107
+
+Matrix statistics:
+  Matrix size (NSTOP)               =         484
+  Initial no. elements (NTTAR)      =        1201
+  No. elements w/ fillin (NTTBR)    =        1201
+  No. fillins (IFILL)               =           0
+  No. overflows (NTTOV)             =           0
+  No. LU operations (IOPS)          =           0
+  Percent sparsity (PERSPA)         =      99.487
+
+Analysis statistics:
+  No. total time points (NUMTTP)    =           0
+  No. rejected time points (NUMRTP) =           0
+  No. iterations (NUMNIT)           =           0
+
+Load Threads                        =           1
+
+Runtime statistics:                       Seconds      Iterations
+  Matrix load                       =        0.00
+  Matrix solution                   =        0.00               1
+  Readin                            =         .03
+  General setup                     =         .03
+  CMI setup                     =        0.00
+  Setup                             =         .03
+  DC sweep                          =        0.00               0
+  Bias point                        =        0.00               0
+  AC and noise                      =        0.00               0
+  Total transient analysis          =        0.00
+  Output                            =        0.00
+  Overhead                          =         .09
+  Total job time (using Solver 1)   =         .66
+

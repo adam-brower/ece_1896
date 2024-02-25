@@ -1,0 +1,8 @@
+* source TPS613222A
+C_C2         VOUT 0  10u IC={VOUT*SS} TC=0,0 
+V_V1         VIN 0 2
+R_RLOAD         0 VOUT  {VOUT/70m} TC=0,0 
+C_C1         VIN 0  150u  TC=0,0 
+X_L1         VIN SW LDCR PARAMS:  L=2.2u  DCR=80m IC=0
+X_U1         SW VOUT 0 TPS613222A_TRANS
+.PARAM  ss=1 vout=5

@@ -12,7 +12,7 @@ ratio = extref_nom / battCut;
 R1 = 200;
 R2 = 5600;
 resRatio_nom = (R2) / (R1 + R2);
-resTol = 0.005;
+resTol = 0.01;
 
 ratioErrorPer = ((resRatio_nom - ratio) / (ratio)) * 100;
 

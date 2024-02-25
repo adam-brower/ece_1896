@@ -1,0 +1,6 @@
+* source BOOST_TRANSIENT
+E_U2         VOUT 0 VALUE {LIMIT(V(N00163,0)*1E6,-15V,+15V)}
+C_C1         N00163 VOUT  1u  TC=0,0 
+R_R1         N00163 VOUT  1k TC=0,0 
+R_R2         VIN N00163  1k TC=0,0 
+V_V1         VIN 0 1V

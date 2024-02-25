@@ -1,0 +1,115 @@
+
+**** 01/04/18 14:23:31 ***** PSpice 16.6.0 (October 2012) ***** ID# 0 ********
+
+ ** Profile: "Startup_TB-trans"  [ c:\elab_model_ws\elab_model_ds\part_numbers\tps61322\release_ti\pspice\tps61322_pspice_trans\tps61
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "trans.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../tps61322_trans.lib" 
+* From [PSPICE NETLIST] section of C:\Users\a0132703\Documents\cdssetup\OrCAD_PSpice/16.6.0/PSpice.ini file:
+.lib "C:\Cadence\SPB_166\tools\pspice\library\nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 1.5m 0 10n SKIPBP 
+.OPTIONS ADVCONV
+.OPTIONS ITL2= 40
+.OPTIONS ITL4= 40
+.PROBE64 V(alias(*)) I(alias(*)) 
+.INC "..\Startup_TB.net" 
+
+
+
+**** INCLUDING Startup_TB.net ****
+* source TPS61322_TRANS
+X_U1         SW VOUT 0 TPS61322_TRANS
+V_VIN         VIN 0  
++PULSE 0 1.2 0.1m 10u 1000u 1.5m 2
+C_C2         VOUT 0  10u IC={VOUT*SS} TC=0,0 
+R_RLOAD         0 VOUT  200 TC=0,0 
+C_C1         VIN 0  150u  TC=0,0 
+X_L1         VIN SW LDCR PARAMS:  L=2.2u  DCR=80m IC=0
+.PARAM  ss=0 vout=2.2
+
+**** RESUMING trans.cir ****
+.END
+
+INFO(ORPSIM-15423): Unable to find index file tps61322_trans.ind for library file tps61322_trans.lib.
+
+INFO(ORPSIM-15422): Making new index file tps61322_trans.ind for library file tps61322_trans.lib.
+
+Index has 30 entries from 1 file(s).
+
+**** 01/04/18 14:23:31 ***** PSpice 16.6.0 (October 2012) ***** ID# 0 ********
+
+ ** Profile: "Startup_TB-trans"  [ c:\elab_model_ws\elab_model_ds\part_numbers\tps61322\release_ti\pspice\tps61322_pspice_trans\tps61
+
+
+ ****     MOSFET MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               PMOS_SIMPLE     
+               PMOS            
+       LEVEL    1            
+           L  100.000000E-06 
+           W  100.000000E-06 
+         VTO    0            
+          KP   20.000000E-06 
+       GAMMA    0            
+         PHI     .6          
+      LAMBDA    0            
+          IS   10.000000E-15 
+          JS    0            
+          PB     .8          
+        PBSW     .8          
+          CJ    0            
+        CJSW    0            
+        CGSO    0            
+        CGDO    0            
+        CGBO    0            
+         TOX    0            
+          XJ    0            
+       UCRIT   10.000000E+03 
+      DIOMOD    1            
+         VFB    0            
+        LETA    0            
+        WETA    0            
+          U0    0            
+        TEMP    0            
+         VDD    5            
+       XPART    0            
+
+
+          JOB ABORTED
+
+**** 01/04/18 14:23:31 ***** PSpice 16.6.0 (October 2012) ***** ID# 0 ********
+
+ ** Profile: "Startup_TB-trans"  [ c:\elab_model_ws\elab_model_ds\part_numbers\tps61322\release_ti\pspice\tps61322_pspice_trans\tps61
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =        9.02
+

@@ -1,0 +1,22 @@
+** Profile: "Steady_State_TB-trans"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSPICE_TRANS\tps613222a-pspicefiles\steady_state_tb\trans.sim ] 
+
+** Creating circuit file "trans.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../tps613222a_trans.lib" 
+* From [PSPICE NETLIST] section of C:\SPB_DATA\cdssetup\OrCAD_PSpice\23.1.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 0.1m 0 10n SKIPBP 
+.OPTIONS ADVCONV
+.OPTIONS ITL2= 40
+.OPTIONS ITL4= 40
+.PROBE64 V(alias(*)) I(alias(*)) 
+.INC "..\Steady_State_TB.net" 
+
+
+.END

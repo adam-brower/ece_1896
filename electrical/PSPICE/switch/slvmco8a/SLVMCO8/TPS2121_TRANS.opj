@@ -1,0 +1,200 @@
+(ExpressProject "TPS25942A_TRANS"
+  (ProjectVersion "19981106")
+  (SoftwareVersion "23.1 S002 (4170606)  [2/5/2024]-[05/10/18]")
+  (ProjectType "Analog or A/D Mixed Mode")
+  (Folder "Design Resources"
+    (Folder "Library"
+      (File ".\tps2121_trans.olb"
+        (Type "Schematic Library")))
+    (NoModify)
+    (File ".\tps2121_trans.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (PSPICE_Regenerate_Netlist_Flag "FALSE")
+    (RootChangedForceReNetlist "x")
+    (Netlist_TAB "4")
+    (PSPICE_Output_File "TPS2121_TRANS.lib")
+    (PSPICE_View_Output "TRUE")
+    (PSPICE_Subcircuit_Format "TRUE")
+    (PSPICE_Do_DRC_Markers "TRUE")
+    (PSPICE_Hier_Format "FALSE")
+    (PSPICE_Hier_Descend "TRUE")
+    (PSPICE_Hier_DoNot_Descend "FALSE")
+    (PSPICE_Alt_Template "PSpiceTemplate")
+    (DOCKED "TRUE")
+    (DOCKING_POSITION "59420"))
+  (Folder "Layout")
+  (Folder "Outputs")
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles"
+      (ActiveProfile ".\tps2121_trans-pspicefiles\tps2121_startup\trans.sim")
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\tps2121_trans-pspicefiles\tps2121_startup\trans.sim"
+        (DisplayName "TPS2121_STARTUP-TRANS")
+        (Type "PSpice Profile")))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User))
+    (Folder "Model Libraries"
+      (Sort User)
+      (File ".\tps2121_trans.lib"
+        (Type "PSpiceLibrary")
+        (DisplayName ".\tps2121_trans.lib"))))
+  (DefaultLibraryBrowseDirectory "library\PSpice")
+  (PartMRUSelector
+    (TPS2121_TRANS
+      (FullPartName "TPS2121_TRANS.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\PART_NUMBERS\TPS2121\ACTIVE_WORK_FPT\EXPERIMENTS\TPS2121_PSPICE_TRANS\TPS2121_TRANS.OLB")
+      (DeviceIndex "0"))
+    (S
+      (FullPartName "S.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (AND2_BASIC_GEN
+      (FullPartName "AND2_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (BUF_DELAY_BASIC_GEN
+      (FullPartName "BUF_DELAY_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (VDC
+      (FullPartName "VDC.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (NOR2_BASIC_GEN
+      (FullPartName "NOR2_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (OR2_BASIC_GEN
+      (FullPartName "OR2_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (C
+      (FullPartName "C.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (INV_BASIC_GEN
+      (FullPartName "INV_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (E
+      (FullPartName "E.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (INV_DELAY_BASIC_GEN
+      (FullPartName "INV_DELAY_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (COMPHYS_BASIC_GEN
+      (FullPartName "COMPHYS_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\COMPARATOR_GEN.OLB")
+      (DeviceIndex "0"))
+    (SRLATCHRHP_BASIC_GEN
+      (FullPartName "SRLATCHRHP_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (ONE_SHOT
+      (FullPartName "ONE_SHOT.Normal")
+      (LibraryName
+         "C:\ELABTRANS_WS\ELABTRANS_DS\PART_NUMBERS\TPS2592\ACTIVE_WORK_SANKALP\PSPICE\TPS2592_PSPICE_TRANS\GENERIC.OLB")
+      (DeviceIndex "0"))
+    (ABM2
+      (FullPartName "ABM2.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ABM.OLB")
+      (DeviceIndex "0"))
+    (0
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (BUF_BASIC_GEN
+      (FullPartName "BUF_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (DFFSBRB_RHPBASIC_GEN
+      (FullPartName "DFFSBRB_RHPBASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (VPULSE
+      (FullPartName "VPULSE.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (AND3_BASIC_GEN
+      (FullPartName "AND3_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (SRLATCHSHP_BASIC_GEN
+      (FullPartName "SRLATCHSHP_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (SBRBLATCHSHP_BASIC_GEN
+      (FullPartName "SBRBLATCHSHP_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\GATES_GEN.OLB")
+      (DeviceIndex "0"))
+    (COMP_BASIC_GEN
+      (FullPartName "COMP_BASIC_GEN.Normal")
+      (LibraryName
+         "C:\FPT_WS\FPT_DS\MISC\LDO TRAINING\STANDARD MACRO OLB FILES\COMPARATOR_GEN.OLB")
+      (DeviceIndex "0"))
+    (ABM/I
+      (FullPartName "ABM/I.Normal")
+      (LibraryName "C:\CADENCE\SPB_16.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ABM.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "D:\x0191627_Data\Hot Swap Controllers\TPS2594x Revision_1P2\TPS25942A\Active_Work_KarMic\PSPICE\TPS25942A_PSPICE_TRANS")
+  (MPSSessionName "marka")
+  (ISPCBBASICLICENSE "false")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\switch\slvmco8a\SLVMCO8\tps2121_trans.dsn")
+      (Path "Design Resources"
+         "C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\switch\slvmco8a\SLVMCO8\tps2121_trans.dsn"
+         "TPS2121_STARTUP")
+      (Select "Design Resources"
+         "C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\switch\slvmco8a\SLVMCO8\tps2121_trans.dsn"
+         "TPS2121_STARTUP" "PAGE1"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 0 0 0 200 0 285"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 5 1290 24 549")
+        (Scroll "309 404")
+        (Zoom "200")
+        (Occurrence "/"))
+      (Path
+         "C:\USERS\MARKA\SPRING-2024\SENIOR-DESIGN\ECE_1896\ELECTRICAL\PSPICE\SWITCH\SLVMCO8A\SLVMCO8\TPS2121_TRANS.DSN")
+      (Schematic "TPS2121_STARTUP")
+      (Page "PAGE1")))
+  (Folder "Logs"))

@@ -44,13 +44,12 @@ ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c3;
 
-UART_HandleTypeDef hlpuart1;
-
 SAI_HandleTypeDef hsai_BlockA1;
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 PCD_HandleTypeDef hpcd_USB_FS;
@@ -68,9 +67,9 @@ static void MX_I2C3_Init(void);
 static void MX_SAI1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_ADC1_Init(void);
-static void MX_LPUART1_UART_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_TIM1_Init(void);
 static void MX_RF_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -117,9 +116,9 @@ int main(void)
   MX_SAI1_Init();
   MX_SPI2_Init();
   MX_ADC1_Init();
-  MX_LPUART1_UART_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
+  MX_TIM1_Init();
   MX_RF_Init();
   /* USER CODE BEGIN 2 */
 
@@ -328,54 +327,6 @@ static void MX_I2C3_Init(void)
 }
 
 /**
-  * @brief LPUART1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_LPUART1_UART_Init(void)
-{
-
-  /* USER CODE BEGIN LPUART1_Init 0 */
-
-  /* USER CODE END LPUART1_Init 0 */
-
-  /* USER CODE BEGIN LPUART1_Init 1 */
-
-  /* USER CODE END LPUART1_Init 1 */
-  hlpuart1.Instance = LPUART1;
-  hlpuart1.Init.BaudRate = 209700;
-  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
-  hlpuart1.Init.StopBits = UART_STOPBITS_1;
-  hlpuart1.Init.Parity = UART_PARITY_NONE;
-  hlpuart1.Init.Mode = UART_MODE_TX_RX;
-  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
-  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN LPUART1_Init 2 */
-
-  /* USER CODE END LPUART1_Init 2 */
-
-}
-
-/**
   * @brief RF Initialization Function
   * @param None
   * @retval None
@@ -418,7 +369,7 @@ static void MX_SAI1_Init(void)
   hsai_BlockA1.Init.NoDivider = SAI_MASTERDIVIDER_ENABLE;
   hsai_BlockA1.Init.MckOverSampling = SAI_MCK_OVERSAMPLING_DISABLE;
   hsai_BlockA1.Init.FIFOThreshold = SAI_FIFOTHRESHOLD_EMPTY;
-  hsai_BlockA1.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_192K;
+  hsai_BlockA1.Init.AudioFrequency = SAI_AUDIO_FREQUENCY_44K;
   hsai_BlockA1.Init.SynchroExt = SAI_SYNCEXT_DISABLE;
   hsai_BlockA1.Init.MonoStereoMode = SAI_STEREOMODE;
   hsai_BlockA1.Init.CompandingMode = SAI_NOCOMPANDING;
@@ -510,6 +461,57 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_Encoder_InitTypeDef sConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC1Filter = 0;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+  sConfig.IC2Filter = 0;
+  if (HAL_TIM_Encoder_Init(&htim1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
 
 }
 
@@ -610,22 +612,90 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(TFT_RST_GPIO_Port, TFT_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, PULSE_CHRG_SEL_Pin|TFT_RST_Pin|I2S_AMP_SD_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : TFT_RST_Pin */
-  GPIO_InitStruct.Pin = TFT_RST_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, LED_BLUE_Pin|LED_YELLOW_Pin|GPIO_PIN_11|GAIN_3dB_Pin
+                          |Gain_6dB_Pin|GAIN_15dB_Pin|BOOST_EN_Pin|GAUGE_IO_Pin
+                          |BATT_DETECT_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(Gain_12dB_GPIO_Port, Gain_12dB_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(PULSE_CHRG_EN_GPIO_Port, PULSE_CHRG_EN_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PULSE_CHRG_SEL_Pin TFT_RST_Pin I2S_AMP_SD_Pin */
+  GPIO_InitStruct.Pin = PULSE_CHRG_SEL_Pin|TFT_RST_Pin|I2S_AMP_SD_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(TFT_RST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SD__CARD_DETECT_Pin */
+  GPIO_InitStruct.Pin = SD__CARD_DETECT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(SD__CARD_DETECT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : GYRO_EXTI_Pin EXTI_ROT_SWT_Pin */
+  GPIO_InitStruct.Pin = GYRO_EXTI_Pin|EXTI_ROT_SWT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : TFT_WAIT_Pin */
   GPIO_InitStruct.Pin = TFT_WAIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(TFT_WAIT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LED_BLUE_Pin LED_YELLOW_Pin PB11 GAIN_3dB_Pin
+                           Gain_6dB_Pin GAIN_15dB_Pin BOOST_EN_Pin GAUGE_IO_Pin
+                           BATT_DETECT_Pin */
+  GPIO_InitStruct.Pin = LED_BLUE_Pin|LED_YELLOW_Pin|GPIO_PIN_11|GAIN_3dB_Pin
+                          |Gain_6dB_Pin|GAIN_15dB_Pin|BOOST_EN_Pin|GAUGE_IO_Pin
+                          |BATT_DETECT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : Gain_12dB_Pin */
+  GPIO_InitStruct.Pin = Gain_12dB_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(Gain_12dB_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PULSE_CHRG_EN_Pin */
+  GPIO_InitStruct.Pin = PULSE_CHRG_EN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PULSE_CHRG_EN_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : EXTI_BUTTON_1_Pin EXTI_BUTTON_2_Pin EXTI_BUTTON_3_Pin */
+  GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : EXTI_PWR_SWT_STAT_Pin */
+  GPIO_InitStruct.Pin = EXTI_PWR_SWT_STAT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(EXTI_PWR_SWT_STAT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : EXTI_PRESSURE_ALARM_Pin */
+  GPIO_InitStruct.Pin = EXTI_PRESSURE_ALARM_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

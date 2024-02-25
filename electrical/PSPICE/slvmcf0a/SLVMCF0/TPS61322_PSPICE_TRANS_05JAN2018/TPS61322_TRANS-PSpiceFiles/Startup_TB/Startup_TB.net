@@ -1,0 +1,9 @@
+* source TPS61322_TRANS
+X_U1         SW VOUT 0 TPS61322_TRANS
+V_VIN         VIN 0  
++PULSE 0 1.2 0.1m 10u 1000u 1.5m 2
+C_C2         VOUT 0  10u IC={VOUT*SS} TC=0,0 
+R_RLOAD         0 VOUT  200 TC=0,0 
+C_C1         VIN 0  150u  TC=0,0 
+X_L1         VIN SW LDCR PARAMS:  L=2.2u  DCR=80m IC=0
+.PARAM  ss=0 vout=2.2

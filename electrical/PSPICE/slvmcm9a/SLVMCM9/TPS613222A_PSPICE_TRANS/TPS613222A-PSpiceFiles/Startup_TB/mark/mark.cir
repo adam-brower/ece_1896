@@ -1,0 +1,20 @@
+** Profile: "Startup_TB-mark"  [ C:\Users\marka\Spring-2024\Senior-Design\ece_1896\electrical\PSPICE\slvmcm9a\SLVMCM9\TPS613222A_PSPICE_TRANS\TPS613222A-PSpiceFiles\Startup_TB\mark.sim ] 
+
+** Creating circuit file "mark.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../tps613222a_trans.lib" 
+* From [PSPICE NETLIST] section of C:\SPB_DATA\cdssetup\OrCAD_PSpice\23.1.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 5m 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\Startup_TB.net" 
+
+
+.END

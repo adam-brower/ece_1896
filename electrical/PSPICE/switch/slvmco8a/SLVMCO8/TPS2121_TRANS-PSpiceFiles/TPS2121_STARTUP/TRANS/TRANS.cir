@@ -1,0 +1,21 @@
+** Profile: "TPS2121_STARTUP-TRANS"  [ C:\FPT_WS\FPT_DS\Part_Numbers\TPS2121\Source_FPT\PSPICE\TPS2121_PSPICE_TRANS\tps2121_trans-pspicefiles\tps2121_startup\trans.sim ] 
+
+** Creating circuit file "TRANS.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../tps2121_trans.lib" 
+* From [PSPICE NETLIST] section of C:\Cadence\SPB_16.2\tools\PSpice\PSpice.ini file:
+
+*Analysis directives: 
+.TRAN  0 8m 0 100n 
+.OPTIONS ITL1= 1500
+.OPTIONS ITL2= 400
+.OPTIONS ITL4= 400
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\TPS2121_STARTUP.net" 
+
+
+.END
