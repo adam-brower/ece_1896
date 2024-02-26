@@ -233,12 +233,6 @@ int main(void)
     FRESULT fres; //Result after operations
 
     int temp = 0;
-    while(1) {
-    	ITM_SendChar(0x41);
-    	ITM_SendChar('\n');
-//    	HAL_Delay(10);
-
-    }
 
     //Open the file system
     fres = f_mount(&FatFs, "", 1); //1=mount now
