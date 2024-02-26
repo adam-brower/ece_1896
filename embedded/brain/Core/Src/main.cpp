@@ -191,15 +191,15 @@ int main(void)
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
 
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
 
   HAL_Delay(1000); //a short delay is important to let the SD card settle
 
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);
 
     HAL_Delay(1000); //a short delay is important to let the SD card settle
 
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
 
       HAL_Delay(1000); //a short delay is important to let the SD card settle
 
@@ -213,29 +213,45 @@ int main(void)
         tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
         tft.PWM1out(255);
 
+        tft.fillScreen(RA8875_YELLOW);
+
+
+//        for (int i = 0; i < 200; i++) {
+//        	for (int j = 0; j < 200; j++) {
+//        		tft.drawPixel(i,j,RA8875_BLACK);
+//        	}
+//        }
+
+//        tft.pushPixels(10000, RA8875_WHITE);
+
         tft.drawLine(10, 10, 200, 100, RA8875_RED);
 
-        // With hardware accelleration this is instant
+        tft.drawLine(10, 10, 200, 100, RA8875_RED);
+        tft.drawTriangle(200, 15, 250, 100, 150, 125, RA8875_BLACK);
+        tft.fillTriangle(200, 16, 249, 99, 151, 124, RA8875_YELLOW);
+        tft.drawEllipse(300, 100, 100, 40, RA8875_BLACK);
+        tft.fillEllipse(300, 100, 98, 38, RA8875_GREEN);
 
 
-        while (1) {
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_WHITE);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_BLUE);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_GREEN);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_CYAN);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_MAGENTA);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_WHITE);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_YELLOW);
-      	  HAL_Delay(1000);
-      	  tft.fillScreen(RA8875_BLACK);
-        }
+//
+//        while (1) {
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_WHITE);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_BLUE);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_GREEN);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_CYAN);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_MAGENTA);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_WHITE);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_YELLOW);
+//      	  HAL_Delay(1000);
+//      	  tft.fillScreen(RA8875_BLACK);
+//        }
 
 
         tft.fillScreen(RA8875_WHITE);

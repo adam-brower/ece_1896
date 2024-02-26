@@ -527,12 +527,21 @@ void Adafruit_RA8875::pushPixels(uint32_t num, uint16_t p) {
 
 	// TODO: implement SPI and write functions for this
 //    digitalWrite(_cs, LOW);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    SPI.transfer(RA8875_DATAWRITE);
-//    while (num--) {
+	uint8_t data2 = 0x00;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
+
+    while (num--) {
 //        SPI.transfer(p >> 8);
-//        SPI.transfer(p);
-//    }
+    	uint8_t pHigh = p >> 8;
+    	HAL_SPI_Transmit(&_DIS_HSPI, &pHigh, 1, HAL_MAX_DELAY);
+//    	SPI.transfer(p);
+    	uint8_t pLow = p&0xFF;
+    	HAL_SPI_Transmit(&_DIS_HSPI, &pLow, 1, HAL_MAX_DELAY);
+    }
 //    digitalWrite(_cs, HIGH);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
 
 /**************************************************************************/
@@ -602,10 +611,18 @@ void Adafruit_RA8875::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
     // TODO: implement SPI and write functions for this
 //    digitalWrite(_cs, LOW);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    SPI.transfer(RA8875_DATAWRITE);
+	uint8_t data2 = 0x00;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
 //    SPI.transfer(color >> 8);
+	uint8_t pHigh = color >> 8;
+	HAL_SPI_Transmit(&_DIS_HSPI, &pHigh, 1, HAL_MAX_DELAY);
 //    SPI.transfer(color);
+	uint8_t pLow = color&0xFF;
+	HAL_SPI_Transmit(&_DIS_HSPI, &pLow, 1, HAL_MAX_DELAY);
 //    digitalWrite(_cs, HIGH);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
 
 /**************************************************************************/
@@ -638,11 +655,16 @@ void Adafruit_RA8875::drawPixels(uint16_t *p, uint32_t num, int16_t x,
 
     // TODO: implement SPI and write functions for this
     //    digitalWrite(_cs, LOW);
+	 HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 //    SPI.transfer(RA8875_DATAWRITE);
-//    while (num--) {
+	 uint8_t data2 = 0x00;
+	 HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
+    while (num--) {
 //        SPI.transfer16(*p++);
-//    }
+    	HAL_SPI_Transmit(&_DIS_HSPI, (uint8_t*)p++, 2, HAL_MAX_DELAY);
+    }
 //    digitalWrite(_cs, HIGH);
+    HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
 
 /**************************************************************************/
