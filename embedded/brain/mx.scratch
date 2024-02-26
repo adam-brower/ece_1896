@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScratchFile FileVersion="3.0">
+  <FileVersion>3.0</FileVersion>
+  <Workspace>
+    <WorkspaceType>Single-project</WorkspaceType>
+    <WorkspacePath>C:\!JJ\1896\ece_1896\embedded\brain\</WorkspacePath>
+    <underRoot>true</underRoot>
+    <TrustZone>0</TrustZone>
+    <HAL_Driver>C:\Users\jjosw\STM32Cube\Repository\STM32Cube_FW_WB_V1.16.0</HAL_Driver>
+    <CMSIS>Drivers/CMSIS</CMSIS>
+    <Toolchain>STM32CubeIDE</Toolchain>
+    <IocFile>brain.ioc</IocFile>
+    <Project>
+      <ProjectName>brain</ProjectName>
+      <ProjectNature>CPP</ProjectNature>
+      <Secure />
+      <filestoremove />
+      <sourceEntriesToRemove>
+        <sourceEntry />
+      </sourceEntriesToRemove>
+      <configs>
+        <config>
+          <name>brain</name>
+          <mainSourceRepo>Core</mainSourceRepo>
+          <sourceStructure>Advanced</sourceStructure>
+          <device>STM32WB55RGVx</device>
+          <cpucore>ARM Cortex-M4</cpucore>
+          <fpu>SP</fpu>
+          <memories>
+            <memory access="xrw" name="RAM" size="195584" start="0x20000008" />
+            <memory access="rx" name="FLASH" size="524288" start="0x08000000" />
+            <memory access="xrw" name="RAM_SHARED" size="9216" start="0x20030000" />
+          </memories>
+          <startup>C:\Users\jjosw\STM32Cube\Repository\STM32Cube_FW_WB_V1.18.0\Drivers\CMSIS\Device\ST\STM32WBxx\Source\Templates\gcc\startup_stm32wb55xx_cm4.s</startup>
+          <LinkSettings>
+            <LinkAdditionalLibs />
+          </LinkSettings>
+          <heapSize>0x200</heapSize>
+          <stackSize>0x400</stackSize>
+          <cpuclock>64</cpuclock>
+          <board>custom</board>
+          <debugprobe>swd</debugprobe>
+          <optimization />
+          <Aincludes>
+            <include />
+          </Aincludes>
+          <Adefines />
+          <Cdefines>
+            <define>USE_HAL_DRIVER</define>
+            <define>STM32WB55xx</define>
+          </Cdefines>
+          <Ldefines />
+          <Cincludes>
+            <include>FATFS\Target</include>
+            <include>FATFS\App</include>
+            <include>Core\Inc</include>
+            <include>Drivers\STM32WBxx_HAL_Driver\Inc</include>
+            <include>Drivers\STM32WBxx_HAL_Driver\Inc\Legacy</include>
+            <include>Middlewares\Third_Party\FatFs\src</include>
+            <include>Drivers\CMSIS\Device\ST\STM32WBxx\Include</include>
+            <include>Drivers\CMSIS\Include</include>
+          </Cincludes>
+          <definestoremove>
+            <Adefines />
+            <Cdefines>
+              <define>USE_FULL_LL_DRIVER</define>
+              <define>USE_FULL_ASSERT=1U</define>
+            </Cdefines>
+            <Ldefines />
+          </definestoremove>
+          <inctoremove>
+            <Aincludes>
+              <include />
+            </Aincludes>
+            <Cincludes />
+          </inctoremove>
+        </config>
+      </configs>
+      <copyAsReference>false</copyAsReference>
+      <sourceEntries>
+        <sourceEntry>
+          <name>Core</name>
+        </sourceEntry>
+        <sourceEntry>
+          <name>FATFS</name>
+        </sourceEntry>
+        <sourceEntry>
+          <name>Drivers</name>
+        </sourceEntry>
+        <sourceEntry>
+          <name>Middlewares</name>
+        </sourceEntry>
+      </sourceEntries>
+      <Groups />
+    </Project>
+  </Workspace>
+</ScratchFile>
+
