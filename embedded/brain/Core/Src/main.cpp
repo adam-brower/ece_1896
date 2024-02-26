@@ -39,10 +39,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "dbg_trace.h"
 #include "Adafruit_RA8875.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <string.h>
 #include <stdarg.h> //for va_list var arg functions
 
@@ -108,6 +107,21 @@ static void MX_IPCC_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int _write(int file, char *ptr, int len)
+{
+  (void)file;
+  int DataIdx;
+  ITM_SendChar(0x42);
+  ITM_SendChar('\n');
+
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+  {
+    ITM_SendChar(*ptr++);
+  }
+  return len;
+}
+
+uint32_t count;
 
 /* USER CODE END 0 */
 
@@ -205,19 +219,31 @@ int main(void)
 
   HAL_Delay(1000); //a short delay is important to let the SD card settle
 
-  PRINT_MESG_DBG("\r\n\r\n################ Serial Terminal for STM32WB55RG MCU ################");
+  printf("################ Serial Terminal for STM32WB55RG MCU ################%d\n", count);
 
-  PRINT_MESG_DBG("\r\n\r\n################ Read/Write SD Card Demo ################\r\n\r\n");
+  printf("################ Read/Write SD Card Demo ################\n");
+
+ count = 1;
+
+  printf("this is a count %d\n",count);
 
     //some variables for FatFs
     FATFS FatFs; 	//Fatfs handle
     FIL fil; 		//File handle
     FRESULT fres; //Result after operations
 
+    int temp = 0;
+    while(1) {
+    	ITM_SendChar(0x41);
+    	ITM_SendChar('\n');
+//    	HAL_Delay(10);
+
+    }
+
     //Open the file system
     fres = f_mount(&FatFs, "", 1); //1=mount now
     if (fres != FR_OK) {
-  	PRINT_MESG_DBG("f_mount error (%i)\r\n", fres);
+  	printf("f_mount error (%i)\r\n", fres);
   	while(1);
     }
 
@@ -228,7 +254,7 @@ int main(void)
 
     fres = f_getfree("", &free_clusters, &getFreeFs);
     if (fres != FR_OK) {
-  	PRINT_MESG_DBG("f_getfree error (%i)\r\n", fres);
+  	printf("f_getfree error (%i)\r\n", fres);
   	while(1);
     }
 
@@ -236,15 +262,15 @@ int main(void)
     total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
     free_sectors = free_clusters * getFreeFs->csize;
 
-    PRINT_MESG_DBG("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
+    printf("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
 
     //Now let's try to open file "test.txt"
     fres = f_open(&fil, "TEST.txt", FA_READ);
     if (fres != FR_OK) {
-  	PRINT_MESG_DBG("f_open error (%i)\r\n");
+  	printf("f_open error (%i)\r\n");
   	while(1);
     }
-    PRINT_MESG_DBG("I was able to open 'TEST.txt' for reading!\r\n");
+    printf("I was able to open 'TEST.txt' for reading!\r\n");
 
     //Read 100 bytes from "test.txt" on the SD card
     BYTE readBuf[100];
@@ -253,9 +279,9 @@ int main(void)
     //f_gets is a wrapper on f_read that does some string formatting for us
     TCHAR* rres = f_gets((TCHAR*)readBuf, 72, &fil);
     if(rres != 0) {
-  	PRINT_MESG_DBG("Read string from 'test.txt' contents: %s\r\n", readBuf);
+  	printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
     } else {
-  	PRINT_MESG_DBG("f_gets error (%i)\r\n", fres);
+  	printf("f_gets error (%i)\r\n", fres);
     }
 
     f_close(&fil);
@@ -263,9 +289,9 @@ int main(void)
     //Now let's try and write a file "write.txt"
     fres = f_open(&fil, "write.txt", FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
     if(fres == FR_OK) {
-  	PRINT_MESG_DBG("I was able to open 'write.txt' for writing\r\n");
+  	printf("I was able to open 'write.txt' for writing\r\n");
     } else {
-  	PRINT_MESG_DBG("f_open error (%i)\r\n", fres);
+  	printf("f_open error (%i)\r\n", fres);
     }
 
     //Copy in a string
@@ -273,9 +299,9 @@ int main(void)
     UINT bytesWrote;
     fres = f_write(&fil, readBuf, 50, &bytesWrote);
     if(fres == FR_OK) {
-  	PRINT_MESG_DBG("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
+  	printf("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
     } else {
-  	PRINT_MESG_DBG("f_write error (%i)\r\n");
+  	printf("f_write error (%i)\r\n");
     }
 
     f_close(&fil);
@@ -283,7 +309,7 @@ int main(void)
     //We're done, so de-mount the drive
 	f_mount(NULL, "", 0);
 
-    PRINT_MESG_DBG("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
+    printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
 
 

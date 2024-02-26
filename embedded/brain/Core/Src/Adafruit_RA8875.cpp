@@ -35,7 +35,7 @@
 #include "Adafruit_RA8875.h"
 #include "main.h"
 #include "stm32wbxx_hal_gpio.h"
-#include "dbg_trace.h"
+//#include "dbg_trace.h"
 
 
 /// @cond DISABLE
@@ -121,9 +121,9 @@ bool Adafruit_RA8875::begin() {
 
 
     uint8_t x = readReg(0);
-    PRINT_MESG_DBG("x = %d\r\n", x);
+    printf("x = %d\r\n", x);
     if (x != 0x75) {
-		PRINT_MESG_DBG("DISPLAY READ REGISTER FAILED!!!! \r\n");
+		printf("DISPLAY READ REGISTER FAILED!!!! \r\n");
         return false;
     }
 

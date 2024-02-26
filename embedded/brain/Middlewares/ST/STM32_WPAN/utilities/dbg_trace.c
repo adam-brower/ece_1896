@@ -38,7 +38,7 @@ size_t __write(int handle, const unsigned char * buf, size_t bufSize);
  */
 
 /* Private typedef -----------------------------------------------------------*/
-/** @defgroup TRACE Log private typedef 
+/** @defgroup TRACE Log private typedef
  * @{
  */
 
@@ -47,7 +47,7 @@ size_t __write(int handle, const unsigned char * buf, size_t bufSize);
  */
 
 /* Private defines -----------------------------------------------------------*/
-/** @defgroup TRACE Log private defines 
+/** @defgroup TRACE Log private defines
  * @{
  */
 
@@ -56,7 +56,7 @@ size_t __write(int handle, const unsigned char * buf, size_t bufSize);
  */
 
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup TRACE Log private macros 
+/** @defgroup TRACE Log private macros
  * @{
  */
 /**
@@ -64,7 +64,7 @@ size_t __write(int handle, const unsigned char * buf, size_t bufSize);
  */
 
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup TRACE Log private variables 
+/** @defgroup TRACE Log private variables
  * @{
  */
 #if (( CFG_DEBUG_TRACE_FULL != 0 ) || ( CFG_DEBUG_TRACE_LIGHT != 0 ))
@@ -87,7 +87,7 @@ __IO ITStatus DbgTracePeripheralReady = SET;
  */
 
 /* Private function prototypes -----------------------------------------------*/
-/** @defgroup TRACE Log private function prototypes 
+/** @defgroup TRACE Log private function prototypes
  * @{
  */
 #if (( CFG_DEBUG_TRACE_FULL != 0 ) || ( CFG_DEBUG_TRACE_LIGHT != 0 ))
@@ -101,13 +101,13 @@ static void DbgTrace_TxCpltCallback(void);
 
 
 /* Private Functions Definition ------------------------------------------------------*/
-/** @defgroup TRACE Log Private function 
+/** @defgroup TRACE Log Private function
  * @{
  */
 
 
 /* Functions Definition ------------------------------------------------------*/
-/** @defgroup TRACE Log APIs 
+/** @defgroup TRACE Log APIs
  * @{
  */
 
@@ -179,11 +179,11 @@ static void DbgTrace_TxCpltCallback(void)
   buf=CircularQueue_Sense(&MsgDbgTraceQueue,&bufSize);
 
 
-  if ( buf != NULL) 
+  if ( buf != NULL)
   {
     RESTORE_PRIMASK();
     DbgOutputTraces((uint8_t*)buf, bufSize, DbgTrace_TxCpltCallback);
-  } 
+  }
   else
   {
     DbgTracePeripheralReady = SET;
@@ -208,7 +208,7 @@ void DbgTraceInit( void )
   DbgOutputInit();
 #if (DBG_TRACE_USE_CIRCULAR_QUEUE != 0)
   CircularQueue_Init(&MsgDbgTraceQueue, MsgDbgTraceQueueBuff, DBG_TRACE_MSG_QUEUE_SIZE, 0, CIRCULAR_QUEUE_SPLIT_IF_WRAPPING_FLAG);
-#endif 
+#endif
 #endif
   return;
 }
@@ -224,10 +224,10 @@ void DbgTraceInit( void )
  * @param	...: arguments to be formatted in format string
  * @retval none
  */
-size_t _write(int handle, const unsigned char * buf, size_t bufSize)
-{
-  return ( DbgTraceWrite(handle, buf, bufSize) );
-}
+//size_t _write(int handle, const unsigned char * buf, size_t bufSize)
+//{
+//  return ( DbgTraceWrite(handle, buf, bufSize) );
+//}
 
 #else
 /**
@@ -238,10 +238,10 @@ size_t _write(int handle, const unsigned char * buf, size_t bufSize)
  * @param ...: arguments to be formatted in format string
  * @retval none
  */
-size_t __write(int handle, const unsigned char * buf, size_t bufSize)
-{
-  return ( DbgTraceWrite(handle, buf, bufSize) );
-}
+//size_t __write(int handle, const unsigned char * buf, size_t bufSize)
+//{
+//  return ( DbgTraceWrite(handle, buf, bufSize) );
+//}
 #endif /* #if defined(__GNUC__)  */
 
 /**
