@@ -173,7 +173,7 @@ int main(void)
     Error_Handler();
   }
   MX_RF_Init();
-  /* USER CODE BEGIN 2 */
+  /* USER CODE BEGIN 2 */			// ADAM TODO ****************************************************
 
   // TODO: cleanup, I moved this up
   MX_APPE_Init();
