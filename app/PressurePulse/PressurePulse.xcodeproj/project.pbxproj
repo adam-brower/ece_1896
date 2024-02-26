@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,8 @@
 		41B7E3422B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3412B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift */; };
 		41B7E34C2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E34B2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift */; };
 		41B7E34E2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E34D2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift */; };
+		41D42E392B81924E00E1227E /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D42E382B81924E00E1227E /* HapticManager.swift */; };
+		41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D42E3A2B82D8C200E1227E /* BLEManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,8 @@
 		41B7E3472B715F6C00C825C8 /* PressurePulse Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PressurePulse Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7E34B2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulse_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		41B7E34D2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulse_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		41D42E382B81924E00E1227E /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		41D42E3A2B82D8C200E1227E /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,7 @@
 				41B7E3262B715F6B00C825C8 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		41B7E3262B715F6B00C825C8 /* Products */ = {
 			isa = PBXGroup;
@@ -122,6 +127,8 @@
 				41B7E3322B715F6B00C825C8 /* ContentView.swift */,
 				41B7E3342B715F6C00C825C8 /* Assets.xcassets */,
 				41B7E3362B715F6C00C825C8 /* Preview Content */,
+				41D42E382B81924E00E1227E /* HapticManager.swift */,
+				41D42E3A2B82D8C200E1227E /* BLEManager.swift */,
 			);
 			path = "PressurePulse Watch App";
 			sourceTree = "<group>";
@@ -251,7 +258,7 @@
 				};
 			};
 			buildConfigurationList = 41B7E3222B715F6A00C825C8 /* Build configuration list for PBXProject "PressurePulse" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -310,6 +317,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B7E3332B715F6B00C825C8 /* ContentView.swift in Sources */,
+				41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */,
+				41D42E392B81924E00E1227E /* HapticManager.swift in Sources */,
 				41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
