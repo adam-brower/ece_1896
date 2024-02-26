@@ -60,10 +60,10 @@ typedef PACKED_STRUCT
  * - SHCI_C2_DEBUG_OPTIONS_CPU2_STOP_DIS
  * which are used to set following configuration bits:
    * - bit 0:   0: IP BLE core in LP mode    1: IP BLE core in run mode (no LP supported)
-   * - bit 1:   0: CPU2 STOP mode Enable     1: CPU2 STOP mode Disable 
+   * - bit 1:   0: CPU2 STOP mode Enable     1: CPU2 STOP mode Disable
    * - bit [2-7]: bits reserved ( shall be set to 0)
  */
-#define SYS_DBG_CFG1  (SHCI_C2_DEBUG_OPTIONS_IPCORE_LP | SHCI_C2_DEBUG_OPTIONS_CPU2_STOP_EN) 
+#define SYS_DBG_CFG1  (SHCI_C2_DEBUG_OPTIONS_IPCORE_LP | SHCI_C2_DEBUG_OPTIONS_CPU2_STOP_EN)
 /* USER CODE END PD */
 
 /* Private macros ------------------------------------------------------------*/
@@ -316,7 +316,7 @@ static void APPD_SetCPU2GpioConfig( void )
     HAL_GPIO_Init(GPIOC, &gpio_config);
     HAL_GPIO_WritePin(GPIOC, gpioc_pin_list, GPIO_PIN_RESET);
   }
-  
+
 /* USER CODE END APPD_SetCPU2GpioConfig */
   return;
 }
@@ -397,8 +397,8 @@ if (CFG_DEBUG_TRACE_UART == hw_lpuart1)
 }
 else if (CFG_DEBUG_TRACE_UART == hw_uart1)
 {
-#if(CFG_HW_USART1_ENABLED == 1)
-    MX_USART1_UART_Init();
+// #if(CFG_HW_USART1_ENABLED == 1)
+//     MX_USART1_UART_Init();
 #endif
 }
 #endif
@@ -409,10 +409,10 @@ else if (CFG_DEBUG_TRACE_UART == hw_uart1)
 
 void DbgOutputTraces(  uint8_t *p_data, uint16_t size, void (*cb)(void) )
 {
-/* USER CODE END DbgOutputTraces */
-  HW_UART_Transmit_DMA(CFG_DEBUG_TRACE_UART, p_data, size, cb);
+// /* USER CODE END DbgOutputTraces */
+//   HW_UART_Transmit_DMA(CFG_DEBUG_TRACE_UART, p_data, size, cb);
 
 /* USER CODE END DbgOutputTraces */
   return;
 }
-#endif
+// #endif
