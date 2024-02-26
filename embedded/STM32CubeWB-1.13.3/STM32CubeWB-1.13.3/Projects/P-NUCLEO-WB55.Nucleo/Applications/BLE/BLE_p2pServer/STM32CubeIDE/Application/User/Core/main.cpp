@@ -210,25 +210,25 @@ int main(void)
   // With hardware accelleration this is instant
 
 
-  while (1) {
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_WHITE);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_BLUE);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_GREEN);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_CYAN);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_MAGENTA);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_WHITE);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_YELLOW);
-	  HAL_Delay(1000);
-	  tft.fillScreen(RA8875_BLACK);
-  }
-
+//  while (1) {
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_WHITE);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_BLUE);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_GREEN);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_CYAN);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_MAGENTA);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_WHITE);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_YELLOW);
+//	  HAL_Delay(1000);
+//	  tft.fillScreen(RA8875_BLACK);
+//  }
+//
 
   tft.fillScreen(RA8875_WHITE);
 
@@ -734,6 +734,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);

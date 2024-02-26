@@ -181,11 +181,6 @@ int main(void)
 /* USER CODE BEGIN 2 */
 
 
-
-  if (MX_FATFS_Init() != APP_OK) {
-    Error_Handler();
-  }
-
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
   /* USER CODE END MX_GPIO_Init_1 */
@@ -196,7 +191,57 @@ int main(void)
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
 
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+
   HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+
+    HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+
+      HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+
+      uint8_t dummy_rst = 0xFF;
+        Adafruit_RA8875 tft = Adafruit_RA8875(dummy_rst, hspi1);
+        bool a = tft.begin();
+
+        tft.displayOn(true);
+        tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+        tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+        tft.PWM1out(255);
+
+        tft.drawLine(10, 10, 200, 100, RA8875_RED);
+
+        // With hardware accelleration this is instant
+
+
+        while (1) {
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_WHITE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_BLUE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_GREEN);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_CYAN);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_MAGENTA);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_WHITE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_YELLOW);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_BLACK);
+        }
+
+
+        tft.fillScreen(RA8875_WHITE);
+
+
+
 
   printf("################ Serial Terminal for STM32WB55RG MCU ################%d\n", count);
 
@@ -914,7 +959,7 @@ static void MX_GPIO_Init(void)
                           |GAUGE_IO_Pin|BATT_DETECT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DIS_CS_Pin|PULSE_CHRG_EN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DIS_CS_Pin|PULSE_CHRG_EN_Pin|SD_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Gain_12dB_GPIO_Port, Gain_12dB_Pin, GPIO_PIN_RESET);

@@ -62,8 +62,8 @@ void MX_USART1_UART_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SD_CS_Pin GPIO_PIN_3
-#define SD_CS_GPIO_Port GPIOC
+#define SD_CS_Pin GPIO_PIN_9
+#define SD_CS_GPIO_Port GPIOB
 #define DIS_CS_Pin GPIO_PIN_8
 #define DIS_CS_GPIO_Port GPIOA
 
