@@ -297,8 +297,8 @@ tBleStatus P2PS_STM_App_Update_Char(uint16_t UUID, uint8_t *pPayload)
   	  g_index++;
   }
 
-  APP_DBG_MSG("-- Sending value %d to client \r\n", *pPayload);
-  APP_DBG_MSG("\n\r");
+  printf("-- Sending value %d to client \r\n", *pPayload);
+  printf("\n\r");
 
   switch(UUID)
   {

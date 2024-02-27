@@ -122,16 +122,16 @@ void MX_APPE_Init(void)
   APPD_Init();
 
   /**
-   * The Standby mode should not be entered before the initialization is over
-   * The default state of the Low Power Manager is to allow the Standby Mode so an request is needed here
-   */
+* The Standby mode should not be entered before the initialization is over
+* The default state of the Low Power Manager is to allow the Standby Mode so an request is needed here
+*/
   UTIL_LPM_SetOffMode(1 << CFG_LPM_APP, UTIL_LPM_DISABLE);
 
   Led_Init();
 
   Button_Init();
 /* USER CODE END APPE_Init_1 */
-  appe_Tl_Init();	/* Initialize all transport layers */
+appe_Tl_Init();	/* Initialize all transport layers */
 
   /**
    * From now, the application is waiting for the ready event (VS_HCI_C2_Ready)
@@ -369,9 +369,9 @@ static void APPE_SysUserEvtRx(void * pPayload)
 
   /* Read the firmware version of both the wireless firmware and the FUS */
   SHCI_GetWirelessFwInfo( &WirelessInfo );
-  APP_DBG_MSG("Wireless Firmware version %d.%d.%d\r\n", WirelessInfo.VersionMajor, WirelessInfo.VersionMinor, WirelessInfo.VersionSub);
-  APP_DBG_MSG("Wireless Firmware build %d \r\n", WirelessInfo.VersionReleaseType);
-  APP_DBG_MSG("FUS version %d.%d.%d \r\n\n", WirelessInfo.FusVersionMajor, WirelessInfo.FusVersionMinor, WirelessInfo.FusVersionSub);
+  printf("Wireless Firmware version %d.%d.%d\r\n", WirelessInfo.VersionMajor, WirelessInfo.VersionMinor, WirelessInfo.VersionSub);
+  printf("Wireless Firmware build %d \r\n", WirelessInfo.VersionReleaseType);
+  printf("FUS version %d.%d.%d \r\n\n", WirelessInfo.FusVersionMajor, WirelessInfo.FusVersionMinor, WirelessInfo.FusVersionSub);
 
   switch(p_sys_event->subevtcode)
   {
@@ -384,28 +384,28 @@ static void APPE_SysUserEvtRx(void * pPayload)
     break;
 
   case SHCI_SUB_EVT_BLE_NVM_RAM_UPDATE:
-    APP_DBG_MSG("-- BLE NVM RAM HAS BEEN UPDATED BY CMO+ \n");
-    APP_DBG_MSG("SHCI_SUB_EVT_BLE_NVM_RAM_UPDATE : StartAddress = %lx , Size = %ld\n",
+    printf("-- BLE NVM RAM HAS BEEN UPDATED BY CMO+ \n");
+    printf("SHCI_SUB_EVT_BLE_NVM_RAM_UPDATE : StartAddress = %lx , Size = %ld\n",
                 ((SHCI_C2_BleNvmRamUpdate_Evt_t*)p_sys_event->payload)->StartAddress,
                 ((SHCI_C2_BleNvmRamUpdate_Evt_t*)p_sys_event->payload)->Size);
     break;
 
   case SHCI_SUB_EVT_NVM_START_WRITE:
-    APP_DBG_MSG("SHCI_SUB_EVT_NVM_START_WRITE : NumberOfWords = %ld\n",
+    printf("SHCI_SUB_EVT_NVM_START_WRITE : NumberOfWords = %ld\n",
                 ((SHCI_C2_NvmStartWrite_Evt_t*)p_sys_event->payload)->NumberOfWords);
     break;
 
   case SHCI_SUB_EVT_NVM_END_WRITE:
-    APP_DBG_MSG("SHCI_SUB_EVT_NVM_END_WRITE\n");
+    printf("SHCI_SUB_EVT_NVM_END_WRITE\n");
     break;
 
   case SHCI_SUB_EVT_NVM_START_ERASE:
-    APP_DBG_MSG("SHCI_SUB_EVT_NVM_START_ERASE : NumberOfSectors = %ld\n",
+    printf("SHCI_SUB_EVT_NVM_START_ERASE : NumberOfSectors = %ld\n",
                 ((SHCI_C2_NvmStartErase_Evt_t*)p_sys_event->payload)->NumberOfSectors);
     break;
 
   case SHCI_SUB_EVT_NVM_END_ERASE:
-    APP_DBG_MSG("SHCI_SUB_EVT_NVM_END_ERASE\n");
+    printf("SHCI_SUB_EVT_NVM_END_ERASE\n");
     break;
 
   default:
@@ -429,16 +429,16 @@ static void APPE_SysEvtError(void * pPayload)
   p_sys_event = (TL_AsynchEvt_t*)(((tSHCI_UserEvtRxParam*)pPayload)->pckt->evtserial.evt.payload);
   p_sys_error_code = (SCHI_SystemErrCode_t*) p_sys_event->payload;
 
-  APP_DBG_MSG(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON %x \n\r",(*p_sys_error_code));
+  printf(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON %x \n\r",(*p_sys_error_code));
 
   if ((*p_sys_error_code) == ERR_BLE_INIT)
   {
     /* Error during BLE stack initialization */
-    APP_DBG_MSG(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON - ERR_BLE_INIT \n");
+    printf(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON - ERR_BLE_INIT \n");
   }
   else
   {
-    APP_DBG_MSG(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON - BLE ERROR \n");
+    printf(">>== SHCI_SUB_EVT_ERROR_NOTIF WITH REASON - BLE ERROR \n");
   }
   return;
 }
@@ -460,7 +460,7 @@ static void APPE_SysEvtReadyProcessing(void * pPayload)
     /**
     * The wireless firmware is running on the CPU2
     */
-    APP_DBG_MSG(">>== WIRELESS_FW_RUNNING \n");
+    printf(">>== WIRELESS_FW_RUNNING \n");
 
     /* Traces channel initialization */
     APPD_EnableCPU2();
@@ -484,7 +484,7 @@ static void APPE_SysEvtReadyProcessing(void * pPayload)
     */
     RevisionID = LL_DBGMCU_GetRevisionID();
 
-    APP_DBG_MSG("DBGMCU_GetRevisionID= %lx \r\n\n", RevisionID);
+    printf("DBGMCU_GetRevisionID= %lx \r\n\n", RevisionID);
 
     config_param.RevisionID = RevisionID;
     (void)SHCI_C2_Config(&config_param);
@@ -498,14 +498,14 @@ static void APPE_SysEvtReadyProcessing(void * pPayload)
     * The FUS firmware is running on the CPU2
     * In the scope of this application, there should be no case when we get here
     */
-    APP_DBG_MSG(">>== SHCI_SUB_EVT_CODE_READY - FUS_FW_RUNNING \n\r");
+    printf(">>== SHCI_SUB_EVT_CODE_READY - FUS_FW_RUNNING \n\r");
 
     /* The packet shall not be released as this is not supported by the FUS */
     ((tSHCI_UserEvtRxParam*)pPayload)->status = SHCI_TL_UserEventFlow_Disable;
   }
   else
   {
-    APP_DBG_MSG(">>== SHCI_SUB_EVT_CODE_READY - UNEXPECTED CASE \n\r");
+    printf(">>== SHCI_SUB_EVT_CODE_READY - UNEXPECTED CASE \n\r");
   }
 
   return;
@@ -538,7 +538,8 @@ static void Button_Init( void )
 
   BSP_PB_Init(BUTTON_SW1, BUTTON_MODE_EXTI);
   BSP_PB_Init(BUTTON_SW2, BUTTON_MODE_EXTI);
-  BSP_PB_Init(BUTTON_SW3, BUTTON_MODE_EXTI);
+  // TODO: NOTE THIS BREAKS SPI2 WHEN ACTIVATED. DO NOT INTERFERE WITH THIS.
+//  BSP_PB_Init(BUTTON_SW3, BUTTON_MODE_EXTI);
 #endif
 
   return;

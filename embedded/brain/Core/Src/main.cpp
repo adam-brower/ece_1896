@@ -131,54 +131,71 @@ uint32_t count;
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	  /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	  /* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+		HAL_Init();
 /* Config code for STM32_WPAN (HSE Tuning must be done before system clock configuration) */
   MX_APPE_Config();
 
-  /* USER CODE BEGIN Init */
+	  /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	  /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	  /* Configure the system clock */
+	  SystemClock_Config();
 
-/* Configure the peripherals common clocks */
-  PeriphCommonClock_Config();
+	/* Configure the peripherals common clocks */
+	  PeriphCommonClock_Config();
 
   /* IPCC initialisation */
   MX_IPCC_Init();
 
-  /* USER CODE BEGIN SysInit */
+	  /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	  /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USB_PCD_Init();
-  MX_I2C3_Init();
+	  /* Initialize all configured peripherals */
+	  MX_GPIO_Init();
+	MX_USB_PCD_Init();
+MX_I2C3_Init();
   MX_SAI1_Init();
-  MX_SPI2_Init();
-  MX_ADC1_Init();
+	  MX_SPI2_Init();
+MX_ADC1_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
-  if (MX_FATFS_Init() != APP_OK) {
-    Error_Handler();
-  }
-  MX_RF_Init();
+	  if (MX_FATFS_Init() != APP_OK) {
+	    Error_Handler();
+	  }
+MX_RF_Init();
   /* USER CODE BEGIN 2 */
 
   // TODO: cleanup, I moved this up
+  // YOOOOOOOO, future JJ. The buttons use the same pins as some of the SPI2
+  // stuff. Make sure they are not being initialize lol
   MX_APPE_Init();
 
 /* USER CODE BEGIN 2 */
+//  printf("this is a count %d\n",count);
+
+    // some variables for FatFs
+    FATFS FatFs; 	//Fatfs handle
+    FIL fil; 		//File handle
+    FRESULT fres; //Result after operations
+
+    int temp = 0;
+
+    //Open the file system
+    fres = f_mount(&FatFs, "", 1); //1=mount now
+    if (fres != FR_OK) {
+  	printf("f_mount error (%i)\r\n", fres);
+  	while(1);
+    }
 
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -216,13 +233,81 @@ int main(void)
         tft.fillScreen(RA8875_YELLOW);
 
 
-//        for (int i = 0; i < 200; i++) {
-//        	for (int j = 0; j < 200; j++) {
-//        		tft.drawPixel(i,j,RA8875_BLACK);
-//        	}
-//        }
+        for (int i = 0; i < 200; i++) {
+        	for (int j = 0; j < 200; j++) {
+        		tft.drawPixel(i,j,RA8875_BLACK);
+        	}
+        }
 
-//        tft.pushPixels(10000, RA8875_WHITE);
+        tft.pushPixels(10000, RA8875_WHITE);
+
+        tft.displayOn(true);
+         tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+         tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+         tft.PWM1out(255);
+         tft.fillScreen(RA8875_WHITE);
+
+         tft.displayOn(true);
+          tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+          tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+          tft.PWM1out(255);
+          tft.fillScreen(RA8875_BLACK);
+
+          /* Switch to text mode */
+          tft.textMode();
+          tft.cursorBlink(32);
+
+
+          /* Set a solid for + bg color ... */
+
+          /* ... or a fore color plus a transparent background */
+
+
+          /* Set the cursor location (in pixels) */
+          tft.textSetCursor(10, 10);
+
+          /* Render some text! */
+          char string[15] = "Hello, World! ";
+          tft.textTransparent(RA8875_WHITE);
+          tft.textWrite(string);
+          tft.textColor(RA8875_WHITE, RA8875_RED);
+          tft.textWrite(string);
+          tft.textTransparent(RA8875_CYAN);
+          tft.textWrite(string);
+          tft.textTransparent(RA8875_GREEN);
+          tft.textWrite(string);
+          tft.textColor(RA8875_YELLOW, RA8875_CYAN);
+          tft.textWrite(string);
+          tft.textColor(RA8875_BLACK, RA8875_MAGENTA);
+          tft.textWrite(string);
+
+         /* Switch to text mode */
+         tft.textMode();
+         tft.cursorBlink(32);
+
+
+         /* Set a solid for + bg color ... */
+
+         /* ... or a fore color plus a transparent background */
+
+
+         /* Set the cursor location (in pixels) */
+         tft.textSetCursor(10, 10);
+
+         /* Render some text! */
+         char my_str[32] = "Joe is a super cool TA!!! :) !";
+         tft.textTransparent(RA8875_WHITE);
+         tft.textWrite(my_str);
+         tft.textColor(RA8875_WHITE, RA8875_RED);
+         tft.textWrite(my_str);
+         tft.textTransparent(RA8875_CYAN);
+         tft.textWrite(my_str);
+         tft.textTransparent(RA8875_GREEN);
+         tft.textWrite(my_str);
+         tft.textColor(RA8875_YELLOW, RA8875_CYAN);
+         tft.textWrite(my_str);
+         tft.textColor(RA8875_BLACK, RA8875_MAGENTA);
+         tft.textWrite(my_str);
 
         tft.drawLine(10, 10, 200, 100, RA8875_RED);
 
@@ -233,25 +318,25 @@ int main(void)
         tft.fillEllipse(300, 100, 98, 38, RA8875_GREEN);
 
 
-//
-//        while (1) {
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_WHITE);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_BLUE);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_GREEN);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_CYAN);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_MAGENTA);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_WHITE);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_YELLOW);
-//      	  HAL_Delay(1000);
-//      	  tft.fillScreen(RA8875_BLACK);
-//        }
+
+        while (1) {
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_WHITE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_BLUE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_GREEN);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_CYAN);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_MAGENTA);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_WHITE);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_YELLOW);
+      	  HAL_Delay(1000);
+      	  tft.fillScreen(RA8875_BLACK);
+        }
 
 
         tft.fillScreen(RA8875_WHITE);
@@ -265,83 +350,70 @@ int main(void)
 
  count = 1;
 
-  printf("this is a count %d\n",count);
+printf("this is a count %d\n",count);
 
-    //some variables for FatFs
-    FATFS FatFs; 	//Fatfs handle
-    FIL fil; 		//File handle
-    FRESULT fres; //Result after operations
-
-    int temp = 0;
-
-    //Open the file system
-    fres = f_mount(&FatFs, "", 1); //1=mount now
-    if (fres != FR_OK) {
-  	printf("f_mount error (%i)\r\n", fres);
-  	while(1);
-    }
 
     //Let's get some statistics from the SD card
-    DWORD free_clusters, free_sectors, total_sectors;
+DWORD free_clusters, free_sectors, total_sectors;
 
     FATFS* getFreeFs;
 
     fres = f_getfree("", &free_clusters, &getFreeFs);
-    if (fres != FR_OK) {
-  	printf("f_getfree error (%i)\r\n", fres);
-  	while(1);
-    }
+if (fres != FR_OK) {
+printf("f_getfree error (%i)\r\n", fres);
+while(1);
+}
 
     //Formula comes from ChaN's documentation
-    total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
-    free_sectors = free_clusters * getFreeFs->csize;
+total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
+free_sectors = free_clusters * getFreeFs->csize;
 
     printf("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
 
     //Now let's try to open file "test.txt"
-    fres = f_open(&fil, "TEST.txt", FA_READ);
-    if (fres != FR_OK) {
-  	printf("f_open error (%i)\r\n");
-  	while(1);
-    }
+fres = f_open(&fil, "TEST.txt", FA_READ);
+if (fres != FR_OK) {
+printf("f_open error (%i)\r\n");
+while(1);
+}
     printf("I was able to open 'TEST.txt' for reading!\r\n");
 
     //Read 100 bytes from "test.txt" on the SD card
-    BYTE readBuf[100];
+BYTE readBuf[100];
 
     //We can either use f_read OR f_gets to get data out of files
-    //f_gets is a wrapper on f_read that does some string formatting for us
-    TCHAR* rres = f_gets((TCHAR*)readBuf, 72, &fil);
-    if(rres != 0) {
-  	printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
-    } else {
-  	printf("f_gets error (%i)\r\n", fres);
-    }
+//f_gets is a wrapper on f_read that does some string formatting for us
+TCHAR* rres = f_gets((TCHAR*)readBuf, 72, &fil);
+if(rres != 0) {
+printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
+} else {
+printf("f_gets error (%i)\r\n", fres);
+}
 
     f_close(&fil);
 
     //Now let's try and write a file "write.txt"
-    fres = f_open(&fil, "write.txt", FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
-    if(fres == FR_OK) {
-  	printf("I was able to open 'write.txt' for writing\r\n");
-    } else {
-  	printf("f_open error (%i)\r\n", fres);
-    }
+fres = f_open(&fil, "write.txt", FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+if(fres == FR_OK) {
+printf("I was able to open 'write.txt' for writing\r\n");
+} else {
+printf("f_open error (%i)\r\n", fres);
+}
 
     //Copy in a string
-    strncpy((char*)readBuf, "I can write to the SD Card from the embedded code!", 50);
-    UINT bytesWrote;
-    fres = f_write(&fil, readBuf, 50, &bytesWrote);
-    if(fres == FR_OK) {
-  	printf("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
-    } else {
-  	printf("f_write error (%i)\r\n");
-    }
+strncpy((char*)readBuf, "I can write to the SD Card from the embedded code!", 50);
+UINT bytesWrote;
+fres = f_write(&fil, readBuf, 50, &bytesWrote);
+if(fres == FR_OK) {
+printf("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
+} else {
+printf("f_write error (%i)\r\n");
+}
 
     f_close(&fil);
 
     //We're done, so de-mount the drive
-	f_mount(NULL, "", 0);
+f_mount(NULL, "", 0);
 
     printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
@@ -355,7 +427,7 @@ int main(void)
 	while(1)
 	{
     /* USER CODE END WHILE */
-MX_APPE_Process();
+		MX_APPE_Process();
 
     /* USER CODE BEGIN 3 */
   }
@@ -385,8 +457,8 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
@@ -769,24 +841,24 @@ static void MX_SPI2_Init(void)
 
   /* USER CODE END SPI2_Init 1 */
   /* SPI2 parameter configuration*/
-	hspi2.Instance = SPI2;
-    hspi2.Init.Mode = SPI_MODE_MASTER;
-    hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-    hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-    hspi2.Init.NSS = SPI_NSS_SOFT;
-    hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
-    hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi2.Init.CRCPolynomial = 7;
-    hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-    hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-    if (HAL_SPI_Init(&hspi2) != HAL_OK)
-    {
-	  Error_Handler();
-    }
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 7;
+  hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+  hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
@@ -963,7 +1035,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
+__HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -1020,18 +1092,18 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : TFT_WAIT_Pin */
   GPIO_InitStruct.Pin = TFT_WAIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(TFT_WAIT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Gain_12dB_Pin */
   GPIO_InitStruct.Pin = Gain_12dB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Gain_12dB_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : EXTI_BUTTON_1_Pin EXTI_BUTTON_2_Pin EXTI_BUTTON_3_Pin */
-  GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
+GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1046,7 +1118,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = EXTI_PRESSURE_ALARM_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
+HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

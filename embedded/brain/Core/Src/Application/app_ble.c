@@ -540,7 +540,7 @@ SVCCTL_UserEvtFlowStatus_t SVCCTL_App_Notification( void *pckt )
         BleApplicationContext.BleApplicationContext_legacy.connectionHandle = 0;
         BleApplicationContext.Device_Connection_Status = APP_BLE_IDLE;
 
-        APP_DBG_MSG("\r\n\r** DISCONNECTION EVENT WITH CLIENT \n");
+        printf("\r\n\r** DISCONNECTION EVENT WITH CLIENT \n");
       }
 
       /* restart advertising */
@@ -568,7 +568,7 @@ break; /* HCI_DISCONNECTION_COMPLETE_EVT_CODE */
       switch (meta_evt->subevent)
       {
         case HCI_LE_CONNECTION_UPDATE_COMPLETE_SUBEVT_CODE:
-APP_DBG_MSG("\r\n\r** CONNECTION UPDATE EVENT WITH CLIENT \r\n");
+printf("\r\n\r** CONNECTION UPDATE EVENT WITH CLIENT \r\n");
 
           /* USER CODE BEGIN EVT_LE_CONN_UPDATE_COMPLETE */
 
@@ -576,34 +576,34 @@ APP_DBG_MSG("\r\n\r** CONNECTION UPDATE EVENT WITH CLIENT \r\n");
           break;
 
         case HCI_LE_PHY_UPDATE_COMPLETE_SUBEVT_CODE:
-          APP_DBG_MSG("EVT_UPDATE_PHY_COMPLETE \n");
+          printf("EVT_UPDATE_PHY_COMPLETE \n");
           evt_le_phy_update_complete = (hci_le_phy_update_complete_event_rp0*)meta_evt->data;
           if (evt_le_phy_update_complete->Status == 0)
           {
-            APP_DBG_MSG("EVT_UPDATE_PHY_COMPLETE, status ok \r\n");
+            printf("EVT_UPDATE_PHY_COMPLETE, status ok \r\n");
           }
           else
           {
-            APP_DBG_MSG("EVT_UPDATE_PHY_COMPLETE, status nok \r\n");
+            printf("EVT_UPDATE_PHY_COMPLETE, status nok \r\n");
           }
 
           ret = hci_le_read_phy(BleApplicationContext.BleApplicationContext_legacy.connectionHandle,&TX_PHY,&RX_PHY);
           if (ret == BLE_STATUS_SUCCESS)
           {
-            APP_DBG_MSG("Read_PHY success \r\n");
+            printf("Read_PHY success \r\n");
 
             if ((TX_PHY == TX_2M) && (RX_PHY == RX_2M))
             {
-              APP_DBG_MSG("PHY Param  TX= %d, RX= %d \r\n", TX_PHY, RX_PHY);
+              printf("PHY Param  TX= %d, RX= %d \r\n", TX_PHY, RX_PHY);
           }
           else
           {
-            APP_DBG_MSG("PHY Param  TX= %d, RX= %d \r\n", TX_PHY, RX_PHY);
+            printf("PHY Param  TX= %d, RX= %d \r\n", TX_PHY, RX_PHY);
 }
             }
             else
             {
-              APP_DBG_MSG("Read conf not succeess \r\n");
+              printf("Read conf not succeess \r\n");
                       }
           /* USER CODE BEGIN EVT_LE_PHY_UPDATE_COMPLETE */
 
@@ -620,7 +620,7 @@ connection_complete_event = (hci_le_connection_complete_event_rp0 *) meta_evt->d
 
           HW_TS_Stop(BleApplicationContext.Advertising_mgr_timer_Id);
 
-          APP_DBG_MSG("HCI_LE_CONNECTION_COMPLETE_SUBEVT_CODE for connection handle 0x%x \r\n", connection_complete_event->Connection_Handle);
+          printf("HCI_LE_CONNECTION_COMPLETE_SUBEVT_CODE for connection handle 0x%x \r\n", connection_complete_event->Connection_Handle);
                     if (BleApplicationContext.Device_Connection_Status == APP_BLE_LP_CONNECTING)
           {
             /* Connection as client */
@@ -668,52 +668,52 @@ connection_complete_event = (hci_le_connection_complete_event_rp0 *) meta_evt->d
         aci_gap_pairing_complete_event_rp0 *pairing_complete;
 
       case ACI_GAP_LIMITED_DISCOVERABLE_VSEVT_CODE:
-        APP_DBG_MSG("\r\n\r** ACI_GAP_LIMITED_DISCOVERABLE_VSEVT_CODE \r\n");
+        printf("\r\n\r** ACI_GAP_LIMITED_DISCOVERABLE_VSEVT_CODE \r\n");
           break; /* ACI_GAP_LIMITED_DISCOVERABLE_VSEVT_CODE */
       case ACI_GAP_PASS_KEY_REQ_VSEVT_CODE:
-        APP_DBG_MSG("\r\n\r** ACI_GAP_PASS_KEY_REQ_VSEVT_CODE \r\n");
+        printf("\r\n\r** ACI_GAP_PASS_KEY_REQ_VSEVT_CODE \r\n");
 /*
         aci_gap_pass_key_resp(BleApplicationContext.BleApplicationContext_legacy.connectionHandle,123456);
 */
-        APP_DBG_MSG("\r\n\r** aci_gap_pass_key_resp \r\n");
+        printf("\r\n\r** aci_gap_pass_key_resp \r\n");
           break; /* ACI_GAP_PASS_KEY_REQ_VSEVT_CODE */
       case ACI_GAP_AUTHORIZATION_REQ_VSEVT_CODE:
-        APP_DBG_MSG("\r\n\r** ACI_GAP_AUTHORIZATION_REQ_VSEVT_CODE \r\n");
+        printf("\r\n\r** ACI_GAP_AUTHORIZATION_REQ_VSEVT_CODE \r\n");
           break; /* ACI_GAP_AUTHORIZATION_REQ_VSEVT_CODE */
       case ACI_GAP_SLAVE_SECURITY_INITIATED_VSEVT_CODE:
-        APP_DBG_MSG("\r\n\r** ACI_GAP_SLAVE_SECURITY_INITIATED_VSEVT_CODE \r\n");
+        printf("\r\n\r** ACI_GAP_SLAVE_SECURITY_INITIATED_VSEVT_CODE \r\n");
           break; /* ACI_GAP_SLAVE_SECURITY_INITIATED_VSEVT_CODE */
       case ACI_GAP_BOND_LOST_VSEVT_CODE:
-        APP_DBG_MSG("\r\n\r** ACI_GAP_BOND_LOST_VSEVT_CODE \r\n");
+        printf("\r\n\r** ACI_GAP_BOND_LOST_VSEVT_CODE \r\n");
           aci_gap_allow_rebond(BleApplicationContext.BleApplicationContext_legacy.connectionHandle);
-        APP_DBG_MSG("\r\n\r** Send allow rebond \n");
+        printf("\r\n\r** Send allow rebond \n");
           break; /* ACI_GAP_BOND_LOST_VSEVT_CODE */
 
       case ACI_GAP_ADDR_NOT_RESOLVED_VSEVT_CODE:
-         APP_DBG_MSG("\r\n\r** ACI_GAP_ADDR_NOT_RESOLVED_VSEVT_CODE \r\n");
+         printf("\r\n\r** ACI_GAP_ADDR_NOT_RESOLVED_VSEVT_CODE \r\n");
           break; /* ACI_GAP_ADDR_NOT_RESOLVED_VSEVT_CODE */
       case (ACI_GAP_KEYPRESS_NOTIFICATION_VSEVT_CODE):
-         APP_DBG_MSG("\r\n\r** ACI_GAP_KEYPRESS_NOTIFICATION_VSEVT_CODE \r\n");
+         printf("\r\n\r** ACI_GAP_KEYPRESS_NOTIFICATION_VSEVT_CODE \r\n");
           break; /* ACI_GAP_KEYPRESS_NOTIFICATION_VSEVT_CODE */
        case (ACI_GAP_NUMERIC_COMPARISON_VALUE_VSEVT_CODE):
-          APP_DBG_MSG("numeric_value = %ld \r\n",
+          printf("numeric_value = %ld \r\n",
                       ((aci_gap_numeric_comparison_value_event_rp0 *)(blecore_evt->data))->Numeric_Value);
-          APP_DBG_MSG("Hex_value = %lx \r\n",
+          printf("Hex_value = %lx \r\n",
                       ((aci_gap_numeric_comparison_value_event_rp0 *)(blecore_evt->data))->Numeric_Value);
           aci_gap_numeric_comparison_value_confirm_yesno(BleApplicationContext.BleApplicationContext_legacy.connectionHandle, YES); /* CONFIRM_YES = 1 */
-          APP_DBG_MSG("\r\n\r** aci_gap_numeric_comparison_value_confirm_yesno-->YES \n");
+          printf("\r\n\r** aci_gap_numeric_comparison_value_confirm_yesno-->YES \n");
       break;
           case (ACI_GAP_PAIRING_COMPLETE_VSEVT_CODE):
           {
             pairing_complete = (aci_gap_pairing_complete_event_rp0*)blecore_evt->data;
-            APP_DBG_MSG("BLE_CTRL_App_Notification: ACI_GAP_PAIRING_COMPLETE_VSEVT_CODE, pairing_complete->Status = %d\r\n",pairing_complete->Status);
+            printf("BLE_CTRL_App_Notification: ACI_GAP_PAIRING_COMPLETE_VSEVT_CODE, pairing_complete->Status = %d\r\n",pairing_complete->Status);
             if (pairing_complete->Status == 0)
             {
-              APP_DBG_MSG("\r\n\r** Pairing OK \n");
+              printf("\r\n\r** Pairing OK \n");
             }
             else
             {
-              APP_DBG_MSG("\r\n\r** Pairing KO \n");
+              printf("\r\n\r** Pairing KO \n");
             }
           }
            break;
@@ -732,7 +732,7 @@ connection_complete_event = (hci_le_connection_complete_event_rp0 *) meta_evt->d
           break;
 
         case ACI_GAP_PROC_COMPLETE_VSEVT_CODE:
-          APP_DBG_MSG("\r\n\r** ACI_GAP_PROC_COMPLETE_VSEVT_CODE \r\n");
+          printf("\r\n\r** ACI_GAP_PROC_COMPLETE_VSEVT_CODE \r\n");
           /* USER CODE BEGIN EVT_BLUE_GAP_PROCEDURE_COMPLETE */
 
           /* USER CODE END EVT_BLUE_GAP_PROCEDURE_COMPLETE */
@@ -1021,7 +1021,7 @@ static void Adv_Request(APP_BLE_ConnStatus_t New_Status)
    */
   HW_TS_Stop(BleApplicationContext.Advertising_mgr_timer_Id);
 
-  APP_DBG_MSG("First index in %d state \r\n", BleApplicationContext.Device_Connection_Status);
+  printf("First index in %d state \r\n", BleApplicationContext.Device_Connection_Status);
 
     if ((New_Status == APP_BLE_LP_ADV)
       && ((BleApplicationContext.Device_Connection_Status == APP_BLE_FAST_ADV)
@@ -1031,11 +1031,11 @@ static void Adv_Request(APP_BLE_ConnStatus_t New_Status)
     ret = aci_gap_set_non_discoverable();
     if (ret == BLE_STATUS_SUCCESS)
     {
-      APP_DBG_MSG("Successfully Stopped Advertising \r\n");
+      printf("Successfully Stopped Advertising \r\n");
     }
     else
     {
-      APP_DBG_MSG("Stop Advertising Failed , result: %d \n", ret);
+      printf("Stop Advertising Failed , result: %d \n", ret);
     }
   }
 
@@ -1060,24 +1060,24 @@ static void Adv_Request(APP_BLE_ConnStatus_t New_Status)
   {
     if (New_Status == APP_BLE_FAST_ADV)
     {
-      APP_DBG_MSG("Successfully Start Fast Advertising \r\n" );
+      printf("Successfully Start Fast Advertising \r\n" );
         /* Start Timer to STOP ADV - TIMEOUT */
         HW_TS_Start(BleApplicationContext.Advertising_mgr_timer_Id, INITIAL_ADV_TIMEOUT);
     }
     else
     {
-      APP_DBG_MSG("Successfully Start Low Power Advertising \r\n");
+      printf("Successfully Start Low Power Advertising \r\n");
     }
   }
   else
   {
     if (New_Status == APP_BLE_FAST_ADV)
     {
-      APP_DBG_MSG("Start Fast Advertising Failed , result: %d r\n", ret);
+      printf("Start Fast Advertising Failed , result: %d r\n", ret);
     }
     else
     {
-      APP_DBG_MSG("Start Low Power Advertising Failed , result: %d \r\n", ret);
+      printf("Start Low Power Advertising Failed , result: %d \r\n", ret);
     }
   }
 
@@ -1157,11 +1157,11 @@ static void Adv_Cancel(void)
     BleApplicationContext.Device_Connection_Status = APP_BLE_IDLE;
     if (result == BLE_STATUS_SUCCESS)
     {
-      APP_DBG_MSG("  \r\n\r");APP_DBG_MSG("** STOP ADVERTISING **  \r\n\r");
+      printf("  \r\n\r");printf("** STOP ADVERTISING **  \r\n\r");
     }
     else
     {
-      APP_DBG_MSG("** STOP ADVERTISING **  Failed \r\n\r");
+      printf("** STOP ADVERTISING **  Failed \r\n\r");
     }
   }
 
@@ -1211,11 +1211,11 @@ if(mutex == 1) {
                                                     slave_latency, timeout_multiplier);
     if( result == BLE_STATUS_SUCCESS )
     {
-      APP_DBG_MSG("BLE_SVC_L2CAP_Conn_Update(), Successfully \r\n\r");
+      printf("BLE_SVC_L2CAP_Conn_Update(), Successfully \r\n\r");
     }
     else
     {
-      APP_DBG_MSG("BLE_SVC_L2CAP_Conn_Update(), Failed \r\n\r");
+      printf("BLE_SVC_L2CAP_Conn_Update(), Failed \r\n\r");
     }
   }
 
