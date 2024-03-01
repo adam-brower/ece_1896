@@ -174,6 +174,7 @@ int main(void)
   }
   MX_RF_Init();
   /* USER CODE BEGIN 2 */			// ADAM TODO ****************************************************
+  printf("console test");
 
   // TODO: cleanup, I moved this up
   MX_APPE_Init();
