@@ -7,34 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		415D31702B8D28170034C04C /* tempBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415D316F2B8D28170034C04C /* tempBLE.swift */; };
+		417962FB2B8D174500F82A27 /* wasteland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417962FA2B8D174500F82A27 /* wasteland.swift */; };
+		417F91672B8FDE1100E43DD7 /* GhubBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417F91662B8FDE1100E43DD7 /* GhubBLE.swift */; };
 		41B7E32C2B715F6B00C825C8 /* PressurePulse Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */; };
 		41B7E3332B715F6B00C825C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3322B715F6B00C825C8 /* ContentView.swift */; };
 		41B7E3352B715F6C00C825C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41B7E3342B715F6C00C825C8 /* Assets.xcassets */; };
 		41B7E3382B715F6C00C825C8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41B7E3372B715F6C00C825C8 /* Preview Assets.xcassets */; };
-		41B7E3422B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3412B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift */; };
-		41B7E34C2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E34B2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift */; };
-		41B7E34E2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E34D2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift */; };
+		41CE7B562B91840100918D24 /* BLEUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CE7B552B91840100918D24 /* BLEUUID.swift */; };
 		41D42E392B81924E00E1227E /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D42E382B81924E00E1227E /* HapticManager.swift */; };
 		41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D42E3A2B82D8C200E1227E /* BLEManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		41B7E32D2B715F6B00C825C8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 41B7E31F2B715F6A00C825C8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41B7E32A2B715F6B00C825C8;
-			remoteInfo = "PressurePulse Watch App";
-		};
-		41B7E33E2B715F6C00C825C8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 41B7E31F2B715F6A00C825C8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41B7E32A2B715F6B00C825C8;
-			remoteInfo = "PressurePulse Watch App";
-		};
-		41B7E3482B715F6C00C825C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 41B7E31F2B715F6A00C825C8 /* Project object */;
 			proxyType = 1;
@@ -58,37 +45,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		415D316F2B8D28170034C04C /* tempBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tempBLE.swift; sourceTree = "<group>"; };
+		417962FA2B8D174500F82A27 /* wasteland.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wasteland.swift; sourceTree = "<group>"; };
+		417F91662B8FDE1100E43DD7 /* GhubBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhubBLE.swift; sourceTree = "<group>"; };
 		41B7E3252B715F6B00C825C8 /* PressurePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressurePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PressurePulse Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulseApp.swift; sourceTree = "<group>"; };
 		41B7E3322B715F6B00C825C8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		41B7E3342B715F6C00C825C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41B7E3372B715F6C00C825C8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		41B7E33D2B715F6C00C825C8 /* PressurePulse Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PressurePulse Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		41B7E3412B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulse_Watch_AppTests.swift; sourceTree = "<group>"; };
-		41B7E3472B715F6C00C825C8 /* PressurePulse Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PressurePulse Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		41B7E34B2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulse_Watch_AppUITests.swift; sourceTree = "<group>"; };
-		41B7E34D2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulse_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		41CE7B552B91840100918D24 /* BLEUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEUUID.swift; sourceTree = "<group>"; };
 		41D42E382B81924E00E1227E /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		41D42E3A2B82D8C200E1227E /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		41B7E3282B715F6B00C825C8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B7E33A2B715F6C00C825C8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B7E3442B715F6C00C825C8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -102,8 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				41B7E32F2B715F6B00C825C8 /* PressurePulse Watch App */,
-				41B7E3402B715F6C00C825C8 /* PressurePulse Watch AppTests */,
-				41B7E34A2B715F6C00C825C8 /* PressurePulse Watch AppUITests */,
 				41B7E3262B715F6B00C825C8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -114,8 +84,6 @@
 			children = (
 				41B7E3252B715F6B00C825C8 /* PressurePulse.app */,
 				41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */,
-				41B7E33D2B715F6C00C825C8 /* PressurePulse Watch AppTests.xctest */,
-				41B7E3472B715F6C00C825C8 /* PressurePulse Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,12 +91,12 @@
 		41B7E32F2B715F6B00C825C8 /* PressurePulse Watch App */ = {
 			isa = PBXGroup;
 			children = (
-				41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */,
-				41B7E3322B715F6B00C825C8 /* ContentView.swift */,
+				41CE7B572B91852500918D24 /* ViewControllers */,
+				41CE7B542B917A8800918D24 /* BLE */,
 				41B7E3342B715F6C00C825C8 /* Assets.xcassets */,
 				41B7E3362B715F6C00C825C8 /* Preview Content */,
-				41D42E382B81924E00E1227E /* HapticManager.swift */,
-				41D42E3A2B82D8C200E1227E /* BLEManager.swift */,
+				415D316F2B8D28170034C04C /* tempBLE.swift */,
+				417F91662B8FDE1100E43DD7 /* GhubBLE.swift */,
 			);
 			path = "PressurePulse Watch App";
 			sourceTree = "<group>";
@@ -141,21 +109,24 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		41B7E3402B715F6C00C825C8 /* PressurePulse Watch AppTests */ = {
+		41CE7B542B917A8800918D24 /* BLE */ = {
 			isa = PBXGroup;
 			children = (
-				41B7E3412B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift */,
+				41D42E3A2B82D8C200E1227E /* BLEManager.swift */,
+				41CE7B552B91840100918D24 /* BLEUUID.swift */,
+				41D42E382B81924E00E1227E /* HapticManager.swift */,
 			);
-			path = "PressurePulse Watch AppTests";
+			path = BLE;
 			sourceTree = "<group>";
 		};
-		41B7E34A2B715F6C00C825C8 /* PressurePulse Watch AppUITests */ = {
+		41CE7B572B91852500918D24 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				41B7E34B2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift */,
-				41B7E34D2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift */,
+				41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */,
+				41B7E3322B715F6B00C825C8 /* ContentView.swift */,
+				417962FA2B8D174500F82A27 /* wasteland.swift */,
 			);
-			path = "PressurePulse Watch AppUITests";
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,42 +166,6 @@
 			productReference = 41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		41B7E33C2B715F6C00C825C8 /* PressurePulse Watch AppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41B7E3582B715F6C00C825C8 /* Build configuration list for PBXNativeTarget "PressurePulse Watch AppTests" */;
-			buildPhases = (
-				41B7E3392B715F6C00C825C8 /* Sources */,
-				41B7E33A2B715F6C00C825C8 /* Frameworks */,
-				41B7E33B2B715F6C00C825C8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				41B7E33F2B715F6C00C825C8 /* PBXTargetDependency */,
-			);
-			name = "PressurePulse Watch AppTests";
-			productName = "PressurePulse Watch AppTests";
-			productReference = 41B7E33D2B715F6C00C825C8 /* PressurePulse Watch AppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		41B7E3462B715F6C00C825C8 /* PressurePulse Watch AppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41B7E35B2B715F6C00C825C8 /* Build configuration list for PBXNativeTarget "PressurePulse Watch AppUITests" */;
-			buildPhases = (
-				41B7E3432B715F6C00C825C8 /* Sources */,
-				41B7E3442B715F6C00C825C8 /* Frameworks */,
-				41B7E3452B715F6C00C825C8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				41B7E3492B715F6C00C825C8 /* PBXTargetDependency */,
-			);
-			name = "PressurePulse Watch AppUITests";
-			productName = "PressurePulse Watch AppUITests";
-			productReference = 41B7E3472B715F6C00C825C8 /* PressurePulse Watch AppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -246,14 +181,6 @@
 					};
 					41B7E32A2B715F6B00C825C8 = {
 						CreatedOnToolsVersion = 15.2;
-					};
-					41B7E33C2B715F6C00C825C8 = {
-						CreatedOnToolsVersion = 15.2;
-						TestTargetID = 41B7E32A2B715F6B00C825C8;
-					};
-					41B7E3462B715F6C00C825C8 = {
-						CreatedOnToolsVersion = 15.2;
-						TestTargetID = 41B7E32A2B715F6B00C825C8;
 					};
 				};
 			};
@@ -272,8 +199,6 @@
 			targets = (
 				41B7E3242B715F6A00C825C8 /* PressurePulse */,
 				41B7E32A2B715F6B00C825C8 /* PressurePulse Watch App */,
-				41B7E33C2B715F6C00C825C8 /* PressurePulse Watch AppTests */,
-				41B7E3462B715F6C00C825C8 /* PressurePulse Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -295,20 +220,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		41B7E33B2B715F6C00C825C8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B7E3452B715F6C00C825C8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -318,25 +229,12 @@
 			files = (
 				41B7E3332B715F6B00C825C8 /* ContentView.swift in Sources */,
 				41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */,
+				41CE7B562B91840100918D24 /* BLEUUID.swift in Sources */,
 				41D42E392B81924E00E1227E /* HapticManager.swift in Sources */,
+				415D31702B8D28170034C04C /* tempBLE.swift in Sources */,
+				417962FB2B8D174500F82A27 /* wasteland.swift in Sources */,
 				41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B7E3392B715F6C00C825C8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41B7E3422B715F6C00C825C8 /* PressurePulse_Watch_AppTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B7E3432B715F6C00C825C8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41B7E34C2B715F6C00C825C8 /* PressurePulse_Watch_AppUITests.swift in Sources */,
-				41B7E34E2B715F6C00C825C8 /* PressurePulse_Watch_AppUITestsLaunchTests.swift in Sources */,
+				417F91672B8FDE1100E43DD7 /* GhubBLE.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,16 +245,6 @@
 			isa = PBXTargetDependency;
 			target = 41B7E32A2B715F6B00C825C8 /* PressurePulse Watch App */;
 			targetProxy = 41B7E32D2B715F6B00C825C8 /* PBXContainerItemProxy */;
-		};
-		41B7E33F2B715F6C00C825C8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41B7E32A2B715F6B00C825C8 /* PressurePulse Watch App */;
-			targetProxy = 41B7E33E2B715F6C00C825C8 /* PBXContainerItemProxy */;
-		};
-		41B7E3492B715F6C00C825C8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41B7E32A2B715F6B00C825C8 /* PressurePulse Watch App */;
-			targetProxy = 41B7E3482B715F6C00C825C8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -487,6 +375,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = PressurePulse;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This uses Bluetooth";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -517,6 +406,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = PressurePulse;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This uses Bluetooth";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -569,90 +459,6 @@
 			};
 			name = Release;
 		};
-		41B7E3592B715F6C00C825C8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y8B7FHZ9M6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adambrower.PressurePulse-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PressurePulse Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PressurePulse Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Debug;
-		};
-		41B7E35A2B715F6C00C825C8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y8B7FHZ9M6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adambrower.PressurePulse-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PressurePulse Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PressurePulse Watch App";
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Release;
-		};
-		41B7E35C2B715F6C00C825C8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y8B7FHZ9M6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adambrower.PressurePulse-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "PressurePulse Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Debug;
-		};
-		41B7E35D2B715F6C00C825C8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Y8B7FHZ9M6;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.adambrower.PressurePulse-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "PressurePulse Watch App";
-				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 10.2;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -679,24 +485,6 @@
 			buildConfigurations = (
 				41B7E3562B715F6C00C825C8 /* Debug */,
 				41B7E3572B715F6C00C825C8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41B7E3582B715F6C00C825C8 /* Build configuration list for PBXNativeTarget "PressurePulse Watch AppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41B7E3592B715F6C00C825C8 /* Debug */,
-				41B7E35A2B715F6C00C825C8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41B7E35B2B715F6C00C825C8 /* Build configuration list for PBXNativeTarget "PressurePulse Watch AppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41B7E35C2B715F6C00C825C8 /* Debug */,
-				41B7E35D2B715F6C00C825C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
