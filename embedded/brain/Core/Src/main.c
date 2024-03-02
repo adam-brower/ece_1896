@@ -221,23 +221,38 @@ static void my_lcd_send_color(lv_display_t *disp, const uint8_t *cmd, size_t cmd
 /*Static or global buffer(s). The second buffer is optional*/
 void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color);
 
-void my_flush_cb(lv_display_t * display, const lv_area_t * area, void * px_map)
+void my_flush_cb(lv_display_t * disp, const lv_area_t * area, void * px_map)
 {
-    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one
-     *`put_px` is just an example, it needs to be implemented by you.*/
-    uint16_t * buf16 = (uint16_t *)px_map; /*Let's say it's a 16 bit (RGB565) display*/
-    int32_t x, y;
-    for(y = area->y1; y <= area->y2; y++) {
-        for(x = area->x1; x <= area->x2; x++) {
-        	Adafruit_RA8875_drawPixel(x, y, *buf16);
-            buf16++;
-        }
-    }
+  //Set the drawing region
+	// TODO: determine if needed
+//  set_draw_window(area->x1, area->y1, area->x2, area->y2);
 
-    /* IMPORTANT!!!
-     * Inform LVGL that you are ready with the flushing and buf is not used anymore*/
-    lv_display_flush_ready(display);
+  int height = area->y2 - area->y1 + 1;
+  int width = area->x2 - area->x1 + 1;
+
+  uint16_t * buf16 = (uint16_t *)px_map;
+
+  //We will do the SPI write manually here for speed
+//  HAL_GPIO_WritePin(DC_PORT, DC_PIN, GPIO_PIN_SET);
+  //CS low to begin data
+  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
+
+  //Write colour to each pixel
+  int current_height = area->y1;
+  for (int i = 0; i < height; i++) {
+	  Adafruit_RA8875_drawPixels(buf16, width ,area->x1, current_height);
+	  buf16 += width;
+	  current_height++;
+  }
+
+  //Return CS to high
+  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
+
+  /* IMPORTANT!!!
+  * Inform the graphics library that you are ready with the flushing*/
+  lv_display_flush_ready(disp);
 }
+
 
 // ----------------------------------------------------
 // Adafruit-Ra8875 Library ported to C
@@ -1237,34 +1252,24 @@ void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color) {
 /**************************************************************************/
 void Adafruit_RA8875_drawPixels(uint16_t *p, uint32_t num, int16_t x,
                                                                  int16_t y) {
-    x = Adafruit_RA8875_applyRotationX(x);
-    y = Adafruit_RA8875_applyRotationY(y);
-
-    Adafruit_RA8875_writeReg(RA8875_CURH0, x);
-    Adafruit_RA8875_writeReg(RA8875_CURH1, x >> 8);
-    Adafruit_RA8875_writeReg(RA8875_CURV0, y);
-    Adafruit_RA8875_writeReg(RA8875_CURV1, y >> 8);
-
-    uint8_t dir = RA8875_MWCR0_LRTD;
-    if (_rotation == 2) {
-        dir = RA8875_MWCR0_RLTD;
-    }
-    Adafruit_RA8875_writeReg(RA8875_MWCR0, (Adafruit_RA8875_readReg(RA8875_MWCR0) & ~RA8875_MWCR0_DIRMASK) | dir);
-
-    Adafruit_RA8875_writeCommand(RA8875_MRWC);
-
-    // TODO: implement SPI and write functions for this
-    //    digitalWrite(_cs, LOW);
-	 HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
-//    SPI.transfer(RA8875_DATAWRITE);
-	 uint8_t data2 = 0x00;
-	 HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
-    while (num--) {
-//        SPI.transfer16(*p++);
-    	HAL_SPI_Transmit(&_DIS_HSPI, (uint8_t*)p++, 2, HAL_MAX_DELAY);
-    }
-//    digitalWrite(_cs, HIGH);
-    HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
+	Adafruit_RA8875_writeReg(RA8875_CURH0, x);
+	Adafruit_RA8875_writeReg(RA8875_CURH1, x >> 8);
+	Adafruit_RA8875_writeReg(RA8875_CURV0, y);
+	Adafruit_RA8875_writeReg(RA8875_CURV1, y >> 8);
+	Adafruit_RA8875_writeCommand(RA8875_MRWC);
+	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
+	uint8_t data2 = 0x00;
+	HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
+	    while (num--) {
+	    	uint8_t p1 = *p >> 8;
+	    	uint8_t p2 = *p & 0xFF;
+	    	HAL_SPI_Transmit(&_DIS_HSPI, &p1, 1, HAL_MAX_DELAY);
+//	        SPI.transfer(*p >> 8);
+//	        SPI.transfer(*p & 0xFF);
+	        HAL_SPI_Transmit(&_DIS_HSPI, &p2, 1, HAL_MAX_DELAY);
+	        p++;
+	    }
+	    HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
 }
 
 /**************************************************************************/
@@ -2217,7 +2222,7 @@ uint8_t Adafruit_RA8875_readData(void) {
 //    uint8_t x = SPI.transfer(0x0);
 	uint8_t data4 = 0x00;
 	uint8_t x;
-	HAL_SPI_TransmitReceive(&_DIS_HSPI, &data4, &x, 2, HAL_MAX_DELAY);
+	HAL_SPI_TransmitReceive(&_DIS_HSPI, &data4, &x, 1, HAL_MAX_DELAY);
 //    spi_end();
 //
 //    digitalWrite(_cs, HIGH);
@@ -2273,8 +2278,8 @@ uint8_t Adafruit_RA8875_readStatus(void) {
 	return 1;
 }
 
-static lv_color_t buf_1[8000]; //TODO: Chose a buffer size. DISPLAY_WIDTH * 10 is one suggestion.
-static lv_color_t buf_2[8000];
+static lv_color_t buf_1[16000]; //TODO: Chose a buffer size. DISPLAY_WIDTH * 10 is one suggestion.
+static lv_color_t buf_2[16000];
 
 // ----------------------------------------------------
 
@@ -2388,8 +2393,10 @@ MX_RF_Init();
   lv_obj_set_size(bar, 150, 350);
   lv_obj_center(bar);
   lv_bar_set_range(bar, 0, 100);
-  lv_bar_set_value(bar, 100, LV_ANIM_ON);
+  lv_bar_set_value(bar, 100, LV_ANIM_OFF);
   lv_obj_set_flex_flow(bar, LV_FLEX_FLOW_ROW);
+
+  // ------
 
   static lv_style_t style;
   lv_style_init(&style);
@@ -2410,7 +2417,8 @@ MX_RF_Init();
   /*Create an object with the new style*/
   lv_obj_t* obj = lv_label_create(cont_row);
   lv_obj_add_style(obj, &style, 0);
-  lv_label_set_text(obj, LV_SYMBOL_BLUETOOTH"\n100 Minutes\nRemaining\n2000 PSI\n15 LPM");
+  lv_obj_set_width(obj, 300);
+  lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n100 Minutes\nRemaining\n\n2000 PSI\n15 LPM");
   lv_obj_center(obj);
   lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
 
@@ -2455,6 +2463,13 @@ MX_RF_Init();
   lv_obj_set_size(obj_base2, 250, 100);
   lv_obj_set_flex_flow(label2, LV_FLEX_FLOW_COLUMN);
 
+  lv_obj_set_flex_grow(cont_row, 0);
+  lv_obj_set_flex_grow(bar, 0);
+  lv_obj_set_flex_grow(obj, 0);
+  lv_obj_set_flex_grow(cont_col, 0);
+  lv_obj_set_flex_grow(label, 0);
+  lv_obj_set_flex_grow(label2, 0);
+
   /* USER CODE END 2 */
 
 /* Init code for STM32_WPAN */
@@ -2463,8 +2478,15 @@ MX_RF_Init();
   /* Infinite loop */
   while (1)
   {
+    lv_bar_set_value(bar, 80, LV_ANIM_OFF);
     lv_timer_handler();
     HAL_Delay(5);
+    lv_bar_set_value(bar, 50, LV_ANIM_OFF);
+    lv_timer_handler();
+	HAL_Delay(5);
+	lv_bar_set_value(bar, 10, LV_ANIM_OFF);
+	lv_timer_handler();
+	HAL_Delay(5);
   }
   /* USER CODE END 3 */
 }
