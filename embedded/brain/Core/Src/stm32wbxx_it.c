@@ -186,6 +186,9 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+	HAL_SYSTICK_IRQHandler();
+	lv_tick_inc(1);
+
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();

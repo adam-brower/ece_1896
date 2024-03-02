@@ -219,40 +219,24 @@ static void my_lcd_send_color(lv_display_t *disp, const uint8_t *cmd, size_t cmd
 
 //Frame buffers
 /*Static or global buffer(s). The second buffer is optional*/
-static lv_color_t buf_1[800*10]; //TODO: Chose a buffer size. DISPLAY_WIDTH * 10 is one suggestion.
-static lv_color_t buf_2[800*10];
+void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color);
 
-void my_flush_cb(lv_display_t * disp, const lv_area_t * area, lv_color_t * color_p)
+void my_flush_cb(lv_display_t * display, const lv_area_t * area, void * px_map)
 {
-  //Set the drawing region
-  // TODO: figure out what to write here.
-  //  	(area->x1, area->y1, area->x2, area->y2);
+    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one
+     *`put_px` is just an example, it needs to be implemented by you.*/
+    uint16_t * buf16 = (uint16_t *)px_map; /*Let's say it's a 16 bit (RGB565) display*/
+    int32_t x, y;
+    for(y = area->y1; y <= area->y2; y++) {
+        for(x = area->x1; x <= area->x2; x++) {
+        	Adafruit_RA8875_drawPixel(x, y, *buf16);
+            buf16++;
+        }
+    }
 
-  int height = area->y2 - area->y1 + 1;
-  int width = area->x2 - area->x1 + 1;
-
-  //We will do the SPI write manually here for speed
-  // TODO: determine if needed
-  // HAL_GPIO_WritePin(DC_PORT, DC_PIN, GPIO_PIN_SET);
-  //CS low to begin data
-  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
-
-  //Write colour to each pixel
-  for (int i = 0; i < width * height; i++) {
-    uint16_t color_full = (color_p->red << 11) | (color_p->green << 5) | (color_p->blue);
-
-    // TODO: figure out
-    // parallel_write(color_full);
-
-    color_p++;
-  }
-
-  //Return CS to high
-  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
-
-  /* IMPORTANT!!!
-  * Inform the graphics library that you are ready with the flushing*/
-  lv_display_flush_ready(disp);
+    /* IMPORTANT!!!
+     * Inform LVGL that you are ready with the flushing and buf is not used anymore*/
+    lv_display_flush_ready(display);
 }
 
 // ----------------------------------------------------
@@ -591,7 +575,8 @@ typedef struct // Matrix
   void Adafruit_RA8875_pushPixels(uint32_t num, uint16_t p);
 
   /* Adafruit_GFX functions */
-  void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color);
+//  NOTE: Declared above
+//  void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color);
   void Adafruit_RA8875_drawPixels(uint16_t *p, uint32_t count, int16_t x, int16_t y);
   void Adafruit_RA8875_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   void Adafruit_RA8875_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
@@ -2288,6 +2273,9 @@ uint8_t Adafruit_RA8875_readStatus(void) {
 	return 1;
 }
 
+static lv_color_t buf_1[8000]; //TODO: Chose a buffer size. DISPLAY_WIDTH * 10 is one suggestion.
+static lv_color_t buf_2[8000];
+
 // ----------------------------------------------------
 
 /* USER CODE END 0 */
@@ -2352,81 +2340,131 @@ MX_RF_Init();
   printf("################ Start of Screen Demo ################%d\n", count);
 
 
-  //Initialise LVGL UI library
-//  lv_init();
-//
-//  int WIDTH = 800;
-//  int HEIGHT = 480;
-//
-//  lv_display_t * disp = lv_display_create(WIDTH, HEIGHT); /*Basic initialization with horizontal and vertical resolution in pixels*/
-//  lv_display_set_flush_cb(disp, my_flush_cb); /*Set a flush callback to draw to the display*/
-//  lv_display_set_buffers(disp, buf_1, buf_2, sizeof(buf_1), LV_DISPLAY_RENDER_MODE_PARTIAL); /*Set an initialized buffer*/
-
   uint8_t dummy_rst = 0xFF;
   Adafruit_RA8875(dummy_rst, hspi1);
   bool a = Adafruit_RA8875_begin();
 
-          Adafruit_RA8875_displayOn(true);
-          Adafruit_RA8875_GPIOX(true);      // Enable TFT - display enable tied to GPIOX
-          Adafruit_RA8875_PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
-          Adafruit_RA8875_PWM1out(255);
+  Adafruit_RA8875_displayOn(true);
+  Adafruit_RA8875_GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+  Adafruit_RA8875_PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+  Adafruit_RA8875_PWM1out(255);
 
-          Adafruit_RA8875_fillScreen(RA8875_YELLOW);
+  Adafruit_RA8875_fillScreen(RA8875_WHITE);
 
+  //Initialise LVGL UI library
+  lv_init();
 
-          for (int i = 0; i < 200; i++) {
-          	for (int j = 0; j < 200; j++) {
-          		Adafruit_RA8875_drawPixel(i,j,RA8875_BLACK);
-          	}
-          }
+  int WIDTH = 800;
+  int HEIGHT = 480;
 
-  //        Adafruit_RA8875_pushPixels(10000, RA8875_WHITE);
+  lv_display_t * disp = lv_display_create(WIDTH, HEIGHT); /*Basic initialization with horizontal and vertical resolution in pixels*/
+  lv_display_set_flush_cb(disp, my_flush_cb); /*Set a flush callback to draw to the display*/
+  lv_display_set_buffers(disp, buf_1, buf_2, sizeof(buf_1), LV_DISPLAY_RENDER_MODE_PARTIAL); /*Set an initialized buffer*/
 
-          Adafruit_RA8875_drawLine(10, 10, 200, 100, RA8875_RED);
+  // ------------------
+  // Layout Stuff
 
-          Adafruit_RA8875_drawLine(10, 10, 200, 100, RA8875_RED);
-          Adafruit_RA8875_drawTriangle(200, 15, 250, 100, 150, 125, RA8875_BLACK);
-          Adafruit_RA8875_fillTriangle(200, 16, 249, 99, 151, 124, RA8875_RED);
-          Adafruit_RA8875_drawEllipse(300, 100, 100, 40, RA8875_BLACK);
-          Adafruit_RA8875_fillEllipse(300, 100, 98, 38, RA8875_GREEN);
+  /*Create a container with ROW flex direction*/
+  lv_obj_t* cont_row = lv_obj_create(lv_screen_active());
+  lv_obj_set_size(cont_row, 800, 480);
+  lv_obj_align(cont_row, LV_ALIGN_TOP_MID, 0, 5);
+  lv_obj_set_flex_flow(cont_row, LV_FLEX_FLOW_ROW);
 
+  /*Create a container with COLUMN flex direction*/
+  /*lv_obj_t* cont_col = lv_obj_create(lv_screen_active());
+  lv_obj_set_size(cont_col, 200, 150);
+  lv_obj_align_to(cont_col, cont_row, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+  lv_obj_set_flex_flow(cont_col, LV_FLEX_FLOW_COLUMN);*/
 
+  static lv_style_t style_indic;
 
-          while (1) {
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_WHITE);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_BLUE);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_GREEN);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_CYAN);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_MAGENTA);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_WHITE);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_YELLOW);
-        	  HAL_Delay(1000);
-        	  Adafruit_RA8875_fillScreen(RA8875_BLACK);
-          }
+  lv_style_init(&style_indic);
+  lv_style_set_bg_opa(&style_indic, LV_OPA_COVER);
+  lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
 
 
-          Adafruit_RA8875_fillScreen(RA8875_WHITE);
+  lv_obj_t* bar = lv_bar_create(cont_row);
+  lv_obj_add_style(bar, &style_indic, LV_PART_INDICATOR);
+  lv_obj_set_size(bar, 150, 350);
+  lv_obj_center(bar);
+  lv_bar_set_range(bar, 0, 100);
+  lv_bar_set_value(bar, 100, LV_ANIM_ON);
+  lv_obj_set_flex_flow(bar, LV_FLEX_FLOW_ROW);
 
+  static lv_style_t style;
+  lv_style_init(&style);
 
+  //lv_style_set_radius(&style, 5);
+  //lv_style_set_bg_opa(&style, LV_OPA_COVER);
+  //lv_style_set_bg_color(&style, lv_palette_lighten(LV_PALETTE_GREY, 2));
+  //lv_style_set_border_width(&style, 2);
+  //lv_style_set_border_color(&style, lv_color_black());
+  //lv_style_set_pad_all(&style, 10);
+
+  lv_style_set_text_color(&style, lv_color_black());
+  lv_style_set_text_font(&style, &lv_font_montserrat_48);
+  //lv_style_set_text_letter_space(&style, 5);
+  //lv_style_set_text_line_space(&style, 20);
+  //lv_style_set_text_decor(&style, LV_TEXT_DECOR_UNDERLINE);
+
+  /*Create an object with the new style*/
+  lv_obj_t* obj = lv_label_create(cont_row);
+  lv_obj_add_style(obj, &style, 0);
+  lv_label_set_text(obj, LV_SYMBOL_BLUETOOTH"\n100 Minutes\nRemaining\n2000 PSI\n15 LPM");
+  lv_obj_center(obj);
+  lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
+
+  /*Create a container with COLUMN flex direction*/
+  lv_obj_t* cont_col = lv_obj_create(cont_row);
+  lv_obj_set_size(cont_col, 300, 400);
+  //lv_obj_align_to(cont_col, cont_row, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+  lv_obj_set_flex_flow(cont_col, LV_FLEX_FLOW_COLUMN);
+
+  /*A base style*/
+  static lv_style_t style_base;
+  lv_style_init(&style_base);
+  lv_style_set_bg_color(&style_base, lv_palette_main(LV_PALETTE_LIGHT_BLUE));
+  lv_style_set_border_color(&style_base, lv_palette_darken(LV_PALETTE_LIGHT_BLUE, 3));
+  lv_style_set_border_width(&style_base, 2);
+  lv_style_set_radius(&style_base, 10);
+  lv_style_set_shadow_width(&style_base, 10);
+  lv_style_set_shadow_offset_y(&style_base, 5);
+  lv_style_set_shadow_opa(&style_base, LV_OPA_50);
+  lv_style_set_text_color(&style_base, lv_color_white());
+  lv_style_set_width(&style_base, 100);
+  lv_style_set_height(&style_base, LV_SIZE_CONTENT);
+  lv_style_set_text_font(&style_base, &lv_font_montserrat_48);
+
+  /*Create an object with the base style only*/
+  lv_obj_t* obj_base = lv_obj_create(cont_col);
+  lv_obj_add_style(obj_base, &style_base, 0);
+  lv_obj_align(obj_base, LV_ALIGN_LEFT_MID, 20, 0);
+
+  lv_obj_t* label = lv_label_create(obj_base);
+  lv_label_set_text(label, "Settings");
+  lv_obj_set_size(obj_base, 250, 100);
+  lv_obj_set_flex_flow(label, LV_FLEX_FLOW_COLUMN);
+
+  /*Create an object with the base style only*/
+  lv_obj_t* obj_base2 = lv_obj_create(cont_col);
+  lv_obj_add_style(obj_base2, &style_base, 0);
+  lv_obj_align(obj_base2, LV_ALIGN_LEFT_MID, 20, 0);
+
+  lv_obj_t* label2 = lv_label_create(obj_base2);
+  lv_label_set_text(label2, "Charting");
+  lv_obj_set_size(obj_base2, 250, 100);
+  lv_obj_set_flex_flow(label2, LV_FLEX_FLOW_COLUMN);
 
   /* USER CODE END 2 */
 
 /* Init code for STM32_WPAN */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	while(1)
-	{
-    /* USER CODE END WHILE */
-		MX_APPE_Process();
-
-    /* USER CODE BEGIN 3 */
+  /* Infinite loop */
+  while (1)
+  {
+    lv_timer_handler();
+    HAL_Delay(5);
   }
   /* USER CODE END 3 */
 }
