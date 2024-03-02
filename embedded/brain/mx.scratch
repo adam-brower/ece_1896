@@ -12,7 +12,7 @@
     <IocFile>brain.ioc</IocFile>
     <Project>
       <ProjectName>brain</ProjectName>
-      <ProjectNature>CPP</ProjectNature>
+      <ProjectNature>C</ProjectNature>
       <Secure />
       <filestoremove />
       <sourceEntriesToRemove>

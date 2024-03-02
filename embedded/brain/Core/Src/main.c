@@ -75,6 +75,7 @@ SAI_HandleTypeDef hsai_BlockA1;
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -89,7 +90,7 @@ PCD_HandleTypeDef hpcd_USB_FS;
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USB_PCD_Init(void);
+static void MX_DMA_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_SAI1_Init(void);
 static void MX_SPI2_Init(void);
@@ -97,6 +98,7 @@ static void MX_ADC1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_USB_PCD_Init(void);
 static void MX_RF_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -1259,14 +1261,14 @@ void Adafruit_RA8875_drawPixels(uint16_t *p, uint32_t num, int16_t x,
 	Adafruit_RA8875_writeCommand(RA8875_MRWC);
 	HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
 	uint8_t data2 = 0x00;
-	HAL_SPI_Transmit(&_DIS_HSPI, &data2, 1, HAL_MAX_DELAY);
+	HAL_SPI_Transmit_DMA(&_DIS_HSPI, &data2, 1);
 	    while (num--) {
 	    	uint8_t p1 = *p >> 8;
 	    	uint8_t p2 = *p & 0xFF;
-	    	HAL_SPI_Transmit(&_DIS_HSPI, &p1, 1, HAL_MAX_DELAY);
+	    	HAL_SPI_Transmit_DMA(&_DIS_HSPI, &p1, 1);
 //	        SPI.transfer(*p >> 8);
 //	        SPI.transfer(*p & 0xFF);
-	        HAL_SPI_Transmit(&_DIS_HSPI, &p2, 1, HAL_MAX_DELAY);
+	        HAL_SPI_Transmit_DMA(&_DIS_HSPI, &p2, 1);
 	        p++;
 	    }
 	    HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
@@ -2291,48 +2293,49 @@ static lv_color_t buf_2[16000];
   */
 int main(void)
 {
-	/* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
 
-	  /* USER CODE END 1 */
+  /* USER CODE END 1 */
 
-	  /* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-	  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-		HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 /* Config code for STM32_WPAN (HSE Tuning must be done before system clock configuration) */
   MX_APPE_Config();
 
-	  /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-	  /* USER CODE END Init */
+  /* USER CODE END Init */
 
-	  /* Configure the system clock */
-	  SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-	/* Configure the peripherals common clocks */
-	  PeriphCommonClock_Config();
+/* Configure the peripherals common clocks */
+  PeriphCommonClock_Config();
 
   /* IPCC initialisation */
   MX_IPCC_Init();
 
-	  /* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-	  /* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-	  /* Initialize all configured peripherals */
-	  MX_GPIO_Init();
-	MX_USB_PCD_Init();
-MX_I2C3_Init();
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_I2C3_Init();
   MX_SAI1_Init();
-	  MX_SPI2_Init();
-MX_ADC1_Init();
+  MX_SPI2_Init();
+  MX_ADC1_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
-	  if (MX_FATFS_Init() != APP_OK) {
-	    Error_Handler();
-	  }
-MX_RF_Init();
+  MX_USB_PCD_Init();
+  if (MX_FATFS_Init() != APP_OK) {
+    Error_Handler();
+  }
+  MX_RF_Init();
   /* USER CODE BEGIN 2 */
 
   // TODO: cleanup, I moved this up
@@ -2475,7 +2478,7 @@ MX_RF_Init();
 /* Init code for STM32_WPAN */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  /* Infinite loop */
+/* Infinite loop */
   while (1)
   {
     lv_bar_set_value(bar, 80, LV_ANIM_OFF);
@@ -2514,8 +2517,8 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
@@ -3078,6 +3081,26 @@ static void MX_USB_PCD_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMAMUX1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMAMUX1_OVR_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMAMUX1_OVR_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMAMUX1_OVR_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -3092,7 +3115,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-__HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -3104,7 +3127,7 @@ __HAL_RCC_GPIOE_CLK_ENABLE();
                           |GAUGE_IO_Pin|BATT_DETECT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DIS_CS_Pin|PULSE_CHRG_EN_Pin|SD_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DIS_CS_Pin|PULSE_CHRG_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Gain_12dB_GPIO_Port, Gain_12dB_Pin, GPIO_PIN_RESET);
@@ -3149,18 +3172,18 @@ __HAL_RCC_GPIOE_CLK_ENABLE();
   /*Configure GPIO pin : TFT_WAIT_Pin */
   GPIO_InitStruct.Pin = TFT_WAIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(TFT_WAIT_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Gain_12dB_Pin */
   GPIO_InitStruct.Pin = Gain_12dB_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Gain_12dB_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : EXTI_BUTTON_1_Pin EXTI_BUTTON_2_Pin EXTI_BUTTON_3_Pin */
-GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
+  GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -3175,7 +3198,7 @@ GPIO_InitStruct.Pin = EXTI_BUTTON_1_Pin|EXTI_BUTTON_2_Pin|EXTI_BUTTON_3_Pin;
   GPIO_InitStruct.Pin = EXTI_PRESSURE_ALARM_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

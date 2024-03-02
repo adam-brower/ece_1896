@@ -61,6 +61,7 @@
 /* External variables --------------------------------------------------------*/
 extern IPCC_HandleTypeDef hipcc;
 extern RTC_HandleTypeDef hrtc;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -258,6 +259,35 @@ void HSEM_IRQHandler(void)
   /* USER CODE BEGIN HSEM_IRQn 1 */
 
   /* USER CODE END HSEM_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 channel1 global interrupt.
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMAMUX1 overrun interrupt.
+  */
+void DMAMUX1_OVR_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMAMUX1_OVR_IRQn 0 */
+
+  /* USER CODE END DMAMUX1_OVR_IRQn 0 */
+  // Handle DMA1_Channel1
+  HAL_DMAEx_MUX_IRQHandler(&hdma_spi1_tx);
+  /* USER CODE BEGIN DMAMUX1_OVR_IRQn 1 */
+
+  /* USER CODE END DMAMUX1_OVR_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
