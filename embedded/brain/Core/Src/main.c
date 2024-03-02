@@ -2393,7 +2393,7 @@ MX_RF_Init();
   lv_obj_set_size(bar, 150, 350);
   lv_obj_center(bar);
   lv_bar_set_range(bar, 0, 100);
-  lv_bar_set_value(bar, 100, LV_ANIM_OFF);
+  lv_bar_set_value(bar, 80, LV_ANIM_ON);
   lv_obj_set_flex_flow(bar, LV_FLEX_FLOW_ROW);
 
   // ------
@@ -2418,7 +2418,7 @@ MX_RF_Init();
   lv_obj_t* obj = lv_label_create(cont_row);
   lv_obj_add_style(obj, &style, 0);
   lv_obj_set_width(obj, 300);
-  lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n100 Minutes\nRemaining\n\n2000 PSI\n15 LPM");
+  lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n8 Minutes\nRemaining\n\n1600 PSI\n15 LPM");
   lv_obj_center(obj);
   lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
 
@@ -2476,17 +2476,39 @@ MX_RF_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   /* Infinite loop */
+  lv_timer_handler();
+  // lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n10 Minutes\nRemaining\n\n2000 PSI\n15 LPM");
+  HAL_Delay(5);
+
+  int count = 0;
+
   while (1)
   {
-    lv_bar_set_value(bar, 80, LV_ANIM_OFF);
-    lv_timer_handler();
-    HAL_Delay(5);
-    lv_bar_set_value(bar, 50, LV_ANIM_OFF);
-    lv_timer_handler();
-	HAL_Delay(5);
-	lv_bar_set_value(bar, 10, LV_ANIM_OFF);
-	lv_timer_handler();
-	HAL_Delay(5);
+
+      lv_bar_set_value(bar, 80, LV_ANIM_ON);
+
+      if (count == 0) {
+          lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
+      }
+      else {
+          lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_RED));
+      }
+
+
+      lv_timer_handler();
+      lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n8 Minutes\nRemaining\n\n1600 PSI\n15 LPM");
+      HAL_Delay(5);
+      lv_bar_set_value(bar, 50, LV_ANIM_ON);
+      lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
+      lv_timer_handler();
+      lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n5 Minutes\nRemaining\n\n1000 PSI\n15 LPM");
+      HAL_Delay(5);
+      lv_bar_set_value(bar, 10, LV_ANIM_ON);
+      lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_ORANGE));
+      lv_timer_handler();
+      lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n1 Minute\nRemaining\n\n100 PSI\n15 LPM");
+      HAL_Delay(5);
+      count = 1;
   }
   /* USER CODE END 3 */
 }
@@ -2865,7 +2887,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
