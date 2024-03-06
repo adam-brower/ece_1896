@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		415D31702B8D28170034C04C /* tempBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415D316F2B8D28170034C04C /* tempBLE.swift */; };
+		415035B02B9649DC003A67B4 /* ConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415035AF2B9649DC003A67B4 /* ConnectionOptions.swift */; };
 		417962FB2B8D174500F82A27 /* wasteland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417962FA2B8D174500F82A27 /* wasteland.swift */; };
 		417F91672B8FDE1100E43DD7 /* GhubBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417F91662B8FDE1100E43DD7 /* GhubBLE.swift */; };
 		41B7E32C2B715F6B00C825C8 /* PressurePulse Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -45,7 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		415D316F2B8D28170034C04C /* tempBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tempBLE.swift; sourceTree = "<group>"; };
+		415035AF2B9649DC003A67B4 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
 		417962FA2B8D174500F82A27 /* wasteland.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wasteland.swift; sourceTree = "<group>"; };
 		417F91662B8FDE1100E43DD7 /* GhubBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhubBLE.swift; sourceTree = "<group>"; };
 		41B7E3252B715F6B00C825C8 /* PressurePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressurePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,8 +95,6 @@
 				41CE7B542B917A8800918D24 /* BLE */,
 				41B7E3342B715F6C00C825C8 /* Assets.xcassets */,
 				41B7E3362B715F6C00C825C8 /* Preview Content */,
-				415D316F2B8D28170034C04C /* tempBLE.swift */,
-				417F91662B8FDE1100E43DD7 /* GhubBLE.swift */,
 			);
 			path = "PressurePulse Watch App";
 			sourceTree = "<group>";
@@ -112,6 +110,7 @@
 		41CE7B542B917A8800918D24 /* BLE */ = {
 			isa = PBXGroup;
 			children = (
+				417F91662B8FDE1100E43DD7 /* GhubBLE.swift */,
 				41D42E3A2B82D8C200E1227E /* BLEManager.swift */,
 				41CE7B552B91840100918D24 /* BLEUUID.swift */,
 				41D42E382B81924E00E1227E /* HapticManager.swift */,
@@ -125,6 +124,7 @@
 				41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */,
 				41B7E3322B715F6B00C825C8 /* ContentView.swift */,
 				417962FA2B8D174500F82A27 /* wasteland.swift */,
+				415035AF2B9649DC003A67B4 /* ConnectionOptions.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -228,10 +228,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B7E3332B715F6B00C825C8 /* ContentView.swift in Sources */,
+				415035B02B9649DC003A67B4 /* ConnectionOptions.swift in Sources */,
 				41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */,
 				41CE7B562B91840100918D24 /* BLEUUID.swift in Sources */,
 				41D42E392B81924E00E1227E /* HapticManager.swift in Sources */,
-				415D31702B8D28170034C04C /* tempBLE.swift in Sources */,
 				417962FB2B8D174500F82A27 /* wasteland.swift in Sources */,
 				41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */,
 				417F91672B8FDE1100E43DD7 /* GhubBLE.swift in Sources */,
