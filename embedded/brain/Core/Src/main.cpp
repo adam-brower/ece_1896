@@ -166,7 +166,7 @@ static int32_t my_lcd_io_init(void)
 }
 
 /* Send short command to the LCD. This function shall wait until the transaction finishes. */
-static void my_lcd_send_cmd(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size)
+static void my_lcd_send_cmd(lv_display_t *disp, uint8_t *cmd, size_t cmd_size, const uint8_t *param, size_t param_size)
 {
         LV_UNUSED(disp);
         /* Set the SPI in 8-bit mode */
@@ -188,7 +188,7 @@ static void my_lcd_send_cmd(lv_display_t *disp, const uint8_t *cmd, size_t cmd_s
 }
 
 ///* Send large array of pixel data to the LCD. If necessary, this function has to do the byte-swapping. This function can do the transfer in the background. */
-static void my_lcd_send_color(lv_display_t *disp, const uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size)
+static void my_lcd_send_color(lv_display_t *disp, uint8_t *cmd, size_t cmd_size, uint8_t *param, size_t param_size)
 {
         LV_UNUSED(disp);
         while (my_disp_bus_busy);       /* wait until previous transfer is finished */
@@ -221,7 +221,9 @@ static void my_lcd_send_color(lv_display_t *disp, const uint8_t *cmd, size_t cmd
 /*Static or global buffer(s). The second buffer is optional*/
 void Adafruit_RA8875_drawPixel(int16_t x, int16_t y, uint16_t color);
 
-void my_flush_cb(lv_display_t * disp, const lv_area_t * area, void * px_map)
+void Adafruit_RA8875_drawPixels(uint16_t *p, uint32_t count, int16_t x, int16_t y);
+
+void my_flush_cb(lv_display_t * disp, const lv_area_t * area, unsigned char * px_map)
 {
   //Set the drawing region
 	// TODO: determine if needed
@@ -897,7 +899,7 @@ void Adafruit_RA8875_setRotation(int8_t rotation) {
 void Adafruit_RA8875_textMode(void) {
     /* Set text mode */
     Adafruit_RA8875_writeCommand(RA8875_MWCR0);
-    uint8_t temp = readData();
+    uint8_t temp = Adafruit_RA8875_readData();
     temp |= RA8875_MWCR0_TXTMODE; // Set bit 7
     Adafruit_RA8875_writeData(temp);
 
@@ -1874,9 +1876,9 @@ void Adafruit_RA8875_roundRectHelper(int16_t x, int16_t y, int16_t w,
     w = Adafruit_RA8875_applyRotationX(w);
     h = Adafruit_RA8875_applyRotationY(h);
     if (x > w)
-        Adafruit_RA8875_swap(x, w);
+        Adafruit_RA8875_swap(&x, &w);
     if (y > h)
-        Adafruit_RA8875_swap(y, h);
+        Adafruit_RA8875_swap(&y, &h);
 
     /* Set X */
     Adafruit_RA8875_writeCommand(0x91);
