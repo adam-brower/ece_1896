@@ -83,7 +83,7 @@ TIM_HandleTypeDef htim2;
 PCD_HandleTypeDef hpcd_USB_FS;
 
 /* USER CODE BEGIN PV */
-Adafruit_RA8875 g_tft = Adafruit_RA8875
+Adafruit_RA8875 g_tft = Adafruit_RA8875();
 
 /* USER CODE END PV */
 
@@ -171,6 +171,103 @@ static lv_color_t buf_2[8000];
 
 // ----------------------------------------------------
 
+
+void fatfs_demo() {
+	if (MX_FATFS_Init() != APP_OK) {
+	     Error_Handler();
+	   }
+	  /* Infinite loop */
+	  /* USER CODE BEGIN WHILE */
+
+
+	  g_tft.fillScreen(RA8875_BLUE);
+
+
+	  printf("################ Read/Write SD Card Demo ################\n");
+
+	 count = 1;
+
+	  printf("this is a count %d\n",count);
+
+	  HAL_Delay(1000); //a short delay is important to let the SD card settle
+
+	    //some variables for FatFs
+	    FATFS FatFs; 	//Fatfs handle
+	    FIL fil; 		//File handle
+	    FRESULT fres; //Result after operations
+
+	    int temp = 0;
+
+	    //Open the file system
+	    fres = f_mount(&FatFs, "", 1); //1=mount now
+	    if (fres != FR_OK) {
+	  	printf("f_mount error (%i)\r\n", fres);
+	  	while(1);
+	    }
+
+	    //Let's get some statistics from the SD card
+	    DWORD free_clusters, free_sectors, total_sectors;
+
+	    FATFS* getFreeFs;
+
+	    fres = f_getfree("", &free_clusters, &getFreeFs);
+	    if (fres != FR_OK) {
+	  	printf("f_getfree error (%i)\r\n", fres);
+	  	while(1);
+	    }
+
+	    //Formula comes from ChaN's documentation
+	    total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
+	    free_sectors = free_clusters * getFreeFs->csize;
+
+	    printf("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
+
+	    //Now let's try to open file "test.txt"
+	    fres = f_open(&fil, "TEST.txt", FA_READ);
+	    if (fres != FR_OK) {
+	  	printf("f_open error (%i)\r\n");
+	  	while(1);
+	    }
+	    printf("I was able to open 'TEST.txt' for reading!\r\n");
+
+	    //Read 100 bytes from "test.txt" on the SD card
+	    BYTE readBuf[100];
+
+	    //We can either use f_read OR f_gets to get data out of files
+	    //f_gets is a wrapper on f_read that does some string formatting for us
+	    TCHAR* rres = f_gets((TCHAR*)readBuf, 72, &fil);
+	    if(rres != 0) {
+	  	printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
+	    } else {
+	  	printf("f_gets error (%i)\r\n", fres);
+	    }
+
+	    f_close(&fil);
+
+	    //Now let's try and write a file "write.txt"
+	    fres = f_open(&fil, "write.txt", FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+	    if(fres == FR_OK) {
+	  	printf("I was able to open 'write.txt' for writing\r\n");
+	    } else {
+	  	printf("f_open error (%i)\r\n", fres);
+	    }
+
+	    //Copy in a string
+	    strncpy((char*)readBuf, "I can write to the SD Card from the embedded code!", 50);
+	    UINT bytesWrote;
+	    fres = f_write(&fil, readBuf, 50, &bytesWrote);
+	    if(fres == FR_OK) {
+	  	printf("Wrote %i bytes to 'write.txt'!\r\n", bytesWrote);
+	    } else {
+	  	printf("f_write error (%i)\r\n");
+	    }
+
+	    f_close(&fil);
+
+	    //We're done, so de-mount the drive
+		f_mount(NULL, "", 0);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -235,26 +332,27 @@ int main(void)
 
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
 
-  uint8_t dummy_rst = 0xFF;
-  g_tft = Adafruit_RA8875(dummy_rst, hspi1);
+  	  uint8_t dummy_rst = 0xFF;
+  	  g_tft = Adafruit_RA8875(dummy_rst, hspi1);
 
-  bool a = g_tft.begin();
+  	  bool a = g_tft.begin();
 
-  g_tft.displayOn(true);
-  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
-  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
-  g_tft.PWM1out(255);
+  	  g_tft.displayOn(true);
+  	  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+  	  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+  	  g_tft.PWM1out(255);
 
-  g_tft.fillScreen(RA8875_BLUE);
+
+    printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
 	while(1)
 	{
     /* USER CODE END WHILE */
     MX_APPE_Process();
     g_tft.fillScreen(RA8875_GREEN);
+    HAL_Delay(1000);
+    fatfs_demo();
 
     /* USER CODE BEGIN 3 */
   }
@@ -274,9 +372,11 @@ void SystemClock_Config(void)
   */
   HAL_PWR_EnableBkUpAccess();
   __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+
   /** Configure the main internal regulator output voltage
   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -287,24 +387,31 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
+  RCC_OscInitStruct.PLL.PLLN = 8;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
                               |RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
   RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -320,7 +427,18 @@ void PeriphCommonClock_Config(void)
 
   /** Initializes the peripherals clock
   */
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_RFWAKEUP;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_RFWAKEUP
+                              |RCC_PERIPHCLK_SAI1|RCC_PERIPHCLK_USB
+                              |RCC_PERIPHCLK_ADC;
+  PeriphClkInitStruct.PLLSAI1.PLLN = 6;
+  PeriphClkInitStruct.PLLSAI1.PLLP = RCC_PLLP_DIV2;
+  PeriphClkInitStruct.PLLSAI1.PLLQ = RCC_PLLQ_DIV2;
+  PeriphClkInitStruct.PLLSAI1.PLLR = RCC_PLLR_DIV2;
+  PeriphClkInitStruct.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_SAI1CLK|RCC_PLLSAI1_USBCLK
+                              |RCC_PLLSAI1_ADCCLK;
+  PeriphClkInitStruct.Sai1ClockSelection = RCC_SAI1CLKSOURCE_PLLSAI1;
+  PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLLSAI1;
+  PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
   PeriphClkInitStruct.RFWakeUpClockSelection = RCC_RFWKPCLKSOURCE_LSE;
   PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSE;
   PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
