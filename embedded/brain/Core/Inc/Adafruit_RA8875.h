@@ -100,6 +100,7 @@ typedef struct // Matrix
 class Adafruit_RA8875 {
 public:
   Adafruit_RA8875(uint8_t cs, uint8_t rst);
+  Adafruit_RA8875();
   Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI);
 
   bool begin();

@@ -1,5 +1,7 @@
 #include "Adafruit_RA8875.h"
 
+Adafruit_RA8875::Adafruit_RA8875() {}
+
 /**************************************************************************/
 /*!
             Constructor for a new RA8875 instance

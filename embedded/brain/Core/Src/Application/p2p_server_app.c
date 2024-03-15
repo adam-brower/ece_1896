@@ -363,6 +363,23 @@ void P2PS_APP_SW1_Button_Action(void)
  *
  *************************************************************/
 /* USER CODE BEGIN FD_LOCAL_FUNCTIONS*/
+
+// Testing Sending:
+//	- Time Remaining = 0
+//  - Pressure = 2000
+//  - Flow = 15
+//  - Low Threshold = 225
+//					 Time  Pressure 1 Pressure 2 Flow  Low Thresh 1 Low Thresh 2
+uint8_t my_num0[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
+
+//					 Time  Pressure 1 Pressure 2 Flow  Low Thresh 1 Low Thresh 2
+uint8_t my_num1[6] = {0x01, 0x03,      0xB6,      0x0A, 0x00,        0xE1};
+
+//					 Time  Pressure 1 Pressure 2 Flow  Low Thresh 1 Low Thresh 2
+uint8_t my_num2[6] = {0x02, 0x00,      0x64,      0x01, 0x00,        0xE1};
+
+uint8_t g_count = 0;
+
 void P2PS_Send_Notification(void)
 {
 
@@ -373,18 +390,29 @@ void P2PS_Send_Notification(void)
   }
 
    if(P2P_Server_App_Context.Notification_Status){
-    printf("-- P2P APPLICATION SERVER  : INFORM CLIENT BUTTON 1 PUSHED \r\n ");
+    printf("-- P2P APPLICATION SERVER  : INFORM CLIENT BUTTON 1 PUSHED \n ");
+    printf(" \n\r");
+
+//    uint8_t test1 = 0x43;
+    if (g_count == 0) {
+    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num0[0]);
+    	g_count++;
+    }
+    else if (g_count == 1) {
+    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num1[0]);
+    	g_count++;
+    }
+    else {
+    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num2[0]);
+    	g_count = 0;
+    }
 
 
-    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);
-
-    P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, (uint8_t *)&P2P_Server_App_Context.ButtonControl);
+    // TODO: changed
+//    P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, (uint8_t *)&P2P_Server_App_Context.ButtonControl);
    } else {
     printf("-- P2P APPLICATION SERVER : CAN'T INFORM CLIENT -  NOTIFICATION DISABLED\n ");
    }
-
-   HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
 
   return;
 }
