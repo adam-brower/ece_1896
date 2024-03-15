@@ -83,7 +83,7 @@ TIM_HandleTypeDef htim2;
 PCD_HandleTypeDef hpcd_USB_FS;
 
 /* USER CODE BEGIN PV */
-Adafruit_RA8875 g_tft = Adafruit_RA8875(0xFF, hspi1);
+Adafruit_RA8875 g_tft = Adafruit_RA8875
 
 /* USER CODE END PV */
 
@@ -91,6 +91,7 @@ Adafruit_RA8875 g_tft = Adafruit_RA8875(0xFF, hspi1);
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USB_PCD_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_SAI1_Init(void);
@@ -100,6 +101,8 @@ static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_RF_Init(void);
+static void MX_RTC_Init(void);
+static void MX_RNG_Init(void);
 /* USER CODE BEGIN PFP */
 
 static void MX_IPCC_Init(void);
@@ -148,7 +151,8 @@ void my_flush_cb(lv_display_t * disp, const lv_area_t * area, unsigned char * px
   //Write colour to each pixel
   int current_height = area->y1;
   for (int i = 0; i < height; i++) {
-	  g_tft.drawPixels(buf16, width ,area->x1, current_height);
+    // TODO 314: reenable
+	  // g_tft.drawPixels(buf16, width ,area->x1, current_height);
 	  buf16 += width;
 	  current_height++;
   }
@@ -175,7 +179,9 @@ static lv_color_t buf_2[8000];
   */
 int main(void)
 {
-	/* USER CODE BEGIN 1 */
+  // TODO 314: Fix Printf Debug
+
+  /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
 
@@ -193,41 +199,44 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
 
-  /* Configure the peripherals common clocks */
+/* Configure the peripherals common clocks */
   PeriphCommonClock_Config();
 
   /* IPCC initialisation */
-  MX_IPCC_Init();
+   MX_IPCC_Init();
 
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+   MX_RTC_Init();
   MX_GPIO_Init();
-  MX_USB_PCD_Init();
-  MX_I2C3_Init();
-  MX_SAI1_Init();
-  MX_SPI2_Init();
-  MX_ADC1_Init();
+  MX_DMA_Init();
+   MX_USB_PCD_Init();
+   MX_I2C3_Init();
+   MX_SAI1_Init();
+   MX_SPI2_Init();
+   MX_ADC1_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
   MX_TIM1_Init();
 
-  if (MX_FATFS_Init() != APP_OK) {
-    Error_Handler();
-  }
+  // if (MX_FATFS_Init() != APP_OK) {
+  //   Error_Handler();
+  // }
 
   MX_RF_Init();
+//  MX_RTC_Init();
+//  MX_RNG_Init();
   /* USER CODE BEGIN 2 */
 
-  // Note: The dev board buttons use the same pins as some of the SPI2
-  // stuff. Make sure they are not being initialize when using sd card
+  /* USER CODE END 2 */
+
+  /* Init code for STM32_WPAN */
   MX_APPE_Init();
-
-  /* USER CODE BEGIN 2 */
-
-  printf("################ Start of Screen Demo ################%d\n", count);
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
 
   uint8_t dummy_rst = 0xFF;
   g_tft = Adafruit_RA8875(dummy_rst, hspi1);
@@ -241,137 +250,13 @@ int main(void)
 
   g_tft.fillScreen(RA8875_BLUE);
 
-  //Initialise LVGL UI library
-  lv_init();
+	while(1)
+	{
+    /* USER CODE END WHILE */
+    MX_APPE_Process();
+    g_tft.fillScreen(RA8875_GREEN);
 
-  int WIDTH = 800;
-  int HEIGHT = 480;
-
-  lv_display_t * disp = lv_display_create(WIDTH, HEIGHT); /*Basic initialization with horizontal and vertical resolution in pixels*/
-  lv_display_set_flush_cb(disp, my_flush_cb); /*Set a flush callback to draw to the display*/
-  lv_display_set_buffers(disp, buf_1, buf_2, sizeof(buf_1), LV_DISPLAY_RENDER_MODE_PARTIAL); /*Set an initialized buffer*/
-
-  // ------------------
-  // Layout Stuff
-
-  /*Create a container with ROW flex direction*/
-  lv_obj_t* cont_row = lv_obj_create(lv_screen_active());
-  lv_obj_set_size(cont_row, 800, 480);
-  lv_obj_align(cont_row, LV_ALIGN_TOP_MID, 0, 5);
-  lv_obj_set_flex_flow(cont_row, LV_FLEX_FLOW_ROW);
-
-  static lv_style_t style_indic;
-
-  lv_style_init(&style_indic);
-  lv_style_set_bg_opa(&style_indic, LV_OPA_COVER);
-  lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
-
-
-  lv_obj_t* bar = lv_bar_create(cont_row);
-  lv_obj_add_style(bar, &style_indic, LV_PART_INDICATOR);
-  lv_obj_set_size(bar, 150, 350);
-  lv_obj_center(bar);
-  lv_bar_set_range(bar, 0, 100);
-  lv_bar_set_value(bar, 80, LV_ANIM_ON);
-  lv_obj_set_flex_flow(bar, LV_FLEX_FLOW_ROW);
-
-  // ------
-
-  static lv_style_t style;
-  lv_style_init(&style);
-
-  lv_style_set_text_color(&style, lv_color_black());
-  lv_style_set_text_font(&style, &lv_font_montserrat_48);
-
-  /*Create an object with the new style*/
-  lv_obj_t* obj = lv_label_create(cont_row);
-  lv_obj_add_style(obj, &style, 0);
-  lv_obj_set_width(obj, 300);
-  lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n8 Minutes\nRemaining\n\n1600 PSI\n15 LPM");
-  lv_obj_center(obj);
-  lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
-
-  /*Create a container with COLUMN flex direction*/
-  lv_obj_t* cont_col = lv_obj_create(cont_row);
-  lv_obj_set_size(cont_col, 300, 400);
-  //lv_obj_align_to(cont_col, cont_row, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
-  lv_obj_set_flex_flow(cont_col, LV_FLEX_FLOW_COLUMN);
-
-  /*A base style*/
-  static lv_style_t style_base;
-  lv_style_init(&style_base);
-  lv_style_set_bg_color(&style_base, lv_palette_main(LV_PALETTE_LIGHT_BLUE));
-  lv_style_set_border_color(&style_base, lv_palette_darken(LV_PALETTE_LIGHT_BLUE, 3));
-  lv_style_set_border_width(&style_base, 2);
-  lv_style_set_radius(&style_base, 10);
-  lv_style_set_shadow_width(&style_base, 10);
-  lv_style_set_shadow_offset_y(&style_base, 5);
-  lv_style_set_shadow_opa(&style_base, LV_OPA_50);
-  lv_style_set_text_color(&style_base, lv_color_white());
-  lv_style_set_width(&style_base, 100);
-  lv_style_set_height(&style_base, LV_SIZE_CONTENT);
-  lv_style_set_text_font(&style_base, &lv_font_montserrat_48);
-
-  /*Create an object with the base style only*/
-  lv_obj_t* obj_base = lv_obj_create(cont_col);
-  lv_obj_add_style(obj_base, &style_base, 0);
-  lv_obj_align(obj_base, LV_ALIGN_LEFT_MID, 20, 0);
-
-  lv_obj_t* label = lv_label_create(obj_base);
-  lv_label_set_text(label, "Settings");
-  lv_obj_set_size(obj_base, 250, 100);
-  lv_obj_set_flex_flow(label, LV_FLEX_FLOW_COLUMN);
-
-  /*Create an object with the base style only*/
-  lv_obj_t* obj_base2 = lv_obj_create(cont_col);
-  lv_obj_add_style(obj_base2, &style_base, 0);
-  lv_obj_align(obj_base2, LV_ALIGN_LEFT_MID, 20, 0);
-
-  lv_obj_t* label2 = lv_label_create(obj_base2);
-  lv_label_set_text(label2, "Charting");
-  lv_obj_set_size(obj_base2, 250, 100);
-  lv_obj_set_flex_flow(label2, LV_FLEX_FLOW_COLUMN);
-
-  lv_obj_set_flex_grow(cont_row, 0);
-  lv_obj_set_flex_grow(bar, 0);
-  lv_obj_set_flex_grow(obj, 0);
-  lv_obj_set_flex_grow(cont_col, 0);
-  lv_obj_set_flex_grow(label, 0);
-  lv_obj_set_flex_grow(label2, 0);
-
-  lv_timer_handler();
-  HAL_Delay(5);
-  int count = 0;
-
-  /* USER CODE END 2 */
-
-  // MAIN APPLICATION LOOP
-  while (1)
-  {
-    lv_bar_set_value(bar, 80, LV_ANIM_ON);
-
-    if (count == 0) {
-        lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
-    }
-    else {
-        lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_RED));
-    }
-
-
-    lv_timer_handler();
-    lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n8 Minutes\nRemaining\n\n1600 PSI\n15 LPM");
-    HAL_Delay(5);
-    lv_bar_set_value(bar, 50, LV_ANIM_ON);
-    lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_GREEN));
-    lv_timer_handler();
-    lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n5 Minutes\nRemaining\n\n1000 PSI\n15 LPM");
-    HAL_Delay(5);
-    lv_bar_set_value(bar, 10, LV_ANIM_ON);
-    lv_style_set_bg_color(&style_indic, lv_palette_main(LV_PALETTE_ORANGE));
-    lv_timer_handler();
-    lv_label_set_text(obj, " 3-1-2024\n " LV_SYMBOL_BLUETOOTH " " LV_SYMBOL_BATTERY_3 " " LV_SYMBOL_VOLUME_MAX "\n1 Minute\nRemaining\n\n100 PSI\n15 LPM");
-    HAL_Delay(5);
-    count = 1;
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -389,43 +274,37 @@ void SystemClock_Config(void)
   */
   HAL_PWR_EnableBkUpAccess();
   __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
-
   /** Configure the main internal regulator output voltage
   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48|RCC_OSCILLATORTYPE_HSI
+                              |RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
-  RCC_OscInitStruct.PLL.PLLN = 8;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
-
   /** Configure the SYSCLKSource, HCLK, PCLK1 and PCLK2 clocks dividers
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK4|RCC_CLOCKTYPE_HCLK2
                               |RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.AHBCLK2Divider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.AHBCLK4Divider = RCC_SYSCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -441,20 +320,9 @@ void PeriphCommonClock_Config(void)
 
   /** Initializes the peripherals clock
   */
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_RFWAKEUP
-                              |RCC_PERIPHCLK_SAI1|RCC_PERIPHCLK_USB
-                              |RCC_PERIPHCLK_ADC;
-  PeriphClkInitStruct.PLLSAI1.PLLN = 6;
-  PeriphClkInitStruct.PLLSAI1.PLLP = RCC_PLLP_DIV2;
-  PeriphClkInitStruct.PLLSAI1.PLLQ = RCC_PLLQ_DIV2;
-  PeriphClkInitStruct.PLLSAI1.PLLR = RCC_PLLR_DIV2;
-  PeriphClkInitStruct.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_SAI1CLK|RCC_PLLSAI1_USBCLK
-                              |RCC_PLLSAI1_ADCCLK;
-  PeriphClkInitStruct.Sai1ClockSelection = RCC_SAI1CLKSOURCE_PLLSAI1;
-  PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLLSAI1;
-  PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
-  PeriphClkInitStruct.RFWakeUpClockSelection = RCC_RFWKPCLKSOURCE_HSE_DIV1024;
-  PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSI;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SMPS|RCC_PERIPHCLK_RFWAKEUP;
+  PeriphClkInitStruct.RFWakeUpClockSelection = RCC_RFWKPCLKSOURCE_LSE;
+  PeriphClkInitStruct.SmpsClockSelection = RCC_SMPSCLKSOURCE_HSE;
   PeriphClkInitStruct.SmpsDivSelection = RCC_SMPSCLKDIV_RANGE1;
 
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
@@ -619,76 +487,32 @@ static void MX_RF_Init(void)
 
 }
 
-// TODO: determine if needed
 /**
   * @brief RNG Initialization Function
   * @param None
   * @retval None
   */
-//static void MX_RNG_Init(void)
-//{
-//
-//  /* USER CODE BEGIN RNG_Init 0 */
-//
-//  /* USER CODE END RNG_Init 0 */
-//
-//  /* USER CODE BEGIN RNG_Init 1 */
-//
-//  /* USER CODE END RNG_Init 1 */
-//  hrng.Instance = RNG;
-//  hrng.Init.ClockErrorDetection = RNG_CED_ENABLE;
-//  if (HAL_RNG_Init(&hrng) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-//  /* USER CODE BEGIN RNG_Init 2 */
-//
-//  /* USER CODE END RNG_Init 2 */
-//
-//}
+static void MX_RNG_Init(void)
+{
 
-/**
-  * @brief RTC Initialization Function
-  * @param None
-  * @retval None
-  */
-//static void MX_RTC_Init(void)
-//{
-//
-//  /* USER CODE BEGIN RTC_Init 0 */
-//
-//  /* USER CODE END RTC_Init 0 */
-//
-//  /* USER CODE BEGIN RTC_Init 1 */
-//
-//  /* USER CODE END RTC_Init 1 */
-//
-//  /** Initialize RTC Only
-//  */
-//  hrtc.Instance = RTC;
-//  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-//  hrtc.Init.AsynchPrediv = CFG_RTC_ASYNCH_PRESCALER;
-//  hrtc.Init.SynchPrediv = CFG_RTC_SYNCH_PRESCALER;
-//  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-//  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-//  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-//  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
-//  if (HAL_RTC_Init(&hrtc) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-//
-//  /** Enable the WakeUp
-//  */
-//  if (HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0, RTC_WAKEUPCLOCK_RTCCLK_DIV16) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-//  /* USER CODE BEGIN RTC_Init 2 */
-//
-//  /* USER CODE END RTC_Init 2 */
-//
-//}
+  /* USER CODE BEGIN RNG_Init 0 */
+
+  /* USER CODE END RNG_Init 0 */
+
+  /* USER CODE BEGIN RNG_Init 1 */
+
+  /* USER CODE END RNG_Init 1 */
+  hrng.Instance = RNG;
+  hrng.Init.ClockErrorDetection = RNG_CED_ENABLE;
+  if (HAL_RNG_Init(&hrng) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RNG_Init 2 */
+
+  /* USER CODE END RNG_Init 2 */
+
+}
 
 /**
   * @brief SAI1 Initialization Function
@@ -806,28 +630,6 @@ static void MX_SPI2_Init(void)
   /* USER CODE END SPI2_Init 2 */
 
 }
-
-// TODO: determine if needed
-/**
-  * Enable DMA controller clock
-  */
-//static void MX_DMA_Init(void)
-//{
-//
-//  /* DMA controller clock enable */
-//  __HAL_RCC_DMAMUX1_CLK_ENABLE();
-//  __HAL_RCC_DMA1_CLK_ENABLE();
-//  __HAL_RCC_DMA2_CLK_ENABLE();
-//
-//  /* DMA interrupt init */
-//  /* DMA1_Channel4_IRQn interrupt configuration */
-//  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 15, 0);
-//  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-//  /* DMA2_Channel4_IRQn interrupt configuration */
-//  HAL_NVIC_SetPriority(DMA2_Channel4_IRQn, 15, 0);
-//  HAL_NVIC_EnableIRQ(DMA2_Channel4_IRQn);
-//
-//}
 
 /**
   * @brief TIM1 Initialization Function
@@ -963,6 +765,70 @@ static void MX_USB_PCD_Init(void)
 }
 
 /**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = CFG_RTC_ASYNCH_PRESCALER;
+  hrtc.Init.SynchPrediv = CFG_RTC_SYNCH_PRESCALER;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+//  TODO 314 - from https://community.st.com/t5/stm32-mcus-wireless/hw-timerserver-hangs-on-stm32wb-w-ble/td-p/128214
+//  /** Enable the WakeUp
+//  */
+//  if (HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0, RTC_WAKEUPCLOCK_RTCCLK_DIV16) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMAMUX1_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 15, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+  /* DMA2_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel4_IRQn, 15, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel4_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -1067,11 +933,6 @@ HAL_GPIO_Init(EXTI_PRESSURE_ALARM_GPIO_Port, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 4 */
-/**
-  * @brief SPI2 Initialization Function
-  * @param None
-  * @retval None
-  */
 
 /* USER CODE END 4 */
 

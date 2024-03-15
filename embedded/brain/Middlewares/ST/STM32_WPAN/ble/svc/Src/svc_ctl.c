@@ -138,7 +138,7 @@ __WEAK void SVCCTL_InitCustomSvc( void )
 
 void SVCCTL_Init( void )
 {
- 
+
   /**
    * Initialize the number of registered Handler
    */
@@ -155,42 +155,45 @@ void SVCCTL_Init( void )
 
 __WEAK void SVCCTL_SvcInit(void)
 {
-  BAS_Init();
+//  BAS_Init();
+//
+//  BLS_Init();
+//
+//  CRS_STM_Init();
+//
+//  DIS_Init();
+//
+//  EDS_STM_Init();
+//
+//  HIDS_Init();
+//
+//  HRS_Init();
+//
+//  HTS_Init();
+//
+//  IAS_Init();
+//
+//  LLS_Init();
+//
+//  TPS_Init();
+//
+//  MOTENV_STM_Init();
 
-  BLS_Init();
 
-  CRS_STM_Init();
-
-  DIS_Init();
-
-  EDS_STM_Init();
-
-  HIDS_Init();
-
-  HRS_Init();
-
-  HTS_Init();
-
-  IAS_Init();
-
-  LLS_Init();
-
-  TPS_Init();
-
-  MOTENV_STM_Init();
-
+  // NOTE: All services disabled besides P2PS_STM_Init, can add more services if needed.
+  //       This makes BLE TX/RX much easier
   P2PS_STM_Init();
 
-  ZDD_STM_Init();
+//  ZDD_STM_Init();
+//
+//  OTAS_STM_Init();
+//
+//  BVOPUS_STM_Init();
+//
+//  MESH_Init();
+//
+//  SVCCTL_InitCustomSvc();
 
-  OTAS_STM_Init();
-  
-  BVOPUS_STM_Init();
-
-  MESH_Init();
-
-  SVCCTL_InitCustomSvc();
-  
   return;
 }
 
