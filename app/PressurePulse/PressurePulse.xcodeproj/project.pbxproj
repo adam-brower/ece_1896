@@ -10,6 +10,7 @@
 		415035B02B9649DC003A67B4 /* ConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415035AF2B9649DC003A67B4 /* ConnectionOptions.swift */; };
 		417962FB2B8D174500F82A27 /* wasteland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417962FA2B8D174500F82A27 /* wasteland.swift */; };
 		417F91672B8FDE1100E43DD7 /* GhubBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417F91662B8FDE1100E43DD7 /* GhubBLE.swift */; };
+		4199A4CA2B98F686001FB7BE /* BLERc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4199A4C92B98F686001FB7BE /* BLERc.swift */; };
 		41B7E32C2B715F6B00C825C8 /* PressurePulse Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */; };
 		41B7E3332B715F6B00C825C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B7E3322B715F6B00C825C8 /* ContentView.swift */; };
@@ -48,6 +49,7 @@
 		415035AF2B9649DC003A67B4 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
 		417962FA2B8D174500F82A27 /* wasteland.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wasteland.swift; sourceTree = "<group>"; };
 		417F91662B8FDE1100E43DD7 /* GhubBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhubBLE.swift; sourceTree = "<group>"; };
+		4199A4C92B98F686001FB7BE /* BLERc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERc.swift; sourceTree = "<group>"; };
 		41B7E3252B715F6B00C825C8 /* PressurePulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PressurePulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7E32B2B715F6B00C825C8 /* PressurePulse Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PressurePulse Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B7E3302B715F6B00C825C8 /* PressurePulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PressurePulseApp.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				41D42E3A2B82D8C200E1227E /* BLEManager.swift */,
 				41CE7B552B91840100918D24 /* BLEUUID.swift */,
 				41D42E382B81924E00E1227E /* HapticManager.swift */,
+				4199A4C92B98F686001FB7BE /* BLERc.swift */,
 			);
 			path = BLE;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				415035B02B9649DC003A67B4 /* ConnectionOptions.swift in Sources */,
 				41D42E3B2B82D8C200E1227E /* BLEManager.swift in Sources */,
 				41CE7B562B91840100918D24 /* BLEUUID.swift in Sources */,
+				4199A4CA2B98F686001FB7BE /* BLERc.swift in Sources */,
 				41D42E392B81924E00E1227E /* HapticManager.swift in Sources */,
 				417962FB2B8D174500F82A27 /* wasteland.swift in Sources */,
 				41B7E3312B715F6B00C825C8 /* PressurePulseApp.swift in Sources */,
