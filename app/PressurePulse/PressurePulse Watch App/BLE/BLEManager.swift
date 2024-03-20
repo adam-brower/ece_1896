@@ -1,9 +1,9 @@
 //
-//  BLESerialConnection.swift
-//  BLEControl
+//  BLEManager.swift
+//  BLEManager
 //
-//  Created by Dan Shepherd on 18/07/2017.
-//  Copyright © 2017 Dan Shepherd. All rights reserved.
+//  Created by Adam
+//  PressurePulse App BLE
 //
 
 //import Foundation
@@ -13,6 +13,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral?
     private var connectedPeripheral: CBPeripheral?
+    @Published var Rx: [String] = []
     
     override init() {
         super.init()
@@ -65,10 +66,10 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         
         // identifier: 14543F24-25B9-2B97-3E63-BE1E515E3E41
         
-        if peripheral.name == "Adam"{
-            print("Found Adam")
-            stopScanning()
-        }
+//        if peripheral.name == "Adam"{
+//            print("Found Adam")
+//            stopScanning()
+//        }
         if peripheral.name == "P2PSRV1" || peripheral.name == "STM32WB"{
             print("P2PSRV1 or STM32WB")
             print(peripheral.name ?? "default")
@@ -99,23 +100,36 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             return
         }
         for characteristic in characteristics {
-            peripheral.setNotifyValue(true, for: characteristic)
-            peripheral.readValue(for: characteristic)
             print("Characteristic: \(characteristic)")
-            // Check if this is the characteristic you want to read
-//            if characteristic.uuid == CBUUID(string: "0000FE41-8E22-4541-9D4C-21EDAE82ED19") {
-//                // Read the value of this characteristic
-//                peripheral.setNotifyValue(true, for: characteristic)
-//                peripheral.readValue(for: characteristic)
-//            }
+            // Read the value of each characteristic discovered
+            peripheral.readValue(for: characteristic)
+            // Set notify value to true if you want to receive updates when the value changes
+            peripheral.setNotifyValue(true, for: characteristic)
         }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let data = characteristic.value {
-            print(data)
-//            let dataString = String(data: data, encoding: .utf8)
-//            print("Received data for characteristic \(characteristic.uuid): \(dataString ?? "Error decoding data")")
+//        self.Rx = UInt32(characteristic.value?[2] ?? 0)
+        
+//        print(characteristic.value)
+//        print(characteristic.value?.count ?? "default")
+        
+        self.Rx.removeAll()
+        
+        var tempRx: [String] = []
+        
+        if let count = characteristic.value?.count {
+            for idx in 0..<count {
+                if let value = characteristic.value?[idx] {
+                    print(String(format: "0x%02X", value))
+                    tempRx.append(String(format: "0x%02X", value))
+                    
+                }
+            }
         }
+        
+        self.Rx = tempRx
+        
+//        print(String(Rx, radix: 16))
     }
 }
