@@ -44,7 +44,6 @@
 #include <string.h>
 #include <stdarg.h> //for va_list var arg functions
 #include "stm32wbxx_hal_spi.h"
-#include "lvgl/lvgl.h"
 #include "app_fatfs.h"
 /* USER CODE END Includes */
 
@@ -131,43 +130,6 @@ int _write(int file, char *ptr, int len)
 
 // private debug variable
 uint32_t count;
-
-/**************************************************************************/
-/*!
-    Callback for LVGL functions
- */
-/**************************************************************************/
-void my_flush_cb(lv_display_t * disp, const lv_area_t * area, unsigned char * px_map)
-{
-  int height = area->y2 - area->y1 + 1;
-  int width = area->x2 - area->x1 + 1;
-
-  uint16_t * buf16 = (uint16_t *)px_map;
-
-  //We will do the SPI write manually here for speed
-  //CS low to begin data
-  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_RESET);
-
-  //Write colour to each pixel
-  int current_height = area->y1;
-  for (int i = 0; i < height; i++) {
-    // TODO 314: reenable
-	  // g_tft.drawPixels(buf16, width ,area->x1, current_height);
-	  buf16 += width;
-	  current_height++;
-  }
-
-  //Return CS to high
-  HAL_GPIO_WritePin(DIS_CS_GPIO_Port, DIS_CS_Pin, GPIO_PIN_SET);
-
-  /* IMPORTANT!!!
-  * Inform the graphics library that you are ready with the flushing*/
-  lv_display_flush_ready(disp);
-}
-
-// display buffers for LVGL
-static lv_color_t buf_1[8000];
-static lv_color_t buf_2[8000];
 
 // ----------------------------------------------------
 
