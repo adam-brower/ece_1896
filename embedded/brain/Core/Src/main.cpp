@@ -297,6 +297,8 @@ int main(void)
   MX_APPE_Init();
 
   	  uint8_t dummy_rst = 0xFF;
+
+  	  HAL_Delay(100);
   	  g_tft = Adafruit_RA8875(dummy_rst, hspi1);
 
   	  bool a = g_tft.begin();
@@ -309,16 +311,21 @@ int main(void)
 
     printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
-    uint8_t data[6] = {0x00, 0xFF,      0xD0,      0x0F, 0x00,        0xE1};
+    uint8_t data[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
+
 
 	while(1)
 	{
     /* USER CODE END WHILE */
     MX_APPE_Process();
     g_tft.drawMainScreen();
-    HAL_Delay(300);
+
+    HAL_Delay(10000);
+
 //    fatfs_demo();
     P2PS_Send_Notification_Data(&data[0]);
+
+
     data[4] ++;
     if (data[1] > 0) {
     	data[1] --;

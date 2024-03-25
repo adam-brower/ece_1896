@@ -382,7 +382,7 @@ uint8_t g_count = 0;
 
 void P2PS_Send_Notification_Data(uint8_t *data)
 {
-	printf("Sending Pressure Pulse packet over BLE!");
+	printf("Sending Pressure Pulse packet over BLE!\n");
 	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, data);
 
   return;
