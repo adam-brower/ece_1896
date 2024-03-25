@@ -296,45 +296,18 @@ int main(void)
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
 
-  	  uint8_t dummy_rst = 0xFF;
-
-  	  HAL_Delay(100);
-  	  g_tft = Adafruit_RA8875(dummy_rst, hspi1);
-
-  	  bool a = g_tft.begin();
-
-  	  g_tft.displayOn(true);
-  	  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
-  	  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
-  	  g_tft.PWM1out(255);
 
 
-    printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
+  HAL_GPIO_WritePin(BOOST_EN_GPIO_Port, BOOST_EN_Pin, GPIO_PIN_SET);
 
-    uint8_t data[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
+  printf("\r\n\r Set BOOST_EN to High\r\n\r\n");
+
+
 
 
 	while(1)
 	{
     /* USER CODE END WHILE */
-    MX_APPE_Process();
-    g_tft.drawMainScreen();
-
-    HAL_Delay(10000);
-
-//    fatfs_demo();
-    P2PS_Send_Notification_Data(&data[0]);
-
-
-    data[4] ++;
-    if (data[1] > 0) {
-    	data[1] --;
-    }
-    else {
-    	data[1] = 0xFF;
-    }
-
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
