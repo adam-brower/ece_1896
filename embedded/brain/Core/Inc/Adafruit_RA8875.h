@@ -20,7 +20,6 @@
 /**************************************************************************/
 
 #include "main.h"
-#include "lvgl/lvgl.h"
 
 #ifndef _ADAFRUIT_RA8875_H
 #define _ADAFRUIT_RA8875_H ///< File has been included
