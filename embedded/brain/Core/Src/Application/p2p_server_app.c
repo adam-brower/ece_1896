@@ -370,7 +370,7 @@ void P2PS_APP_SW1_Button_Action(void)
 //  - Flow = 15
 //  - Low Threshold = 225
 //					 Time  Pressure 1 Pressure 2 Flow  Low Thresh 1 Low Thresh 2
-uint8_t my_num0[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
+// uint8_t data[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
 
 //					 Time  Pressure 1 Pressure 2 Flow  Low Thresh 1 Low Thresh 2
 uint8_t my_num1[6] = {0x01, 0x03,      0xB6,      0x0A, 0x00,        0xE1};
@@ -380,39 +380,52 @@ uint8_t my_num2[6] = {0x02, 0x00,      0x64,      0x01, 0x00,        0xE1};
 
 uint8_t g_count = 0;
 
+void P2PS_Send_Notification_Data(uint8_t *data)
+{
+	printf("Sending Pressure Pulse packet over BLE!");
+	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, data);
+
+  return;
+}
+
+
+
+
+
+
 void P2PS_Send_Notification(void)
 {
 
-  if(P2P_Server_App_Context.ButtonControl.ButtonStatus == 0x00){
-    P2P_Server_App_Context.ButtonControl.ButtonStatus=0x01;
-  } else {
-    P2P_Server_App_Context.ButtonControl.ButtonStatus=0x00;
-  }
-
-   if(P2P_Server_App_Context.Notification_Status){
-    printf("-- P2P APPLICATION SERVER  : INFORM CLIENT BUTTON 1 PUSHED \n ");
-    printf(" \n\r");
-
-//    uint8_t test1 = 0x43;
-    if (g_count == 0) {
-    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num0[0]);
-    	g_count++;
-    }
-    else if (g_count == 1) {
-    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num1[0]);
-    	g_count++;
-    }
-    else {
-    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num2[0]);
-    	g_count = 0;
-    }
-
-
-    // TODO: changed
-//    P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, (uint8_t *)&P2P_Server_App_Context.ButtonControl);
-   } else {
-    printf("-- P2P APPLICATION SERVER : CAN'T INFORM CLIENT -  NOTIFICATION DISABLED\n ");
-   }
+//  if(P2P_Server_App_Context.ButtonControl.ButtonStatus == 0x00){
+//    P2P_Server_App_Context.ButtonControl.ButtonStatus=0x01;
+//  } else {
+//    P2P_Server_App_Context.ButtonControl.ButtonStatus=0x00;
+//  }
+//
+//   if(P2P_Server_App_Context.Notification_Status){
+//    printf("-- P2P APPLICATION SERVER  : INFORM CLIENT BUTTON 1 PUSHED \n ");
+//    printf(" \n\r");
+//
+////    uint8_t test1 = 0x43;
+//    if (g_count == 0) {
+//    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num0[0]);
+//    	g_count++;
+//    }
+//    else if (g_count == 1) {
+//    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num1[0]);
+//    	g_count++;
+//    }
+//    else {
+//    	P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, &my_num2[0]);
+//    	g_count = 0;
+//    }
+//
+//
+//    // TODO: changed
+////    P2PS_STM_App_Update_Char(P2P_NOTIFY_CHAR_UUID, (uint8_t *)&P2P_Server_App_Context.ButtonControl);
+//   } else {
+//    printf("-- P2P APPLICATION SERVER : CAN'T INFORM CLIENT -  NOTIFICATION DISABLED\n ");
+//   }
 
   return;
 }

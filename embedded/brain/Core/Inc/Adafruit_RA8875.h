@@ -102,6 +102,9 @@ public:
   Adafruit_RA8875();
   Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI);
 
+  // user functions
+  void drawMainScreen();
+
   bool begin();
   void softReset(void);
   void displayOn(bool on);
