@@ -1,19 +1,28 @@
 //
 //  BLEManager.swift
-//  BLEManager
 //
 //  Created by Adam
 //  PressurePulse App BLE
 //
 
-//import Foundation
 import CoreBluetooth
+
+struct Peripheral: Identifiable, Equatable {
+    let id = UUID()
+    let peripheral: CBPeripheral
+    var isConnected: Bool
+    
+    static func == (lhs: Peripheral, rhs: Peripheral) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
 
 class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
     private var centralManager: CBCentralManager!
-    private var peripheral: CBPeripheral?
+//    private var peripheral: CBPeripheral?
     private var connectedPeripheral: CBPeripheral?
     @Published var Rx: [String] = []
+    @Published var discoveredPeripherals: [Peripheral] = []
     
     override init() {
         super.init()
@@ -33,7 +42,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             centralManager.scanForPeripherals(withServices: nil, options: nil)
             print("start scanning")
         }else{
-            print("Device already Connected ")
+            print("Device already Connected")
         }
     }
     
@@ -42,39 +51,42 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         centralManager.stopScan()
     }
     
-    func connectToPeripheral(_ peripheral: CBPeripheral) {
+    func connectToPeripheral(_ peripheral: Peripheral) {
         print("connecting to peripheral")
-        centralManager.connect(peripheral, options: nil)
-        connectedPeripheral = peripheral // store reference to the connected peripheral
+        centralManager.connect(peripheral.peripheral, options: nil)
+        connectedPeripheral = peripheral.peripheral // store reference to the connected peripheral
+        
+        if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral == connectedPeripheral }) {
+            discoveredPeripherals[index].isConnected = true
+        }
     }
-
     
-    func disconnectPeripheral() {
-        if let peripheral = connectedPeripheral { // Use the stored reference
-            print("disconnecting peripheral: " + (connectedPeripheral?.name ??  "no value"))
-            centralManager.cancelPeripheralConnection(peripheral)
-            connectedPeripheral = nil // Reset the stored reference after disconnecting
-        }else{
-            print("No Peripheral to disconnect")
-            stopScanning()
+    func disconnectPeripheral(_ peripheral: Peripheral) {
+        if let connectedPeripheral = connectedPeripheral {
+            print("disconnecting peripheral: \(connectedPeripheral.name ?? "no value")")
+            centralManager.cancelPeripheralConnection(connectedPeripheral)
+            // update the isConnected property of the disconnected peripheral
+            if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral == connectedPeripheral }) {
+                discoveredPeripherals[index].isConnected = false
+            }
+            self.Rx.removeAll()
+            self.connectedPeripheral = nil
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("didDiscover")
-//        print(peripheral.name ?? "  ")
         
-        // identifier: 14543F24-25B9-2B97-3E63-BE1E515E3E41
+        guard let peripheralName = peripheral.name else {
+            return
+        }
         
-//        if peripheral.name == "Adam"{
-//            print("Found Adam")
-//            stopScanning()
-//        }
-        if peripheral.name == "P2PSRV1" || peripheral.name == "STM32WB"{
-            print("P2PSRV1 or STM32WB")
-            print(peripheral.name ?? "default")
-            connectToPeripheral(peripheral)
-            stopScanning()
+        print("Discovered peripheral: \(peripheralName)")
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if !self.discoveredPeripherals.contains(where: { $0.peripheral == peripheral }) {
+                self.discoveredPeripherals.append(Peripheral(peripheral: peripheral, isConnected: false))
+            }
         }
     }
     
@@ -101,35 +113,23 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         }
         for characteristic in characteristics {
             print("Characteristic: \(characteristic)")
-            // Read the value of each characteristic discovered
             peripheral.readValue(for: characteristic)
-            // Set notify value to true if you want to receive updates when the value changes
             peripheral.setNotifyValue(true, for: characteristic)
         }
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-//        self.Rx = UInt32(characteristic.value?[2] ?? 0)
-        
-//        print(characteristic.value)
-//        print(characteristic.value?.count ?? "default")
-        
         self.Rx.removeAll()
-        
         var tempRx: [String] = []
         
         if let count = characteristic.value?.count {
             for idx in 0..<count {
                 if let value = characteristic.value?[idx] {
-                    print(String(format: "0x%02X", value))
                     tempRx.append(String(format: "0x%02X", value))
-                    
                 }
             }
         }
         
         self.Rx = tempRx
-        
-//        print(String(Rx, radix: 16))
     }
 }
