@@ -46,6 +46,7 @@
 #include "stm32wbxx_hal_spi.h"
 #include "app_fatfs.h"
 #include "p2p_server_app.h"
+#include "DataManager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -311,29 +312,48 @@ int main(void)
 
     printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
-    uint8_t data[6] = {0x00, 0x07,      0xD0,      0x0F, 0x00,        0xE1};
+    DataManager dm = DataManager();
+    dm.setTimeRemaining_Minutes(10);
+    dm.setPressure_PSI(2000);
+    dm.setFlow_LPM(15);
+    dm.setLowPressureThreshold_PSI(300);
 
+    uint8_t* blePayload;
+
+    g_tft.drawMainScreen();
 
 	while(1)
 	{
     /* USER CODE END WHILE */
     MX_APPE_Process();
-    g_tft.drawMainScreen();
 
-    HAL_Delay(10000);
+    HAL_Delay(2000);
 
 //    fatfs_demo();
-    P2PS_Send_Notification_Data(&data[0]);
 
+    blePayload = dm.getDataArrPtr();
 
-    data[4] ++;
-    if (data[1] > 0) {
-    	data[1] --;
+    P2PS_Send_Notification_Data(blePayload);
+
+    printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
+        		dm.getTimeRemaining_Minutes(),
+    			dm.getPressure_PSI(),
+    			dm.getFlow_LPM(),
+    			dm.getLowPressureThreshold_PSI());
+
+    if (dm.getPressure_PSI() > 0) {
+    	dm.setPressure_PSI(dm.getPressure_PSI()-100);
     }
     else {
-    	data[1] = 0xFF;
+    	dm.setPressure_PSI(2000);
     }
 
+    if (dm.getTimeRemaining_Minutes() > 0) {
+      dm.setTimeRemaining_Minutes(dm.getTimeRemaining_Minutes()-1);
+    }
+    else {
+      dm.setTimeRemaining_Minutes(15);
+    }
 
     /* USER CODE BEGIN 3 */
   }
