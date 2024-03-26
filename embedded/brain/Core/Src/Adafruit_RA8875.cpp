@@ -17,28 +17,35 @@ Adafruit_RA8875::Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI) {
 
 void Adafruit_RA8875::drawMainScreen() {
     fillScreen(RA8875_WHITE);
-    fillRoundRect(50,50,300,400,10,RA8875_CYAN);
-    textColor(RA8875_BLACK,RA8875_RED);
 
-    /* Switch to text mode */
-    textMode();
-    textTransparent(RA8875_BLACK);
-    textEnlarge(10);
-    cursorBlink(32);
-
-    /* Set a solid for + bg color ... */
-
-    /* ... or a fore color plus a transparent background */
+    drawRect(0,0,750,200, RA8875_BLACK);
 
 
-    /* Set the cursor location (in pixels) */
-    textSetCursor(50, 50);
+    // // drawing top menu bar
+    // fillRoundRect(50,50,300,400,10,RA8875_CYAN);
 
-    /* Render some text! */
-    char string[15] = "Hello, World! ";
-    textWrite(string);
 
-    graphicsMode();
+    // textColor(RA8875_BLACK,RA8875_RED);
+
+    // /* Switch to text mode */
+    // textMode();
+    // textTransparent(RA8875_BLACK);
+    // textEnlarge(10);
+    // cursorBlink(32);
+
+    // /* Set a solid for + bg color ... */
+
+    // /* ... or a fore color plus a transparent background */
+
+
+    // /* Set the cursor location (in pixels) */
+    // textSetCursor(50, 50);
+
+    // /* Render some text! */
+    // char string[15] = "Hello, World! ";
+    // textWrite(string);
+
+    // graphicsMode();
 }
 
 /**************************************************************************/
