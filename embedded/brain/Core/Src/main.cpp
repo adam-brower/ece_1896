@@ -46,7 +46,7 @@
 #include "stm32wbxx_hal_spi.h"
 #include "app_fatfs.h"
 #include "p2p_server_app.h"
-#include "DataManager.h"
+//#include "DataManager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -127,6 +127,7 @@ int _write(int file, char *ptr, int len)
   {
     ITM_SendChar(*ptr++);
   }
+
   return len;
 }
 
@@ -297,26 +298,28 @@ int main(void)
   /* Init code for STM32_WPAN */
   MX_APPE_Init();
 
-  	  uint8_t dummy_rst = 0xFF;
 
-  	  HAL_Delay(100);
-  	  g_tft = Adafruit_RA8875(dummy_rst, hspi1);
-
-  	  bool a = g_tft.begin();
-
-  	  g_tft.displayOn(true);
-  	  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
-  	  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
-  	  g_tft.PWM1out(255);
 
 
     printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
 
-    DataManager dm = DataManager();
-    dm.setTimeRemaining_Minutes(10);
-    dm.setPressure_PSI(2000);
-    dm.setFlow_LPM(15);
-    dm.setLowPressureThreshold_PSI(300);
+    DataManager *dm = new DataManager();
+    dm->setTimeRemaining_Minutes(10);
+    dm->setPressure_PSI(2000);
+    dm->setFlow_LPM(15);
+    dm->setLowPressureThreshold_PSI(300);
+
+    uint8_t dummy_rst = 0xFF;
+
+	  HAL_Delay(100);
+	  g_tft = Adafruit_RA8875(dummy_rst, hspi1, dm);
+
+	  bool a = g_tft.begin();
+
+	  g_tft.displayOn(true);
+	  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+	  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+	  g_tft.PWM1out(255);
 
     uint8_t* blePayload;
 
@@ -327,32 +330,34 @@ int main(void)
     /* USER CODE END WHILE */
     MX_APPE_Process();
 
-    HAL_Delay(2000);
+    HAL_Delay(1000);
 
 //    fatfs_demo();
 
-    blePayload = dm.getDataArrPtr();
+    blePayload = dm->getDataArrPtr();
 
     P2PS_Send_Notification_Data(blePayload);
 
+    g_tft.drawMainScreen();
+
     printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
-        		dm.getTimeRemaining_Minutes(),
-    			dm.getPressure_PSI(),
-    			dm.getFlow_LPM(),
-    			dm.getLowPressureThreshold_PSI());
+        		dm->getTimeRemaining_Minutes(),
+    			dm->getPressure_PSI(),
+    			dm->getFlow_LPM(),
+    			dm->getLowPressureThreshold_PSI());
 
-    if (dm.getPressure_PSI() > 0) {
-    	dm.setPressure_PSI(dm.getPressure_PSI()-100);
+    if (dm->getPressure_PSI() > 0) {
+    	dm->setPressure_PSI(dm->getPressure_PSI()-100);
     }
     else {
-    	dm.setPressure_PSI(2000);
+    	dm->setPressure_PSI(2000);
     }
 
-    if (dm.getTimeRemaining_Minutes() > 0) {
-      dm.setTimeRemaining_Minutes(dm.getTimeRemaining_Minutes()-1);
+    if (dm->getTimeRemaining_Minutes() > 0) {
+      dm->setTimeRemaining_Minutes(dm->getTimeRemaining_Minutes()-1);
     }
     else {
-      dm.setTimeRemaining_Minutes(15);
+      dm->setTimeRemaining_Minutes(15);
     }
 
     /* USER CODE BEGIN 3 */

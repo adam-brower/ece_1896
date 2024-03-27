@@ -20,6 +20,7 @@
 /**************************************************************************/
 
 #include "main.h"
+#include "DataManager.h"
 
 #ifndef _ADAFRUIT_RA8875_H
 #define _ADAFRUIT_RA8875_H ///< File has been included
@@ -100,7 +101,7 @@ class Adafruit_RA8875 {
 public:
   Adafruit_RA8875(uint8_t cs, uint8_t rst);
   Adafruit_RA8875();
-  Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI);
+  Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI, DataManager *dm);
 
   // user functions
   void drawMainScreen();
@@ -227,6 +228,9 @@ private:
     y = temp;
   }
 
+
+  DataManager *_dm;
+
   uint8_t _rst;
   SPI_HandleTypeDef _DIS_HSPI;
   enum RA8875sizes _size;
@@ -245,6 +249,8 @@ private:
 #define RA8875_MAGENTA 0xF81F ///< Magenta Color
 #define RA8875_YELLOW 0xFFE0  ///< Yellow Color
 #define RA8875_WHITE 0xFFFF   ///< White Color
+
+#define COLOR_LIGHT_GREEN 0x07ce
 
 // Command/Data pins for SPI
 #define RA8875_DATAWRITE 0x00 ///< See datasheet

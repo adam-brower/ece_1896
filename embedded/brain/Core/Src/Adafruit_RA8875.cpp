@@ -10,42 +10,71 @@ Adafruit_RA8875::Adafruit_RA8875() {}
             @param RST Location of the reset pin
 */
 /**************************************************************************/
-Adafruit_RA8875::Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI) {
+Adafruit_RA8875::Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI, DataManager *dm) {
   _DIS_HSPI = DIS_HSPI;
   _rst = RST;
+  _dm = dm;
 }
 
 void Adafruit_RA8875::drawMainScreen() {
     fillScreen(RA8875_WHITE);
 
-    drawRect(0,0,750,200, RA8875_BLACK);
+    // drawRect(0,0,750,200, RA8875_BLACK);
+
+    // determining status color
+    const int HEIGHT_BLOCK = 40;
+    const int MAX_PRESSURE = 2000;
+    const int MAX_HEIGHT = 400;
+
+    uint16_t pressure = _dm->getPressure_PSI();
+    uint16_t color;
+    uint16_t height = (pressure/200) * HEIGHT_BLOCK;
+
+    printf("height = %d\n", height);
+
+    if(pressure > 1000) {
+        color = COLOR_LIGHT_GREEN;
+    }
+    else {
+        color = RA8875_RED;
+    }
 
 
-    // // drawing top menu bar
-    // fillRoundRect(50,50,300,400,10,RA8875_CYAN);
 
 
-    // textColor(RA8875_BLACK,RA8875_RED);
+    // drawing top menu bar
 
-    // /* Switch to text mode */
-    // textMode();
-    // textTransparent(RA8875_BLACK);
-    // textEnlarge(10);
+    if (height) {
+        fillRoundRect(50,50+MAX_HEIGHT-height,300,height,10,color);
+    }
+
+
+    textColor(RA8875_BLACK,RA8875_RED);
+
+    /* Switch to text mode */
+    textMode();
+    textTransparent(RA8875_BLACK);
+    textEnlarge(10);
     // cursorBlink(32);
 
-    // /* Set a solid for + bg color ... */
+    /* Set a solid for + bg color ... */
 
-    // /* ... or a fore color plus a transparent background */
+    /* ... or a fore color plus a transparent background */
 
 
-    // /* Set the cursor location (in pixels) */
-    // textSetCursor(50, 50);
+    /* Set the cursor location (in pixels) */
+    textSetCursor(50, 50);
 
-    // /* Render some text! */
-    // char string[15] = "Hello, World! ";
-    // textWrite(string);
+    /* Render some text! */
+    char string[15] = "Hello, World!";
 
-    // graphicsMode();
+    int n = 10;
+    char bla[32];   // Use an array which is large enough
+    snprintf(bla, sizeof(bla), "My number is %d", _dm->getPressure_PSI());
+
+    textWrite(bla);
+
+    graphicsMode();
 }
 
 /**************************************************************************/
