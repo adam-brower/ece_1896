@@ -66,13 +66,18 @@ void Adafruit_RA8875::drawMainScreen() {
     textSetCursor(50, 50);
 
     /* Render some text! */
-    char string[15] = "Hello, World!";
+    char bla1[32];   // Use an array which is large enough
+    char bla2[32];   // Use an array which is large enough
+    char bla3[32];   // Use an array which is large enough
+    snprintf(bla1, sizeof(bla1), "Pressure: %d", _dm->getPressure_PSI());
+    snprintf(bla1, sizeof(bla2), "Flow: %d", _dm->getFlow_LPM());
+    snprintf(bla1, sizeof(bla3), "Time Remaining: %d", _dm->getTimeRemaining_Minutes());
 
-    int n = 10;
-    char bla[32];   // Use an array which is large enough
-    snprintf(bla, sizeof(bla), "My number is %d", _dm->getPressure_PSI());
-
-    textWrite(bla);
+    textWrite(bla1);
+    textSetCursor(50, 150);
+    textWrite(bla2);
+    textSetCursor(50, 250);
+    textWrite(bla3);
 
     graphicsMode();
 }

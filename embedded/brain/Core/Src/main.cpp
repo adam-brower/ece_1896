@@ -136,6 +136,52 @@ uint32_t count;
 
 // ----------------------------------------------------
 
+#include <stdio.h>
+#include <stdlib.h>
+
+// filter parameters
+#define Q_PRESSURE 0.01         // process noise covariance for pressure
+#define Q_FLOWRATE 0.01         // process noise covariance for flow rate
+#define R 0.5                   // measurement noise covariance
+#define P_INITIAL 1             // initial estimation error covariance
+#define TANK_CAPACITY 2000.0    // maximum tank pressure in psi
+#define MAX_FLOW_RATE 25.0      // maximum flow rate in liters per minute
+#define MIN_FLOW_RATE 0.1       // minimum flow rate in liters per minute
+#define TIME_DEPLETION 22.0     // time to depletion at max pressure and flow rate
+
+/*
+kalman()
+Inputs:
+    float flow_rate : flow rate sensor input
+    float pressure  : pressure sensor input
+Returns:
+    float x_est     : estimated time left in oxygen tank
+Desc:
+    reads in flow rate and pressure and updates
+*/
+float kalman_filter(float flow_rate, float pressure) {
+
+    static float x_est = TIME_DEPLETION; // initial estimated time
+    static float P_est = P_INITIAL;      // initial estimation error covariance
+
+    // prediction step
+    float x_pred = x_est; // pred state estimate
+    float P_pred = P_est + Q_PRESSURE + Q_FLOWRATE * flow_rate * flow_rate; // pred error covariance
+
+    // update step
+    // convert pressure to a fraction of tank capacity to estimate time left
+    float y = (pressure / TANK_CAPACITY) * TIME_DEPLETION;
+    // Kalman gain
+    float S = P_pred + R; // estimate error covariance + measurement noise covariance
+    float K = P_pred / S; // gain
+
+    // update state estimate and error covariance
+    x_est = x_pred + K * (y - x_pred); // state estimate
+    P_est = (1 - K) * P_pred;          // estimation error covariance
+
+    return x_est; // time left in the tank
+}
+
 
 void fatfs_demo() {
 	if (MX_FATFS_Init() != APP_OK) {
@@ -325,40 +371,51 @@ int main(void)
 
     g_tft.drawMainScreen();
 
+    MX_APPE_Process();
+
 	while(1)
 	{
     /* USER CODE END WHILE */
-    MX_APPE_Process();
 
-    HAL_Delay(1000);
 
-//    fatfs_demo();
 
-    blePayload = dm->getDataArrPtr();
 
-    P2PS_Send_Notification_Data(blePayload);
 
-    g_tft.drawMainScreen();
+  // read in data from bronco
 
-    printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
+
+  // call adams kalman filter
+  float time = kalman_filter((float)(dm->getFlow_LPM()), (float)(dm->getPressure_PSI()));
+  dm->setTimeRemaining_Minutes((uint8_t)time);
+
+  // display to screen
+  g_tft.drawMainScreen();
+
+  // send over ble
+  blePayload = dm->getDataArrPtr();
+  printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
         		dm->getTimeRemaining_Minutes(),
     			dm->getPressure_PSI(),
     			dm->getFlow_LPM(),
     			dm->getLowPressureThreshold_PSI());
+  P2PS_Send_Notification_Data(blePayload);
 
-    if (dm->getPressure_PSI() > 0) {
-    	dm->setPressure_PSI(dm->getPressure_PSI()-100);
-    }
-    else {
-    	dm->setPressure_PSI(2000);
-    }
+  // delay a bit
+  HAL_Delay(1000);
 
-    if (dm->getTimeRemaining_Minutes() > 0) {
-      dm->setTimeRemaining_Minutes(dm->getTimeRemaining_Minutes()-1);
-    }
-    else {
-      dm->setTimeRemaining_Minutes(15);
-    }
+     if (dm->getPressure_PSI() > 0) {
+     	dm->setPressure_PSI(dm->getPressure_PSI()-100);
+     }
+     else {
+     	dm->setPressure_PSI(2000);
+     }
+
+     if (dm->getTimeRemaining_Minutes() > 0) {
+       dm->setTimeRemaining_Minutes(dm->getTimeRemaining_Minutes()-1);
+     }
+     else {
+       dm->setTimeRemaining_Minutes(15);
+     }
 
     /* USER CODE BEGIN 3 */
   }
