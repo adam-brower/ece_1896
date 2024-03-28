@@ -19,12 +19,12 @@ Adafruit_RA8875::Adafruit_RA8875(uint8_t RST, SPI_HandleTypeDef DIS_HSPI, DataMa
 void Adafruit_RA8875::drawMainScreen() {
     fillScreen(RA8875_WHITE);
 
-    // drawRect(0,0,750,200, RA8875_BLACK);
-
     // determining status color
-    const int HEIGHT_BLOCK = 40;
     const int MAX_PRESSURE = 2000;
-    const int MAX_HEIGHT = 400;
+    const int MAX_HEIGHT = 350;
+    const int HEIGHT_BLOCK = MAX_HEIGHT / 10;
+    const int TANK_X = 50;
+    const int TANK_Y = 100;
 
     uint16_t pressure = _dm->getPressure_PSI();
     uint16_t color;
@@ -32,21 +32,55 @@ void Adafruit_RA8875::drawMainScreen() {
 
     printf("height = %d\n", height);
 
-    if(pressure > 1000) {
-        color = COLOR_LIGHT_GREEN;
+    if(pressure >= 1600) {
+        color = COLOR_GREEN;
+    }
+    else if(pressure >= 1200) {
+        color = COLOR_YELLOW_GREEN;
+    }
+    else if(pressure >= 800) {
+        color = COLOR_YELLOW;
+    }
+    else if(pressure >= 400) {
+        color = COLOR_ORANGE;
     }
     else {
         color = RA8875_RED;
     }
 
-
-
-
-    // drawing top menu bar
+    const int RECT_WIDTH = 100;
 
     if (height) {
-        fillRoundRect(50,50+MAX_HEIGHT-height,300,height,10,color);
+        fillRoundRect(TANK_X,TANK_Y+MAX_HEIGHT-height,RECT_WIDTH,height,10,color);
     }
+    drawRoundRect(TANK_X,TANK_Y,RECT_WIDTH,MAX_HEIGHT,10,RA8875_BLACK);
+
+    // Buttons on right
+    const int BUTTON_X = 550;
+    const int BUTTON_WIDTH = 225;
+    const int BUTTON_HEGIHT = 90;
+    const int BUTTON1_Y = 25;
+    const int BUTTON2_Y = 141;
+    const int BUTTON3_Y = 257;
+    const int BUTTON4_Y = 373;
+    const int TEXT_X_OFFSET = 10;
+    const int TEXT_Y_OFFSET = 15;
+
+    fillRoundRect(BUTTON_X,BUTTON1_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,COLOR_CYAN);
+    fillRoundRect(BUTTON_X,BUTTON2_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,COLOR_CYAN);
+    fillRoundRect(BUTTON_X,BUTTON3_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,COLOR_CYAN);
+    fillRoundRect(BUTTON_X,BUTTON4_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,COLOR_CYAN);
+
+    drawRoundRect(BUTTON_X,BUTTON1_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10 ,RA8875_BLACK);
+    drawRoundRect(BUTTON_X,BUTTON2_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,RA8875_BLACK);
+    drawRoundRect(BUTTON_X,BUTTON3_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,RA8875_BLACK);
+    drawRoundRect(BUTTON_X,BUTTON4_Y,BUTTON_WIDTH,BUTTON_HEGIHT,10,RA8875_BLACK);
+
+    // drawing top menu bar
+    fillRoundRect(-10,-10,525,90,10,COLOR_NOAH);
+    drawRoundRect(-10,-10,525,90,10,RA8875_BLACK);
+
+
 
 
     textColor(RA8875_BLACK,RA8875_RED);
@@ -63,21 +97,47 @@ void Adafruit_RA8875::drawMainScreen() {
 
 
     /* Set the cursor location (in pixels) */
-    textSetCursor(50, 50);
+    const int CURSOR_X = 200;
 
     /* Render some text! */
     char bla1[32];   // Use an array which is large enough
     char bla2[32];   // Use an array which is large enough
     char bla3[32];   // Use an array which is large enough
-    snprintf(bla1, sizeof(bla1), "Pressure: %d", _dm->getPressure_PSI());
-    snprintf(bla1, sizeof(bla2), "Flow: %d", _dm->getFlow_LPM());
-    snprintf(bla1, sizeof(bla3), "Time Remaining: %d", _dm->getTimeRemaining_Minutes());
+    snprintf(bla3, sizeof(bla3), "%d Minutes", _dm->getTimeRemaining_Minutes());
+    snprintf(bla1, sizeof(bla1), "%d PSI", _dm->getPressure_PSI());
+    snprintf(bla2, sizeof(bla2), "%d LPM", _dm->getFlow_LPM());
 
-    textWrite(bla1);
-    textSetCursor(50, 150);
-    textWrite(bla2);
-    textSetCursor(50, 250);
+    textSetCursor(CURSOR_X, TANK_Y+25);
     textWrite(bla3);
+    textSetCursor(CURSOR_X, TANK_Y+125);
+    textWrite(bla1);
+    textSetCursor(CURSOR_X, TANK_Y+225);
+    textWrite(bla2);
+
+    char btn1Text[15] = "Settings";
+    textEnlarge(2);
+    textSetCursor(BUTTON_X+TEXT_X_OFFSET, BUTTON1_Y+TEXT_Y_OFFSET);
+    textWrite(btn1Text);
+
+    char btn2Text[15] = "Charting";
+    textEnlarge(2);
+    textSetCursor(BUTTON_X+TEXT_X_OFFSET, BUTTON2_Y+TEXT_Y_OFFSET);
+    textWrite(btn2Text);
+
+    char btn3Text[15] = "Alarm";
+    textEnlarge(2);
+    textSetCursor(BUTTON_X+TEXT_X_OFFSET, BUTTON3_Y+TEXT_Y_OFFSET);
+    textWrite(btn3Text);
+
+    char btn4Text[15] = "Threshold";
+    textEnlarge(2);
+    textSetCursor(BUTTON_X+TEXT_X_OFFSET, BUTTON4_Y+TEXT_Y_OFFSET);
+    textWrite(btn4Text);
+
+    char btn5Text[30] = "B? | DT | S | B1 B2";
+    textEnlarge(2);
+    textSetCursor(10,10);
+    textWrite(btn5Text);
 
     graphicsMode();
 }

@@ -251,6 +251,15 @@ private:
 #define RA8875_WHITE 0xFFFF   ///< White Color
 
 #define COLOR_LIGHT_GREEN 0x07ce
+#define COLOR_CYAN 0x07fb
+#define COLOR_LIGHT_GAY 0xef5d
+#define COLOR_NOAH 0xbf7d
+
+#define COLOR_GREEN 0x1640
+#define COLOR_YELLOW_GREEN 0x6fe0
+#define COLOR_YELLOW 0xf7e0
+#define COLOR_ORANGE 0xebe2
+#define COLOR_RED 0xf800
 
 // Command/Data pins for SPI
 #define RA8875_DATAWRITE 0x00 ///< See datasheet

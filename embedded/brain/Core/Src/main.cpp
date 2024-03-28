@@ -46,6 +46,8 @@
 #include "stm32wbxx_hal_spi.h"
 #include "app_fatfs.h"
 #include "p2p_server_app.h"
+#include "PTE7300_I2C.h"
+#include "SFM3100.h"
 //#include "DataManager.h"
 /* USER CODE END Includes */
 
@@ -345,77 +347,90 @@ int main(void)
   MX_APPE_Init();
 
 
-
-
-    printf("\r\n\r\n################ BLE TX/RX DEMO (Server Side) ################\r\n\r\n");
+    printf("\r\n\r\n################ Integration Test 1 ################\r\n\r\n");
 
     DataManager *dm = new DataManager();
-    dm->setTimeRemaining_Minutes(10);
+    dm->setTimeRemaining_Minutes(15);
     dm->setPressure_PSI(2000);
     dm->setFlow_LPM(15);
-    dm->setLowPressureThreshold_PSI(300);
+    dm->setLowPressureThreshold_PSI(500);
 
     uint8_t dummy_rst = 0xFF;
 
-	  HAL_Delay(100);
-	  g_tft = Adafruit_RA8875(dummy_rst, hspi1, dm);
+	   g_tft = Adafruit_RA8875(dummy_rst, hspi1, dm);
 
 	  bool a = g_tft.begin();
 
-	  g_tft.displayOn(true);
-	  g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
-	  g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
-	  g_tft.PWM1out(255);
+	   g_tft.displayOn(true);
+	   g_tft.GPIOX(true);      // Enable TFT - display enable tied to GPIOX
+	   g_tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
+	   g_tft.PWM1out(255);
 
     uint8_t* blePayload;
 
-    g_tft.drawMainScreen();
+     g_tft.drawMainScreen();
 
-    MX_APPE_Process();
+    PTE7300_I2C pressure_sensor(&hi2c3);
+	  SFM3100 flow_sensor(&hadc1);
 
 	while(1)
 	{
+		// TODO: enable for integration
+//		 HAL_GPIO_WritePin(BOOST_EN_GPIO_Port, BOOST_EN_Pin, GPIO_PIN_SET);
+
     /* USER CODE END WHILE */
 
+	// -----------------------------
+	// Integration Code
+    // read in data from bronco
+//    int pressure = pressure_sensor.readPressure();
+//    float flow = flow_sensor.read_flowRate();
+//    printf("-------------------\n");
+//    printf("Sensor Readings: flow = %.2f, pressure = %d\n", flow, pressure);
+//
+//    // update data manager with sensor readings
+//    dm->setFlow_LPM((uint8_t)flow);
+//    dm->setPressure_PSI((uint16_t)pressure);
+//
+//    // call kalman filter
+//    float time = kalman_filter(flow, (float)pressure);
+//    printf("Kalman Calculated Time: %.2f\n", time);
+//
+//    // update data manager with time
+//    dm->setTimeRemaining_Minutes((uint8_t)time);
+    // -----------------------------
 
+    // display to screen
+     g_tft.drawMainScreen();
 
+    // send payload over ble
+    blePayload = dm->getDataArrPtr();
+    printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
+            dm->getTimeRemaining_Minutes(),
+            dm->getPressure_PSI(),
+            dm->getFlow_LPM(),
+            dm->getLowPressureThreshold_PSI());
+    MX_APPE_Process();
+    P2PS_Send_Notification_Data(blePayload);
 
+    // delay a bit
+    HAL_Delay(250);
 
-  // read in data from bronco
+    // ------------------------------------
+    // Mock Code
+   if (dm->getPressure_PSI() > 0) {
+   dm->setPressure_PSI(dm->getPressure_PSI()-100);
+   }
+   else {
+   dm->setPressure_PSI(2000);
+   }
 
-
-  // call adams kalman filter
-  float time = kalman_filter((float)(dm->getFlow_LPM()), (float)(dm->getPressure_PSI()));
-  dm->setTimeRemaining_Minutes((uint8_t)time);
-
-  // display to screen
-  g_tft.drawMainScreen();
-
-  // send over ble
-  blePayload = dm->getDataArrPtr();
-  printf("- SENDING time: %d, pressure: %d, flow: %d, threshold %d\n",
-        		dm->getTimeRemaining_Minutes(),
-    			dm->getPressure_PSI(),
-    			dm->getFlow_LPM(),
-    			dm->getLowPressureThreshold_PSI());
-  P2PS_Send_Notification_Data(blePayload);
-
-  // delay a bit
-  HAL_Delay(1000);
-
-     if (dm->getPressure_PSI() > 0) {
-     	dm->setPressure_PSI(dm->getPressure_PSI()-100);
-     }
-     else {
-     	dm->setPressure_PSI(2000);
-     }
-
-     if (dm->getTimeRemaining_Minutes() > 0) {
-       dm->setTimeRemaining_Minutes(dm->getTimeRemaining_Minutes()-1);
-     }
-     else {
-       dm->setTimeRemaining_Minutes(15);
-     }
+   if (dm->getTimeRemaining_Minutes() > 0) {
+     dm->setTimeRemaining_Minutes(dm->getTimeRemaining_Minutes()-1);
+   }
+   else {
+     dm->setTimeRemaining_Minutes(15);
+   }
 
     /* USER CODE BEGIN 3 */
   }
